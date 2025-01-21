@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,11 +6,121 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+  Alert,
+} from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useRouter } from "expo-router";
+import Toast from "react-native-toast-message";
+import { register } from "@/services/auth";
+import { ToastAndroid } from "react-native";
 
 const RegisterScreen = () => {
-  const [selectedRole, setSelectedRole] = useState('Patient');
+  const [selectedRole, setSelectedRole] = useState("Patient");
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    code: "",
+    mobile: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (key, value) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    const { first_name, last_name, email, password, confirmPassword } =
+      formData;
+
+    // Check if passwords match
+    if (password !== confirmPassword || password.trim() === "") {
+      return Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Passwords do not match.",
+      });
+    }
+
+    // Basic validation for required fields
+    if (!first_name || first_name.trim() === "") {
+      return Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "First Name is required.",
+      });
+    }
+
+    if (!last_name || last_name.trim() === "") {
+      return Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Last Name is required.",
+      });
+    }
+
+    if (!email || email.trim() === "") {
+      return Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Email is required.",
+      });
+    }
+
+    // Email format validation using regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Please enter a valid email address.",
+      });
+    }
+
+    const newData = {
+      role: selectedRole,
+      firstName: formData.first_name,
+      lastName: formData.last_name,
+      email: formData.email,
+      code: formData.code,
+      mobile: formData.mobile,
+      password: formData.password,
+    };
+
+    try {
+      const data = await register(newData);
+      Toast.show({
+        type: "success",
+        text1: "Registration Successful",
+        text2: "You are now registered!",
+      });
+      console.log(data);
+      //clear form data
+      setFormData({
+        first_name: "",
+        last_name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        mobile: "",
+        code: "",
+      });
+
+      // Save token and user data to AsyncStorage
+      await AsyncStorage.setItem("token", data.response.token);
+      await AsyncStorage.setItem("user", JSON.stringify(data.response.user));
+
+      //redirect to dashboard
+      setTimeout(() => {
+        router.push("/pages/dashboard");
+      }, 2000);
+    } catch (error) {}
+  };
 
   return (
     <View style={styles.container}>
@@ -23,7 +133,7 @@ const RegisterScreen = () => {
       <View style={styles.imageContainer}>
         <Image
           source={{
-            uri: 'https://cdn-icons-png.flaticon.com/512/8189/8189797.png',
+            uri: "https://cdn-icons-png.flaticon.com/512/8189/8189797.png",
           }}
           style={styles.image}
           resizeMode="contain"
@@ -35,19 +145,21 @@ const RegisterScreen = () => {
 
       {/* Role Selection */}
       <View style={styles.roleContainer}>
-        {['Doctor', 'Patient', 'Labs'].map((role) => (
+        {["Doctor", "Patient", "Labs"].map((role) => (
           <TouchableOpacity
             key={role}
             style={[
               styles.roleButton,
               selectedRole === role && styles.roleButtonSelected,
             ]}
-            onPress={() => setSelectedRole(role)}>
+            onPress={() => setSelectedRole(role)}
+          >
             <Text
               style={[
                 styles.roleText,
                 selectedRole === role && styles.roleTextSelected,
-              ]}>
+              ]}
+            >
               {role}
             </Text>
           </TouchableOpacity>
@@ -57,23 +169,53 @@ const RegisterScreen = () => {
       {/* Form */}
       <View style={styles.formContainer}>
         <View style={styles.inputWrapper}>
-          <TextInput style={styles.input} placeholder="First Name" />
+          <TextInput
+            style={styles.input}
+            placeholder="First Name"
+            value={formData.firstName}
+            onChangeText={(value) => handleChange("first_name", value)}
+          />
           <Icon name="user" size={20} color="#000" style={styles.inputIcon} />
         </View>
         <View style={styles.inputWrapper}>
-          <TextInput style={styles.input} placeholder="Last Name" />
+          <TextInput
+            style={styles.input}
+            placeholder="Last Name"
+            value={formData.lastName}
+            onChangeText={(value) => handleChange("last_name", value)}
+          />
           <Icon name="user" size={20} color="#000" style={styles.inputIcon} />
         </View>
         <View style={styles.inputWrapper}>
-          <TextInput style={styles.input} placeholder="Email" />
-          <Icon name="envelope" size={20} color="#000" style={styles.inputIcon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={formData.email}
+            onChangeText={(value) => handleChange("email", value)}
+          />
+          <Icon
+            name="envelope"
+            size={20}
+            color="#000"
+            style={styles.inputIcon}
+          />
         </View>
         <View style={styles.inputWrapper}>
-          <TextInput style={styles.input} placeholder="Code" />
+          <TextInput
+            style={styles.input}
+            placeholder="Code"
+            value={formData.code}
+            onChangeText={(value) => handleChange("code", value)}
+          />
           <Icon name="phone" size={20} color="#000" style={styles.inputIcon} />
         </View>
         <View style={styles.inputWrapper}>
-          <TextInput style={styles.input} placeholder="Mobile no" />
+          <TextInput
+            style={styles.input}
+            placeholder="Mobile no"
+            value={formData.mobile}
+            onChangeText={(value) => handleChange("mobile", value)}
+          />
           <Icon name="mobile" size={20} color="#000" style={styles.inputIcon} />
         </View>
         <View style={styles.inputWrapper}>
@@ -81,6 +223,8 @@ const RegisterScreen = () => {
             style={styles.input}
             placeholder="Password"
             secureTextEntry={true}
+            value={formData.password}
+            onChangeText={(value) => handleChange("password", value)}
           />
           <Icon name="lock" size={20} color="#000" style={styles.inputIcon} />
         </View>
@@ -89,19 +233,27 @@ const RegisterScreen = () => {
             style={styles.input}
             placeholder="Confirm Password"
             secureTextEntry={true}
+            value={formData.confirmPassword}
+            onChangeText={(value) => handleChange("confirmPassword", value)}
           />
           <Icon name="lock" size={20} color="#000" style={styles.inputIcon} />
         </View>
       </View>
 
       {/* Register Button */}
-      <TouchableOpacity style={styles.registerButton}>
+      <TouchableOpacity style={styles.registerButton} onPress={handleSubmit}>
         <Text style={styles.registerButtonText}>Register</Text>
       </TouchableOpacity>
 
       {/* Login Link */}
       <Text style={styles.loginText}>
-        Already have an account? <Text style={styles.loginLink}>Login Now!</Text>
+        Already have an account?{" "}
+        <Text
+          style={styles.loginLink}
+          onPress={() => router.push("auth/login")}
+        >
+          Login Now!
+        </Text>
       </Text>
     </View>
   );
@@ -110,15 +262,15 @@ const RegisterScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     paddingHorizontal: 20,
   },
   closeButton: {
     marginTop: 20,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   imageContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
   },
   image: {
@@ -127,46 +279,46 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 20,
-    color: '#000',
+    color: "#000",
   },
   roleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginBottom: 20,
   },
   roleButton: {
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: "#DDD",
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginHorizontal: 5,
   },
   roleButtonSelected: {
-    borderColor: '#0056B3',
-    backgroundColor: '#EAF3FF',
+    borderColor: "#0056B3",
+    backgroundColor: "#EAF3FF",
   },
   roleText: {
     fontSize: 14,
-    color: '#888',
+    color: "#888",
   },
   roleTextSelected: {
-    color: '#0056B3',
+    color: "#0056B3",
   },
   formContainer: {
     marginBottom: 20,
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFF",
     borderRadius: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -181,25 +333,25 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   registerButton: {
-    backgroundColor: '#0056B3',
+    backgroundColor: "#0056B3",
     borderRadius: 20,
     paddingVertical: 15,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   registerButtonText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   loginText: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 14,
-    color: '#888',
+    color: "#888",
   },
   loginLink: {
-    color: '#0056B3',
-    fontWeight: 'bold',
+    color: "#0056B3",
+    fontWeight: "bold",
   },
 });
 

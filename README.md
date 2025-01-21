@@ -16,6 +16,8 @@ Let's Start 👋🏻
 command to install and run :
 
 ```
+
+ipconfig getifaddr en0  // get ip on mac
 Install :  npm install
 
 Run on Android : npm run android

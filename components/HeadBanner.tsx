@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 
+
 const specialities = [
   {
     id: 1,
@@ -56,11 +57,11 @@ const doctors = [
 
 const HomePage = () => {
   const { width } = useWindowDimensions();
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f6f6" }}>
       <ScrollView>
         {/* Header */}
+
         <View
           style={{
             backgroundColor: "#0077b6",
