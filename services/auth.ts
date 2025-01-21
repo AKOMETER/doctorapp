@@ -67,3 +67,32 @@ export const register = async (data) => {
     });
   }
 };
+
+
+export const forget_password = async (email) => {
+  try {
+    const response = await api.post("/auth/forget_password",  email);
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    if (error.response.data.errors) {
+      const errs = error.response.data.errors;
+
+      errs.map((err) => {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: err.msg || "Something went wrong. Please try again.",
+        });
+      });
+      return;
+    }
+
+    Toast.show({
+      type: "error",
+      text1: "Error",
+      text2:
+        error.response?.data?.msg || "Something went wrong. Please try again.",
+    });
+  }
+};

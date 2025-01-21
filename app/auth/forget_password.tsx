@@ -1,15 +1,53 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
-
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import {forget_password} from "@/services/auth"
 export default function ForgetPasswordScreen() {
   const [email, setEmail] = useState("");
 
-  const handleResetPassword = () => {
-    if (email.trim() === "") {
-      Alert.alert("Error", "Please enter your email address.");
-    } else {
-      Alert.alert("Reset Link Sent", `A reset link has been sent to ${email}.`);
+  const handleSubmit = async () => {
+
+    // Basic validation
+    if (!email) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Please fill in both fields.",
+      });
+      return;
     }
+
+    // Email format validation using regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Please enter a valid email address.",
+      });
+    }
+
+console.log("here")
+
+    try {
+      const data = await forget_password({ email });
+
+      Toast.show({
+        type: "success",
+        text1: "Check Your Mail For Token",
+      });
+
+      setTimeout(() => {
+        router.push("/auth/login");
+      }, 2000);
+    } catch (error) {
+        console.log(error)}
   };
 
   return (
@@ -25,7 +63,10 @@ export default function ForgetPasswordScreen() {
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
-      <TouchableOpacity style={styles.resetButton} onPress={handleResetPassword}>
+      <TouchableOpacity
+        style={styles.resetButton}
+        onPress={handleSubmit}
+      >
         <Text style={styles.resetButtonText}>Send Reset Link</Text>
       </TouchableOpacity>
     </View>
