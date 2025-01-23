@@ -1,6 +1,4 @@
 const User = require("../database/models/User"); // Import the User model
-const Email = require("../database/models/Email"); // Import the User model
-const Location = require("../database/models/Location");
 
 //get all users
 exports.get = async (req, res) => {
@@ -21,15 +19,6 @@ exports.show = async (req, res) => {
     } else {
       res.status(404).json({ error: "User not found" });
     }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-exports.newsLetter = async (req, res) => {
-  try {
-    const newUser = await Email.create(req.body);
-    res.json({ msg: `${newUser.email} has been added successfully` });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

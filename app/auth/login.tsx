@@ -41,22 +41,23 @@ const LoginScreen = () => {
 
     try {
       const data = await login(email, password);
+
+      if (!data) {
+        return;
+      }
       Toast.show({
         type: "success",
         text1: "Login Successful",
         text2: "You are now logged in!",
       });
 
-  // Save token and user data to AsyncStorage
-             await AsyncStorage.setItem("token", data.response.token);
-             await AsyncStorage.setItem("user", JSON.stringify(data.response.user));
+      // Save token and user data to AsyncStorage
+      await AsyncStorage.setItem("token", data.token);
+      await AsyncStorage.setItem("user", JSON.stringify(data.user));
 
-
-       setTimeout(() => {
-              router.push("/pages/dashboard");
-            }, 2000);
-
-
+      setTimeout(() => {
+        router.push("/pages/dashboard");
+      }, 2000);
     } catch (error) {
       Toast.show({
         type: "error",

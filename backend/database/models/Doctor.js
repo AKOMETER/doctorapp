@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../index"); // Sequelize instance
 
-const Notification = sequelize.define(
-  "Notification",
+const Doctor = sequelize.define(
+  "Doctor",
   {
     userId: {
       type: DataTypes.INTEGER,
@@ -12,17 +12,25 @@ const Notification = sequelize.define(
         key: "id",
       },
     },
-    content: {
+    specialty: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    type: {
-      type: DataTypes.ENUM("System", "Appointment", "Message"),
-      allowNull: false,
+    bio: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
-    isRead: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    availableFrom: {
+      type: DataTypes.TIME,
+      allowNull: true,
+    },
+    availableTo: {
+      type: DataTypes.TIME,
+      allowNull: true,
+    },
+    ratings: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
     },
   },
   {
@@ -30,4 +38,4 @@ const Notification = sequelize.define(
   }
 );
 
-module.exports = Notification;
+module.exports = Doctor;

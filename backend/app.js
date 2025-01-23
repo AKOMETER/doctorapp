@@ -31,19 +31,11 @@ syncDatabase();
 
 // all routes
 app.use("/auth", require("./routes/auth"));
-//app.use("/users", require("./routes/users"));
-//app.use("/urls", require("./routes/urls"));
-//app.use("/teams", require("./routes/teams"));
-//app.use("/tags", require("./routes/tags"));
-//app.use("/testimonies", require("./routes/testimonies"));
-//app.use("/projects", require("./routes/projects"));
-//app.use("/partners", require("./routes/partners"));
-//app.use("/notifications", require("./routes/notifications"));
-//app.use("/medias", require("./routes/medias"));
-//app.use("/extra", require("./routes/extra"));
-//app.use("/comments", require("./routes/comments"));
-//app.use("/categories", require("./routes/category"));
-//app.use("/blogs", require("./routes/blog"));
+app.use("/users", require("./routes/users"));
+// app.use("/appointment", require("./routes/appointment"));
+// app.use("/doctor", require("./routes/doctor"));
+// app.use("/message", require("./routes/message "));
+// app.use("/notification", require("./routes/notification"));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import HeadBanner from "@/components/HeadBanner";
+import Homepage from "./pages/homePage";
 import Menu from "@/components/menu";
-import StatusBar from "@/components/sidebar";
+import SideBar from "@/components/sidebar";
 
 const Home = () => {
   const [authDropdownVisible, setAuthDropdownVisible] = useState(false);
@@ -20,10 +20,9 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <ScrollView scrollEventThrottle={16} bounces={false}>
-        <StatusBar style="auto">
-
-          <HeadBanner />
-        </StatusBar>
+        <SideBar style="auto">
+          <Homepage />
+        </SideBar>
       </ScrollView>
     </View>
   );

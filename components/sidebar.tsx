@@ -86,7 +86,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
 
           {/* Screen Title */}
           <Text style={styles.title}>
-            {isOpen ? "Sidebar Open" : "Sidebar Closed"}
+          Home
           </Text>
         </View>
         {children}
@@ -149,7 +149,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
   },
   header: {
     flexDirection: "row",
@@ -168,6 +167,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#fff",
     marginLeft: 10,
+    color: "white", fontSize: 24, fontWeight: "bold"
   },
   login: {
     flexDirection: "row",

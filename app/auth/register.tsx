@@ -94,6 +94,9 @@ const RegisterScreen = () => {
 
     try {
       const data = await register(newData);
+      if (!data) {
+        return;
+      }
       Toast.show({
         type: "success",
         text1: "Registration Successful",
@@ -112,8 +115,8 @@ const RegisterScreen = () => {
       });
 
       // Save token and user data to AsyncStorage
-      await AsyncStorage.setItem("token", data.response.token);
-      await AsyncStorage.setItem("user", JSON.stringify(data.response.user));
+      await AsyncStorage.setItem("token", data.token);
+      await AsyncStorage.setItem("user", JSON.stringify(data.user));
 
       //redirect to dashboard
       setTimeout(() => {
@@ -172,7 +175,7 @@ const RegisterScreen = () => {
           <TextInput
             style={styles.input}
             placeholder="First Name"
-            value={formData.firstName}
+            value={formData.first_name}
             onChangeText={(value) => handleChange("first_name", value)}
           />
           <Icon name="user" size={20} color="#000" style={styles.inputIcon} />
@@ -181,7 +184,7 @@ const RegisterScreen = () => {
           <TextInput
             style={styles.input}
             placeholder="Last Name"
-            value={formData.lastName}
+            value={formData.last_name}
             onChangeText={(value) => handleChange("last_name", value)}
           />
           <Icon name="user" size={20} color="#000" style={styles.inputIcon} />

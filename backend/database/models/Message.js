@@ -1,10 +1,18 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../index"); // Sequelize instance
 
-const Notification = sequelize.define(
-  "Notification",
+const Message = sequelize.define(
+  "Message",
   {
-    userId: {
+    senderId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
+    receiverId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -13,11 +21,7 @@ const Notification = sequelize.define(
       },
     },
     content: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    type: {
-      type: DataTypes.ENUM("System", "Appointment", "Message"),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     isRead: {
@@ -30,4 +34,4 @@ const Notification = sequelize.define(
   }
 );
 
-module.exports = Notification;
+module.exports = Message;

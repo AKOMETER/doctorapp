@@ -14,13 +14,22 @@ const api = axios.create({
 export const login = async (email, password) => {
   try {
     const response = await api.post("/auth/login", { email, password });
-    console.log(response);
+    console.log(JSON.parse(response.data));
     return response.data;
   } catch (error) {
-    if (error.response.data.errors) {
-      const errs = error.response.data.errors;
+    if (error.response.data.msg) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2:
+          error.response.data.msg || "Something went wrong. Please try again.",
+      });
+    }
 
-      errs.map((err) => {
+    if (error.response.data.errors) {
+      const err = error.response.data.errors;
+
+      errs.foreach((err) => {
         Toast.show({
           type: "error",
           text1: "Error",
@@ -29,19 +38,12 @@ export const login = async (email, password) => {
       });
       return;
     }
-
-    Toast.show({
-      type: "error",
-      text1: "Error",
-      text2:
-        error.response?.data?.msg || "Something went wrong. Please try again.",
-    });
   }
 };
 
 export const register = async (data) => {
   try {
-    const response = await api.post("/auth/register",data);
+    const response = await api.post("/auth/register", data);
     console.log(response);
     return response.data;
   } catch (error) {
@@ -56,7 +58,6 @@ export const register = async (data) => {
           text2: err.msg || "Something went wrong. Please try again.",
         });
       });
-      return;
     }
 
     Toast.show({
@@ -68,10 +69,9 @@ export const register = async (data) => {
   }
 };
 
-
 export const forget_password = async (email) => {
   try {
-    const response = await api.post("/auth/forget_password",  email);
+    const response = await api.post("/auth/forget_password", email);
     console.log(response);
     return response.data;
   } catch (error) {

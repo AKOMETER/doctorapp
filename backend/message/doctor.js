@@ -16,6 +16,14 @@ router.get("/is_logged", isAuth, Controller.isLoggedIn);
 // Get all users
 router.get("/", Controller.get);
 
+// Route for newsletter subscription
+router.post(
+  "/newsletter",
+  validateEmail,
+  returnValidation,
+  Controller.newsLetter
+);
+
 // Get a user by ID
 router.get("/:id", Controller.show);
 

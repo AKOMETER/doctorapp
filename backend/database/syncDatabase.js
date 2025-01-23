@@ -1,148 +1,37 @@
-const sequelize = require("./index"); // Your sequelize instance
-const Location = require("./models/Location");
 const User = require("./models/User");
-const Email = require("./models/Email");
-const Blog = require("./models/Blog");
-const Project = require("./models/Project");
-const Category = require("./models/Category");
-const Comment = require("./models/Comment");
-const Tag = require("./models/Tag");
-const Media = require("./models/Media");
+const Appointment = require("./models/Appointment");
 const Notification = require("./models/Notification");
-const Partner = require("./models/Partner");
-const Url = require("./models/Url");
-const Team = require("./models/Team");
-const Testimony = require("./models/Testimony");
-const Estate = require("./models/Estate");
-// Define associations here
+const Message = require("./models/Message");
+const Doctor = require("./models/Doctor");
+const MyDoctor = require("./models/MyDoctor");
+const sequelize = require("./index"); // Sequelize instance
 
-// User <-> Blog (One-to-Many)
-User.hasMany(Blog, { foreignKey: "user_id", as: "blog" });
-Blog.belongsTo(User, { foreignKey: "user_id", as: "user" });
+// Define relationships
+User.hasMany(Appointment, { foreignKey: "patientId" });
+User.hasMany(Appointment, { foreignKey: "doctorId" });
+Appointment.belongsTo(User, { as: "Patient", foreignKey: "patientId" });
+Appointment.belongsTo(User, { as: "Doctor", foreignKey: "doctorId" });
 
-// Define associations with alias
-Location.hasMany(Project, { foreignKey: "location_id", as: "projects" });
-Project.belongsTo(Location, { foreignKey: "location_id", as: "location" });
+User.hasMany(Notification, { foreignKey: "userId" });
+Notification.belongsTo(User, { foreignKey: "userId" });
 
-// Define associations with alias
-Location.hasMany(Estate, { foreignKey: "location_id", as: "estate" });
-Estate.belongsTo(Location, { foreignKey: "location_id", as: "location" });
+User.hasMany(Message, { as: "SentMessages", foreignKey: "senderId" });
+User.hasMany(Message, { as: "ReceivedMessages", foreignKey: "receiverId" });
+Message.belongsTo(User, { as: "Sender", foreignKey: "senderId" });
+Message.belongsTo(User, { as: "Receiver", foreignKey: "receiverId" });
 
-// User <-> Comment relationship
-User.hasMany(Comment, { foreignKey: "user_id", as: "comment" });
-Comment.belongsTo(User, { foreignKey: "user_id", as: "user" });
+User.hasOne(Doctor, { foreignKey: "userId" });
+Doctor.belongsTo(User, { foreignKey: "userId" });
 
-// Blog <-> Comment (Many-to-Many through BlogComment)
-Comment.belongsToMany(Blog, {
-  through: "BlogComment",
-  foreignKey: "comment_id",
-});
-Blog.belongsToMany(Comment, { through: "BlogComment", foreignKey: "blog_id" });
-
-// Project <-> Comment (Many-to-Many through ProjectComment)
-Comment.belongsToMany(Project, {
-  through: "ProjectComment",
-  foreignKey: "comment_id",
-});
-Project.belongsToMany(Comment, {
-  through: "ProjectComment",
-  foreignKey: "project_id",
-});
-
-// Project <-> Media (Many-to-Many through ProjectMedia)
-Media.belongsToMany(Project, {
-  through: "ProjectMedia",
-  foreignKey: "media_id",
-});
-Project.belongsToMany(Media, {
-  through: "ProjectMedia",
-  foreignKey: "project_id",
-});
-
-// Blog <-> Media (Many-to-Many through BlogMedia)
-Media.belongsToMany(Blog, { through: "BlogMedia", foreignKey: "media_id" });
-Blog.belongsToMany(Media, { through: "BlogMedia", foreignKey: "blog_id" });
-
-// Category <-> Blog  (Many-to-Many)
-Category.belongsToMany(Blog, {
-  through: "BlogCategories",
-  foreignKey: "category_id",
-});
-Blog.belongsToMany(Category, {
-  through: "BlogCategories",
-  foreignKey: "blog_id",
-});
-
-// Category <->  Project (Many-to-Many)
-Category.belongsToMany(Project, {
-  through: "ProjectCategories",
-  foreignKey: "category_id",
-});
-Project.belongsToMany(Category, {
-  through: "ProjectCategories",
-  foreignKey: "project_id",
-});
-
-// Category <-> estate (Many-to-Many)
-Category.belongsToMany(Estate, {
-  through: "EstateCategories",
-  foreignKey: "category_id",
-});
-Estate.belongsToMany(Category, {
-  through: "EstateCategories",
-  foreignKey: "estate_id",
-});
-
-// Tag <-> Blog and Project (Many-to-Many)
-Tag.belongsToMany(Blog, { through: "BlogTag", foreignKey: "tag_id" });
-Blog.belongsToMany(Tag, { through: "BlogTag", foreignKey: "blog_id" });
-
-Tag.belongsToMany(Project, { through: "ProjectTag", foreignKey: "tag_id" });
-Project.belongsToMany(Tag, { through: "ProjectTag", foreignKey: "project_id" });
-
-// Team <-> Url (Many-to-Many through TeamUrl)
-Team.belongsToMany(Url, {
-  through: "TeamUrl",
-  foreignKey: "team_id",
-  otherKey: "url_id", // explicitly setting the other key
-});
-
-Url.belongsToMany(Team, {
-  through: "TeamUrl",
-  foreignKey: "url_id",
-  otherKey: "team_id", // explicitly setting the other key
-});
-// Blog <-> Url (Many-to-Many through BlogUrl)
-Blog.belongsToMany(Url, { through: "BlogUrl", foreignKey: "blog_id" });
-Url.belongsToMany(Blog, { through: "BlogUrl", foreignKey: "url_id" });
-
-// Project <-> Url (Many-to-Many through ProjectUrl)
-Project.belongsToMany(Url, { through: "ProjectUrl", foreignKey: "project_id" });
-Url.belongsToMany(Project, { through: "ProjectUrl", foreignKey: "url_id" });
-
-Project.belongsTo(Estate, {
-  foreignKey: "estateId",
-  as: "estate",
-  onDelete: "CASCADE",
-});
-
-Estate.hasMany(Project, {
-  foreignKey: "estateId",
-  as: "projects",
-  onDelete: "CASCADE",
-});
-
-// Team <-> Estate  (Many-to-Many)
-Team.belongsToMany(Estate, { through: "EstateTeam", foreignKey: "team_id" });
-Estate.belongsToMany(Team, { through: "EstateTeam", foreignKey: "estate_id" });
-
-Tag.belongsToMany(Project, { through: "ProjectTag", foreignKey: "tag_id" });
-Project.belongsToMany(Tag, { through: "ProjectTag", foreignKey: "project_id" });
+User.hasMany(MyDoctor, { as: "MyDoctors", foreignKey: "patientId" });
+User.hasMany(MyDoctor, { as: "Patients", foreignKey: "doctorId" });
+MyDoctor.belongsTo(User, { as: "Patient", foreignKey: "patientId" });
+MyDoctor.belongsTo(User, { as: "Doctor", foreignKey: "doctorId" });
 
 // Sync database
 const syncDatabase = async () => {
   try {
-    await sequelize.sync({ alter: false }); // Use { force: true } to drop and recreate tables
+    await sequelize.sync({ alter: false, force: true }); // Use { force: true } to drop and recreate tables
     console.log("Database synchronized successfully.");
   } catch (error) {
     console.error("Error synchronizing database:", error);
