@@ -6,14 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useRouter } from "expo-router";
-import Toast from "react-native-toast-message";
 import { register } from "@/services/auth";
-import { ToastAndroid } from "react-native";
-
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ErrorHandler } from "@/utils/helperFunction";
 const RegisterScreen = () => {
   const [selectedRole, setSelectedRole] = useState("Patient");
   const router = useRouter();
@@ -27,7 +25,7 @@ const RegisterScreen = () => {
     confirmPassword: "",
   });
 
-  const handleChange = (key, value) => {
+  const handleChange = (key: string, value: string) => {
     setFormData((prevState) => ({
       ...prevState,
       [key]: value,
@@ -40,46 +38,31 @@ const RegisterScreen = () => {
 
     // Check if passwords match
     if (password !== confirmPassword || password.trim() === "") {
-      return Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Passwords do not match.",
-      });
+      ErrorHandler("Error", "Passwords Do Not Match");
+      return;
     }
 
     // Basic validation for required fields
     if (!first_name || first_name.trim() === "") {
-      return Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "First Name is required.",
-      });
+      ErrorHandler("Error", "First Name is required.");
+      return;
     }
 
     if (!last_name || last_name.trim() === "") {
-      return Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Last Name is required.",
-      });
+      ErrorHandler("Error", "Last Name is required.");
+      return;
     }
 
     if (!email || email.trim() === "") {
-      return Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Email is required.",
-      });
+      ErrorHandler("Error", "Email is required.");
+      return;
     }
 
     // Email format validation using regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-      return Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Please enter a valid email address.",
-      });
+      ErrorHandler("Error", "Please enter a valid email address.");
+      return;
     }
 
     const newData = {
@@ -97,11 +80,7 @@ const RegisterScreen = () => {
       if (!data) {
         return;
       }
-      Toast.show({
-        type: "success",
-        text1: "Registration Successful",
-        text2: "You are now registered!",
-      });
+      ErrorHandler("Success", "Registration Successful");
       console.log(data);
       //clear form data
       setFormData({
@@ -120,15 +99,21 @@ const RegisterScreen = () => {
 
       //redirect to dashboard
       setTimeout(() => {
-        router.push("/pages/dashboard");
+        router.push("/");
       }, 2000);
-    } catch (error) {}
+    } catch (error: any) {
+      console.log(error);
+      ErrorHandler("Error", "Login Failed" || error?.response?.data.msg);
+    }
   };
 
   return (
     <View style={styles.container}>
       {/* Close Button */}
-      <TouchableOpacity style={styles.closeButton}>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => router.back()}
+      >
         <Icon name="close" size={20} color="#000" />
       </TouchableOpacity>
 
@@ -253,7 +238,7 @@ const RegisterScreen = () => {
         Already have an account?{" "}
         <Text
           style={styles.loginLink}
-          onPress={() => router.push("auth/login")}
+          onPress={() => router.push("/auth/login")}
         >
           Login Now!
         </Text>
@@ -355,6 +340,7 @@ const styles = StyleSheet.create({
   loginLink: {
     color: "#0056B3",
     fontWeight: "bold",
+    textDecorationLine: "underline",
   },
 });
 

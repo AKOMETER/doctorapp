@@ -11,6 +11,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Toast from "react-native-toast-message"; // Toast for notifications
 import { login } from "@/services/auth";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   // Handle form input changes (email, password)
-  const handleFormChange = (name, value) => {
+  const handleFormChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
   };
 
@@ -38,10 +39,19 @@ const LoginScreen = () => {
       });
       return;
     }
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Please enter a valid email address.",
+      });
+      return;
+    }
 
     try {
       const data = await login(email, password);
-
+      console.log(data);
       if (!data) {
         return;
       }
@@ -52,17 +62,18 @@ const LoginScreen = () => {
       });
 
       // Save token and user data to AsyncStorage
-      await AsyncStorage.setItem("token", data.token);
-      await AsyncStorage.setItem("user", JSON.stringify(data.user));
+      await AsyncStorage.setItem("token", data?.token);
+      await AsyncStorage.setItem("user", JSON.stringify(data?.user));
 
       setTimeout(() => {
-        router.push("/pages/dashboard");
+        router.push("/");
       }, 2000);
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error.message);
       Toast.show({
         type: "error",
         text1: "Login Failed",
-        text2: error.response.data.msg,
+        text2: error?.message,
       });
     }
   };
@@ -74,7 +85,10 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       {/* Close Button */}
-      <TouchableOpacity style={styles.closeButton}>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => router.back()}
+      >
         <Icon name="close" size={20} color="#000" />
       </TouchableOpacity>
 
@@ -153,7 +167,7 @@ const LoginScreen = () => {
             router.push("/auth/register"); // This will navigate to /auth/login
           }}
         >
-          Signup Now!
+          Sign up Now!
         </Text>
       </Text>
 

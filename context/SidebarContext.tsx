@@ -1,23 +1,42 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface SidebarContextType {
   isOpen: boolean;
   toggleSidebar: () => void;
+  user: any;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
   };
 
+  const [user, setUser] = useState<any>(null);
+
+  async function getUser() {
+    const _user = await AsyncStorage.getItem("user");
+    if (_user) {
+      setUser(JSON.parse(_user));
+    }
+  }
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
-   <SidebarContext.Provider value={{ isOpen: isOpen, toggleSidebar: toggleSidebar }}>
-     {children}
-   </SidebarContext.Provider>
+    <SidebarContext.Provider
+      value={{ isOpen: isOpen, toggleSidebar: toggleSidebar, user: user }}
+    >
+      {children}
+    </SidebarContext.Provider>
   );
 };
 

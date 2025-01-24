@@ -7,56 +7,12 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
-  useWindowDimensions,
 } from "react-native";
-
-
-const specialities = [
-  {
-    id: 1,
-    name: "Dentist",
-    icon: "https://img.icons8.com/color/64/tooth.png",
-  },
-  {
-    id: 2,
-    name: "Neurologist",
-    icon: "https://img.icons8.com/color/64/brain.png",
-  },
-  {
-    id: 3,
-    name: "Orthopedic",
-    icon: "https://img.icons8.com/color/64/orthopedic.png",
-  },
-  {
-    id: 4,
-    name: "Cardiologist",
-    icon: "https://img.icons8.com/color/64/heart-health.png",
-  },
-];
-
-const doctors = [
-  {
-    id: 1,
-    name: "Dr. Zara K",
-    speciality: "Dentist",
-    location: "Coimbatore, India",
-    price: "₹50.00 / per slot",
-    rating: 4.5,
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    id: 2,
-    name: "Dr. Waseem Sabra",
-    speciality: "Neurologist",
-    location: "Cherrybrook, Australia",
-    price: "₹2.45 / per slot",
-    rating: 4.0,
-    image: "https://randomuser.me/api/portraits/men/47.jpg",
-  },
-];
+import { specialities } from "@/utils/data";
+import { doctors } from "@/utils/data";
+import { router } from "expo-router";
 
 const HomePage = () => {
-  const { width } = useWindowDimensions();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f6f6" }}>
       <ScrollView>
@@ -121,24 +77,32 @@ const HomePage = () => {
               marginBottom: 10,
             }}
           >
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>Specialities</Text>
-            <Text style={{ color: "#0077b6" }}>View All</Text>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+              Specialties
+            </Text>
+            <Text
+              style={{ color: "#0077b6" }}
+              onPress={() => router.push("/pages/specialities/index")}
+            >
+              View All
+            </Text>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {specialities.map((item) => (
-              <View
-                key={item.id}
+            {specialities.slice(0, 4).map((item, index) => (
+              <TouchableOpacity
+                key={index}
                 style={{
                   alignItems: "center",
                   marginRight: 20,
                 }}
+                onPress={() => router.push(item.url)}
               >
                 <Image
                   source={{ uri: item.icon }}
                   style={{ width: 64, height: 64, marginBottom: 5 }}
                 />
                 <Text>{item.name}</Text>
-              </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
@@ -152,10 +116,17 @@ const HomePage = () => {
               marginBottom: 10,
             }}
           >
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>Find Doctors</Text>
-            <Text style={{ color: "#0077b6" }}>View All</Text>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+              Find Doctors
+            </Text>
+            <Text
+              style={{ color: "#0077b6" }}
+              onPress={() => router.push("/pages/doctor/index")}
+            >
+              View All
+            </Text>
           </View>
-          {doctors.map((doctor) => (
+          {doctors.slice(0, 10).map((doctor, index) => (
             <View
               key={doctor.id}
               style={{
@@ -175,7 +146,9 @@ const HomePage = () => {
                 <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                   {doctor.name}
                 </Text>
-                <Text style={{ color: "#777" }}>{doctor.speciality}</Text>
+                <Text style={{ color: "#777" }}>
+                  {specialities[doctor.specialty].name}
+                </Text>
                 <Text style={{ color: "#0077b6" }}>{doctor.location}</Text>
                 <Text>{doctor.price}</Text>
                 <Text>{`⭐ ${doctor.rating}`}</Text>
@@ -189,7 +162,12 @@ const HomePage = () => {
                   alignSelf: "center",
                 }}
               >
-                <Text style={{ color: "white" }}>Book Appointment</Text>
+                <Text
+                  style={{ color: "white" }}
+                  onPress={() => router.push(doctor.url)}
+                >
+                  Book Appointment
+                </Text>
               </TouchableOpacity>
             </View>
           ))}

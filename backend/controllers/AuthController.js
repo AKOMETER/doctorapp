@@ -125,9 +125,8 @@ exports.forget_password = async (req, res) => {
     const filePath = path.join(__dirname, "../mails/forgetpassword.html");
     let mailTemplate = fs.readFileSync(filePath, "utf-8");
 
-    // Replace the reset link in the template
-    const resetLink = `${process.env.FRONTEND_URL}forget_password_confirm?reset_token=${resetToken}&id=${user.id}`;
-    mailTemplate = mailTemplate.replace("{{resetLink}}", resetLink);
+    // Replace the reset token in the template
+    mailTemplate = mailTemplate.replace("{{token}}", resetToken);
 
     // Send email
 
@@ -150,8 +149,7 @@ exports.forget_password = async (req, res) => {
 //set new  password
 exports.forget_password_confirm = async (req, res) => {
   // Find the user by ID
-  const { reset_token, id } = req.query; // Get reset_token and id from query
-  const { confirm_password, password } = req.body; // Get new password from body
+  const { confirm_password, password, reset_token } = req.body; // Get new password from body
 
   if (!id) {
     return res.status(400).json({ msg: "User ID is required" });

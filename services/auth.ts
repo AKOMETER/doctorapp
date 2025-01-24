@@ -1,5 +1,6 @@
 import axios from "axios";
 import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const backendUrl = process.env.EXPO_PUBLIC_BACKENDURL; // Get the BACKENDURL from the .env file
 
@@ -11,12 +12,25 @@ const api = axios.create({
   },
 });
 
-export const login = async (email, password) => {
+// Axios interceptor to add Bearer token to each request
+api.interceptors.request.use(
+  async (config) => {
+    const token = await AsyncStorage.getItem("token"); // Get token from AsyncStorage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`; // Set the Authorization header
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export const login = async (email: string, password: string) => {
   try {
     const response = await api.post("/auth/login", { email, password });
-    console.log(JSON.parse(response.data));
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     if (error.response.data.msg) {
       Toast.show({
         type: "error",
@@ -27,9 +41,9 @@ export const login = async (email, password) => {
     }
 
     if (error.response.data.errors) {
-      const err = error.response.data.errors;
+      const errs: any[] = error.response.data.errors;
 
-      errs.foreach((err) => {
+      errs.forEach((err) => {
         Toast.show({
           type: "error",
           text1: "Error",
@@ -41,17 +55,15 @@ export const login = async (email, password) => {
   }
 };
 
-export const register = async (data) => {
+export const register = async (data: Record<string, any>) => {
   try {
     const response = await api.post("/auth/register", data);
-    console.log(response);
     return response.data;
-  } catch (error) {
-    console.log(error.response);
+  } catch (error: any) {
     if (error.response.data.errors) {
-      const err = error.response.data.errors;
+      const errs: any[] = error.response.data.errors;
 
-      errs.foreach((err) => {
+      errs.forEach((err) => {
         Toast.show({
           type: "error",
           text1: "Error",
@@ -69,16 +81,70 @@ export const register = async (data) => {
   }
 };
 
-export const forget_password = async (email) => {
+export const forget_password = async (email: string) => {
   try {
     const response = await api.post("/auth/forget_password", email);
     console.log(response);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     if (error.response.data.errors) {
       const errs = error.response.data.errors;
 
-      errs.map((err) => {
+      errs.map((err: any) => {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: err.msg || "Something went wrong. Please try again.",
+        });
+      });
+      return;
+    }
+
+    Toast.show({
+      type: "error",
+      text1: "Error",
+      text2:
+        error.response?.data?.msg || "Something went wrong. Please try again.",
+    });
+  }
+};
+
+export const forget_password_confirm = async (data: Record<string, any>) => {
+  try {
+    const response = await api.post("/auth/forget_password_confirm", data);
+    return response.data;
+  } catch (error: any) {
+    if (error.response.data.errors) {
+      const errs = error.response.data.errors;
+
+      errs.map((err: any) => {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: err.msg || "Something went wrong. Please try again.",
+        });
+      });
+      return;
+    }
+
+    Toast.show({
+      type: "error",
+      text1: "Error",
+      text2:
+        error.response?.data?.msg || "Something went wrong. Please try again.",
+    });
+  }
+};
+
+export const isLogged = async () => {
+  try {
+    const response = await api.get("/users/is_logged");
+    return response.data;
+  } catch (error: any) {
+    if (error.response.data.errors) {
+      const errs = error.response.data.errors;
+
+      errs.map((err: any) => {
         Toast.show({
           type: "error",
           text1: "Error",

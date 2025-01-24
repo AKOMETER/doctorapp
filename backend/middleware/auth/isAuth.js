@@ -18,7 +18,6 @@ const isAuth = async (req, res, next) => {
 
     // Attach user info to request object
     req.user = decoded;
-
     // Proceed to the next middleware or route handler
     next();
   } catch (error) {

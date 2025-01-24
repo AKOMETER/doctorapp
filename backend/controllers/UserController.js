@@ -103,17 +103,10 @@ exports.update = async (req, res) => {
 
 exports.isLoggedIn = async (req, res) => {
   try {
-    const user = req.user.user;
-    console.log(user);
+    const user = req.user;
+
     if (user) {
-      const getUser = await User.findByPk(user.id, {
-        include: [
-          {
-            model: Location,
-            as: "location",
-          },
-        ],
-      });
+      const getUser = await User.findByPk(user.id, {});
 
       if (!getUser) {
         return res.status(404).json({ status: false });

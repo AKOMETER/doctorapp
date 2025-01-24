@@ -7,20 +7,13 @@ import {
   StyleSheet,
 } from "react-native";
 import Homepage from "./pages/homePage";
-import Menu from "@/components/menu";
 import SideBar from "@/components/sidebar";
 
 const Home = () => {
-  const [authDropdownVisible, setAuthDropdownVisible] = useState(false);
-
-  const toggleAuthDropdown = () => {
-    setAuthDropdownVisible(!authDropdownVisible);
-  };
-
   return (
     <View style={styles.container}>
       <ScrollView scrollEventThrottle={16} bounces={false}>
-        <SideBar style="auto">
+        <SideBar title="Home">
           <Homepage />
         </SideBar>
       </ScrollView>

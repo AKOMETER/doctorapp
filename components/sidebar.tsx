@@ -3,10 +3,22 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { useSidebar } from "../context/SidebarContext";
 import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome for icons
 import { useRouter } from "expo-router";
+const backendUrl = process.env.EXPO_PUBLIC_BACKENDURL;
 
-const Sidebar = ({ children }: { children: React.ReactNode }) => {
-  const { isOpen, toggleSidebar } = useSidebar();
+const Sidebar = ({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title: string;
+}) => {
+  const { isOpen, toggleSidebar, user } = useSidebar();
   const router = useRouter();
+
+  const name = user ? user.firstName + " " + user.lastName : "Guest";
+  const imageUrl = user
+    ? backendUrl + "/" + user.profileImage
+    : "https://avatar.iran.liara.run/public/boy?username=Ash";
   return (
     <View style={styles.container}>
       {isOpen && (
@@ -15,26 +27,44 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
           <View style={styles.userContainer}>
             <Image
               source={{
-                uri: "https://via.placeholder.com/50", // Replace with avatar image URL
+                uri: imageUrl, // Replace with avatar image URL
               }}
               style={styles.avatar}
             />
             <View style={styles.greeting}>
               <Text style={styles.greetingText}>Hello</Text>
-              <Text style={styles.guestText}>Guest</Text>
+              <Text style={styles.guestText}> {name} </Text>
             </View>
           </View>
 
           {/* Navigation Items with Icons */}
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => {
+              router.push("/");
+              toggleSidebar();
+            }}
+          >
             <FontAwesome name="home" size={20} color="#000000" />
             <Text style={styles.navText}>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => {
+              router.push("/pages/dashboard");
+              toggleSidebar();
+            }}
+          >
             <FontAwesome name="tachometer" size={20} color="#000000" />
             <Text style={styles.navText}>Dashboard</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => {
+              router.push("/pages/appointments");
+              toggleSidebar();
+            }}
+          >
             <FontAwesome name="calendar" size={20} color="#000000" />
             <Text style={styles.navText}>Appointments</Text>
           </TouchableOpacity>
@@ -42,10 +72,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             <FontAwesome name="stethoscope" size={20} color="#000000" />
             <Text style={styles.navText}>My Doctors</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <FontAwesome name="heart" size={20} color="#000000" />
-            <Text style={styles.navText}>Favorite</Text>
-          </TouchableOpacity>
+
           <TouchableOpacity style={styles.navItem}>
             <FontAwesome name="envelope" size={20} color="#000000" />
             <Text style={styles.navText}>Message</Text>
@@ -70,6 +97,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             style={styles.login}
             onPress={() => {
               router.push("/auth/login"); // This will navigate to /auth/login
+              toggleSidebar();
             }}
           >
             <FontAwesome name="sign-in" size={20} color="#fff" />
@@ -85,9 +113,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
           </TouchableOpacity>
 
           {/* Screen Title */}
-          <Text style={styles.title}>
-          Home
-          </Text>
+          <Text style={styles.title}>{title}</Text>
         </View>
         {children}
       </View>
@@ -164,10 +190,10 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     textAlign: "center",
-    fontSize: 20,
     color: "#fff",
     marginLeft: 10,
-    color: "white", fontSize: 24, fontWeight: "bold"
+    fontSize: 24,
+    fontWeight: "bold",
   },
   login: {
     flexDirection: "row",

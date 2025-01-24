@@ -1,4 +1,7 @@
-import React from "react";
+import Sidebar from "@/components/sidebar";
+import { isLogged } from "@/services/auth";
+import { router } from "expo-router";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 
 const Dashboard = () => {
@@ -7,35 +10,50 @@ const Dashboard = () => {
     { id: 2, patient: "Jane Smith", status: "Pending", date: "2024-12-11" },
     { id: 3, patient: "Alice Brown", status: "Cancelled", date: "2024-12-12" },
   ];
+  async function getLogState() {
+    const result = await isLogged();
+    console.log(result);
+    if (result == undefined) {
+      router.push("/auth/login");
+    }
+  }
+
+  useEffect(() => {
+    getLogState();
+  }, []);
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Appointments</Text>
-      {appointments.map((appointment) => (
-        <View key={appointment.id} style={styles.card}>
-          <Image
-            source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-JGmDTLjVbkHk2YKLyc4yOEgIPahk0aJo4Q&s" }}
-            style={styles.avatar}
-          />
-          <View style={styles.cardContent}>
-            <Text style={styles.patientName}>{appointment.patient}</Text>
-            <Text style={styles.subText}>Date: {appointment.date}</Text>
-            <Text
-              style={[
-                styles.status,
-                appointment.status === "Confirmed"
-                  ? styles.confirmed
-                  : appointment.status === "Pending"
-                  ? styles.pending
-                  : styles.cancelled,
-              ]}
-            >
-              {appointment.status}
-            </Text>
+    <Sidebar title={"Dashboard"}>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Appointments</Text>
+        {appointments.map((appointment) => (
+          <View key={appointment.id} style={styles.card}>
+            <Image
+              source={{
+                uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-JGmDTLjVbkHk2YKLyc4yOEgIPahk0aJo4Q&s",
+              }}
+              style={styles.avatar}
+            />
+            <View style={styles.cardContent}>
+              <Text style={styles.patientName}>{appointment.patient}</Text>
+              <Text style={styles.subText}>Date: {appointment.date}</Text>
+              <Text
+                style={[
+                  styles.status,
+                  appointment.status === "Confirmed"
+                    ? styles.confirmed
+                    : appointment.status === "Pending"
+                    ? styles.pending
+                    : styles.cancelled,
+                ]}
+              >
+                {appointment.status}
+              </Text>
+            </View>
           </View>
-        </View>
-      ))}
-    </ScrollView>
+        ))}
+      </ScrollView>
+    </Sidebar>
   );
 };
 

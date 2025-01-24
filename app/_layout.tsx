@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import React from "react";
 import "react-native-reanimated";
 import "../global.css";
+import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
   return (
@@ -24,6 +25,39 @@ export default function RootLayout() {
               headerShown: false,
             }}
           />
+
+          <Stack.Screen
+            name="pages/specialities/index.tsx"
+            options={{
+              title: "Specialties",
+              headerShown: false,
+            }}
+          />
+
+          <Stack.Screen
+            name="pages/specialities/[id].tsx"
+            options={{
+              title: "Search By Doctor",
+              headerShown: false,
+            }}
+          />
+
+          <Stack.Screen
+            name="pages/doctor/index.tsx"
+            options={{
+              title: "Doctor",
+              headerShown: false,
+            }}
+          />
+
+          <Stack.Screen
+            name="pages/doctor/[id].tsx"
+            options={{
+              title: "Search By Doctor",
+              headerShown: false,
+            }}
+          />
+
           <Stack.Screen
             name="pages/dashboard"
             options={{
@@ -60,6 +94,8 @@ export default function RootLayout() {
 
           <Stack.Screen name="+not-found" />
         </Stack>
+
+        <Toast />
       </React.Fragment>
     </SidebarProvider>
   );

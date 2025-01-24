@@ -6,33 +6,32 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { forget_password } from "@/services/auth";
-import Toast from "react-native-toast-message";
+import { forget_password_confirm } from "@/services/auth";
 import { useRouter } from "expo-router";
 import { ErrorHandler } from "@/utils/helperFunction";
 export default function ForgetPasswordScreen() {
-  const [email, setEmail] = useState("");
+  const [formData, setFormData] = useState({
+    reset_token: "",
+    password: "",
+    confirm_password: "",
+  });
   const router = useRouter();
   const handleSubmit = async () => {
     // Basic validation
-    if (!email) {
+    if (
+      formData.password != formData.confirm_password ||
+      formData.password == ""
+    ) {
       ErrorHandler("Error", "Please fill in both fields.");
       return;
     }
 
-    // Email format validation using regex
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      ErrorHandler("Error", "Please enter a valid email address.");
-      return;
-    }
-
     try {
-      await forget_password(email);
-      ErrorHandler("Success", "Check Your Mail For Token");
+      await forget_password_confirm(formData);
+      ErrorHandler("Success", "Password Reset Successfully");
 
       setTimeout(() => {
-        router.push("/auth/forget_password_confirm");
+        router.push("/auth/login");
       }, 2000);
     } catch (error) {
       console.log(error);
@@ -41,16 +40,34 @@ export default function ForgetPasswordScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Forget Password</Text>
+      <Text style={styles.title}>Reset Password</Text>
       <Text style={styles.instruction}>
         Enter your email address below to receive a password reset link.
       </Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
+        placeholder="Token"
+        keyboardType={undefined}
+        value={formData.reset_token}
+        onChangeText={(text) => setFormData({ ...formData, reset_token: text })}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        keyboardType={undefined}
+        value={formData.password}
+        onChangeText={(text) => setFormData({ ...formData, password: text })}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm Password"
+        keyboardType={undefined}
+        value={formData.confirm_password}
+        onChangeText={(text) =>
+          setFormData({ ...formData, confirm_password: text })
+        }
       />
       <TouchableOpacity style={styles.resetButton} onPress={handleSubmit}>
         <Text style={styles.resetButtonText}>Send Reset Link</Text>
