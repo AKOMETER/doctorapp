@@ -68,30 +68,39 @@ const Sidebar = ({
             <FontAwesome name="calendar" size={20} color="#000000" />
             <Text style={styles.navText}>Appointments</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <FontAwesome name="stethoscope" size={20} color="#000000" />
-            <Text style={styles.navText}>My Doctors</Text>
-          </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => {
+              router.push("/pages/message");
+              toggleSidebar();
+            }}
+          >
             <FontAwesome name="envelope" size={20} color="#000000" />
             <Text style={styles.navText}>Message</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/pages/profile");
+              toggleSidebar();
+            }}
+            style={styles.navItem}
+          >
             <FontAwesome name="user" size={20} color="#000000" />
             <Text style={styles.navText}>My Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <FontAwesome name="plus-square" size={20} color="#000000" />
-            <Text style={styles.navText}>Pharmacy</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <FontAwesome name="shopping-cart" size={20} color="#000000" />
-            <Text style={styles.navText}>My Orders</Text>
-          </TouchableOpacity>
+
           <TouchableOpacity style={styles.navItem}>
             <FontAwesome name="cogs" size={20} color="#000000" />
-            <Text style={styles.navText}>Settings</Text>
+            <Text
+              style={styles.navText}
+              onPress={() => {
+                router.push("/pages/settings");
+                toggleSidebar();
+              }}
+            >
+              Settings
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.login}
@@ -137,7 +146,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     height: 130,
     backgroundColor: "#1f5b92",
-    padding: 10,
   },
   avatar: {
     width: 70,

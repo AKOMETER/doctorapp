@@ -1,5 +1,14 @@
-import { useState } from "react";
-import { Image, StyleSheet, Text, View, Alert, ScrollView } from "react-native";
+import { useState, useEffect } from "react";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  ScrollView,
+  PermissionsAndroid,
+  Platform,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons"; // Material UI Icons
 import Calendar from "./calender";
 import { appointments as initialAppointments } from "@/utils/data"; // Assuming your appointments data is imported
@@ -11,18 +20,44 @@ export default function Appointment() {
   const [showPicker, setShowPicker] = useState(false);
   const [currentAppointment, setCurrentAppointment] = useState(null);
 
+  // Request notification permission (Android specific)
+  const requestNotificationPermission = async () => {
+    if (Platform.OS === "android") {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        {
+          title: "Notification Permission",
+          message:
+            "This app requires access to notifications to alert you about appointments.",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        }
+      );
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Notification permission denied");
+      }
+    }
+  };
+
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
+
   // Handle updating the appointment date
   const handleUpdateDate = (datetime: string) => {
-    setAppointmentsList((prevAppointments) =>
-      prevAppointments.map((appointment) =>
-        appointment.id === currentAppointment.id
-          ? { ...appointment, date: datetime }
-          : appointment
-      )
-    );
-    setShowPicker(false); // Hide the picker
-    setCurrentAppointment(null); // Reset current appointment
-    Alert.alert("Success", "Appointment date updated!");
+    if (currentAppointment) {
+      setAppointmentsList((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment.id === currentAppointment.id
+            ? { ...appointment, date: datetime }
+            : appointment
+        )
+      );
+      setShowPicker(false); // Hide the picker
+      setCurrentAppointment(null); // Reset current appointment
+      Alert.alert("Success", "Appointment date updated!");
+    }
   };
 
   // Handle deleting an appointment
@@ -114,6 +149,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     backgroundColor: "#f5f5f5",
+    display: "flex",
   },
   card: {
     flexDirection: "row-reverse",

@@ -162,3 +162,30 @@ export const isLogged = async () => {
     });
   }
 };
+
+export const updateUser = async (id: string, data: Record<string, any>) => {
+  try {
+    const response = await api.put(`/users/${id}`);
+    return response.data;
+  } catch (error: any) {
+    if (error.response.data.errors) {
+      const errs = error.response.data.errors;
+
+      errs.map((err: any) => {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: err.msg || "Something went wrong. Please try again.",
+        });
+      });
+      return;
+    }
+
+    Toast.show({
+      type: "error",
+      text1: "Error",
+      text2:
+        error.response?.data?.msg || "Something went wrong. Please try again.",
+    });
+  }
+};

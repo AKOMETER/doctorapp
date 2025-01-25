@@ -1,4 +1,6 @@
 const User = require("../database/models/User"); // Import the User model
+const fs = require("fs");
+const path = require("path");
 
 //get all users
 exports.get = async (req, res) => {
@@ -46,58 +48,76 @@ exports.delete = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const { name, role, country, state, city, address } = req.body; // Retrieve fields from request body
+  const {
+    firstName,
+    lastName,
+    role,
+    country,
+    state,
+    city,
+    address,
+    email,
+    mobile,
+  } = req.body; // Retrieve fields from request body
   const userId = req.params.id; // Assuming user ID is passed as a URL parameter
 
   try {
+    // Find the user by primary key
     let user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    // Update user fields except email and password
-    user.name = name;
-    user.role = role;
-
-    // Handle profile_image update
-    if (req.files["files"] && req.files["files"].length > 0) {
-      user.profile_image = req.files["files"][0].path.replace(
+    // Handle profileImage if a new file is uploaded
+    let profileImage = user.profileImage; // Default to the existing image
+    if (req.files && req.files["show"]) {
+      const uploadedImagePath = req.files["show"][0].path.replace(
         /^public[\\/]/,
         ""
-      ); // Save the uploaded file path
+      ); // Remove 'public/' from the path
+
+      // Delete the old profile image if it exists
+      if (user.profileImage) {
+        const oldFilePath = path.join(
+          __dirname,
+          "../public/images",
+          user.profileImage
+        );
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath); // Delete the old file
+        }
+      }
+
+      // Update the profile image with the new path
+      profileImage = uploadedImagePath;
     }
 
-    // Update or create location
-    let location = await Location.findOne({ where: { id: user.location_id } }); // Check if location exists
-    if (!location) {
-      // Create new location if it doesn't exist
-      location = await Location.create({
-        country,
-        state,
-        city,
-        address,
-        type: "user", // Assuming the type for user
-      });
-    } else {
-      // Update existing location
-      location.country = country;
-      location.state = state;
-      location.city = city;
-      location.address = address;
-      await location.save();
-    }
+    // Update user fields
+    await User.update(
+      {
+        firstName: firstName || user.firstName,
+        lastName: lastName || user.lastName,
+        role: role || user.role,
+        country: country || user.country,
+        state: state || user.state,
+        city: city || user.city,
+        address: address || user.address,
+        email: email || user.email,
+        mobile: mobile || user.mobile,
+        profileImage: profileImage,
+      },
+      {
+        where: { id: userId },
+      }
+    );
 
-    user.location_id = location.id; // Associate location with user
-
-    // Save user changes
-    await user.save();
-
-    user = { ...user.dataValues, location };
+    // Fetch the updated user data
+    user = await User.findByPk(userId);
 
     return res.json({ msg: "User updated successfully", user });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ msg: "User update failed" });
+    console.error("Error updating user:", error);
+    return res.status(500).json({ msg: "User update failed", error });
   }
 };
 

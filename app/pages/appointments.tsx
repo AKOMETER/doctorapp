@@ -5,6 +5,7 @@ import Calendar from "@/components/calender";
 import Appointment from "@/components/appointment";
 import { appointments } from "@/utils/data";
 import { useSidebar } from "@/context/SidebarContext";
+import Sidebar from "@/components/sidebar";
 
 const Appointments = () => {
   const navigation = useNavigation();
@@ -34,13 +35,15 @@ const Appointments = () => {
   console.log("Specialty ID:", specialtyId);
 
   return (
-    <ScrollView style={styles.container}>
-      {specialtyId === null ? (
-        <Appointment />
-      ) : (
-        <Calendar handleBook={handleBook} />
-      )}
-    </ScrollView>
+    <Sidebar title="Appointment">
+      <ScrollView style={styles.container}>
+        {specialtyId === null ? (
+          <Appointment />
+        ) : (
+          <Calendar handleBook={handleBook} />
+        )}
+      </ScrollView>
+    </Sidebar>
   );
 };
 
