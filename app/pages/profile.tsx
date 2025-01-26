@@ -12,6 +12,7 @@ import * as ImagePicker from "react-native-image-picker";
 import Toast from "react-native-toast-message";
 import { useSidebar } from "@/context/SidebarContext"; // Assuming the context is here
 import { updateUser } from "@/services/auth";
+import { useNavigation } from "expo-router";
 
 // Define the structure of the user data
 interface User {
@@ -54,6 +55,7 @@ export default function Profile() {
       address: "",
     },
   });
+  const navigation = useNavigation();
 
   const [profileImage, setProfileImage] = useState<string | null>(
     user?.profileImage || null
@@ -72,6 +74,15 @@ export default function Profile() {
       setValue("address", user.address || "");
     }
   }, [user, setValue]);
+
+  useEffect(() => {
+    // Set header title dynamically
+    navigation.setOptions({
+      title: "Profile", // New title
+      headerStyle: { backgroundColor: "#00b4d8" },
+      headerTintColor: "#fff",
+    });
+  }, [navigation]);
 
   // Handle image selection
   const handleSelectImage = () => {
@@ -99,6 +110,7 @@ export default function Profile() {
 
   // Handle form submission
   const onSubmit = async (data: FormData) => {
+    console.log(data);
     try {
       const formData = new FormData();
       formData.append("firstName", data.firstName);
