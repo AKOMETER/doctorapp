@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { useSidebar } from "../context/SidebarContext";
 import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome for icons
 import { useRouter } from "expo-router";
+
 const backendUrl = process.env.EXPO_PUBLIC_BACKENDURL;
 
 const Sidebar = ({
@@ -19,21 +20,27 @@ const Sidebar = ({
   const imageUrl = user
     ? backendUrl + "/" + user.profileImage
     : "https://avatar.iran.liara.run/public/boy?username=Ash";
+
   return (
     <View style={styles.container}>
       {isOpen && (
         <View style={styles.sidebar}>
+          {/* Close Button */}
+          <TouchableOpacity onPress={toggleSidebar} style={styles.closeButton}>
+            <FontAwesome name="close" size={24} color="#000" />
+          </TouchableOpacity>
+
           {/* Avatar and Greeting */}
           <View style={styles.userContainer}>
             <Image
               source={{
-                uri: imageUrl, // Replace with avatar image URL
+                uri: imageUrl,
               }}
               style={styles.avatar}
             />
             <View style={styles.greeting}>
               <Text style={styles.greetingText}>Hello</Text>
-              <Text style={styles.guestText}> {name} </Text>
+              <Text style={styles.guestText}>{name}</Text>
             </View>
           </View>
 
@@ -68,7 +75,6 @@ const Sidebar = ({
             <FontAwesome name="calendar" size={20} color="#000000" />
             <Text style={styles.navText}>Appointments</Text>
           </TouchableOpacity>
-
           <TouchableOpacity
             style={styles.navItem}
             onPress={() => {
@@ -89,23 +95,20 @@ const Sidebar = ({
             <FontAwesome name="user" size={20} color="#000000" />
             <Text style={styles.navText}>My Profile</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => {
+              router.push("/pages/settings");
+              toggleSidebar();
+            }}
+          >
             <FontAwesome name="cogs" size={20} color="#000000" />
-            <Text
-              style={styles.navText}
-              onPress={() => {
-                router.push("/pages/settings");
-                toggleSidebar();
-              }}
-            >
-              Settings
-            </Text>
+            <Text style={styles.navText}>Settings</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.login}
             onPress={() => {
-              router.push("/auth/login"); // This will navigate to /auth/login
+              router.push("/auth/login");
               toggleSidebar();
             }}
           >
@@ -116,7 +119,7 @@ const Sidebar = ({
       )}
       <View style={styles.content}>
         <View style={styles.header}>
-          {/* Icon Button */}
+          {/* Menu Icon Button */}
           <TouchableOpacity onPress={toggleSidebar} style={styles.menuButton}>
             <FontAwesome name="bars" size={20} color="#fff" />
           </TouchableOpacity>
@@ -134,11 +137,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
+    backgroundColor: "#1f5b92",
   },
   sidebar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
     width: 250,
-    backgroundColor: "#fff",
+    height: "100%",
+    backgroundColor: "#1f5b92",
     paddingTop: 20,
+    zIndex: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  closeButton: {
+    alignSelf: "flex-end",
+    padding: 10,
+    marginRight: 10,
+    backgroundColor: "#1f5b92",
   },
   userContainer: {
     flexDirection: "row",

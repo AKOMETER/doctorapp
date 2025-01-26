@@ -1,6 +1,7 @@
 import axios from "axios";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 
 const backendUrl = process.env.EXPO_PUBLIC_BACKENDURL; // Get the BACKENDURL from the .env file
 
@@ -31,27 +32,15 @@ export const login = async (email: string, password: string) => {
     const response = await api.post("/auth/login", { email, password });
     return response.data;
   } catch (error: any) {
-    if (error.response.data.msg) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2:
-          error.response.data.msg || "Something went wrong. Please try again.",
-      });
-    }
-
     if (error.response.data.errors) {
       const errs: any[] = error.response.data.errors;
 
       errs.forEach((err) => {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: err.msg || "Something went wrong. Please try again.",
-        });
+        Alert.alert("Error", err.msg || "Something went wrong");
       });
-      return;
     }
+
+    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
   }
 };
 
@@ -64,20 +53,11 @@ export const register = async (data: Record<string, any>) => {
       const errs: any[] = error.response.data.errors;
 
       errs.forEach((err) => {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: err.msg || "Something went wrong. Please try again.",
-        });
+        Alert.alert("Error", err.msg || "Something went wrong");
       });
     }
 
-    Toast.show({
-      type: "error",
-      text1: "Error",
-      text2:
-        error.response?.data?.msg || "Something went wrong. Please try again.",
-    });
+    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
   }
 };
 
@@ -88,24 +68,14 @@ export const forget_password = async (email: string) => {
     return response.data;
   } catch (error: any) {
     if (error.response.data.errors) {
-      const errs = error.response.data.errors;
+      const errs: any[] = error.response.data.errors;
 
-      errs.map((err: any) => {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: err.msg || "Something went wrong. Please try again.",
-        });
+      errs.forEach((err) => {
+        Alert.alert("Error", err.msg || "Something went wrong");
       });
-      return;
     }
 
-    Toast.show({
-      type: "error",
-      text1: "Error",
-      text2:
-        error.response?.data?.msg || "Something went wrong. Please try again.",
-    });
+    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
   }
 };
 
@@ -115,24 +85,14 @@ export const forget_password_confirm = async (data: Record<string, any>) => {
     return response.data;
   } catch (error: any) {
     if (error.response.data.errors) {
-      const errs = error.response.data.errors;
+      const errs: any[] = error.response.data.errors;
 
-      errs.map((err: any) => {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: err.msg || "Something went wrong. Please try again.",
-        });
+      errs.forEach((err) => {
+        Alert.alert("Error", err.msg || "Something went wrong");
       });
-      return;
     }
 
-    Toast.show({
-      type: "error",
-      text1: "Error",
-      text2:
-        error.response?.data?.msg || "Something went wrong. Please try again.",
-    });
+    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
   }
 };
 
@@ -142,24 +102,14 @@ export const isLogged = async () => {
     return response.data;
   } catch (error: any) {
     if (error.response.data.errors) {
-      const errs = error.response.data.errors;
+      const errs: any[] = error.response.data.errors;
 
-      errs.map((err: any) => {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: err.msg || "Something went wrong. Please try again.",
-        });
+      errs.forEach((err) => {
+        Alert.alert("Error", err.msg || "Something went wrong");
       });
-      return;
     }
 
-    Toast.show({
-      type: "error",
-      text1: "Error",
-      text2:
-        error.response?.data?.msg || "Something went wrong. Please try again.",
-    });
+    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
   }
 };
 
@@ -169,23 +119,13 @@ export const updateUser = async (id: string, data: Record<string, any>) => {
     return response.data;
   } catch (error: any) {
     if (error.response.data.errors) {
-      const errs = error.response.data.errors;
+      const errs: any[] = error.response.data.errors;
 
-      errs.map((err: any) => {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: err.msg || "Something went wrong. Please try again.",
-        });
+      errs.forEach((err) => {
+        Alert.alert("Error", err.msg || "Something went wrong");
       });
-      return;
     }
 
-    Toast.show({
-      type: "error",
-      text1: "Error",
-      text2:
-        error.response?.data?.msg || "Something went wrong. Please try again.",
-    });
+    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
   }
 };

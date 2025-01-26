@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { doctors, specialities } from "@/utils/data";
+import Sidebar from "@/components/sidebar";
 
 export default function DoctorPage() {
   const { id }: { id: string } = useLocalSearchParams();
@@ -27,37 +28,41 @@ export default function DoctorPage() {
   }, [navigation]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView style={styles.container}>
-        <View style={styles.wrapper}>
-          {datas.map((doctor) => (
-            <View key={doctor.id} style={styles.card}>
-              <Image
-                source={{ uri: doctor.image }}
-                style={styles.doctorImage}
-              />
-              <View style={styles.doctorDetails}>
-                <Text style={styles.doctorName}>{doctor.name}</Text>
-                <Text style={styles.specialityName}>
-                  {specialities[doctor.specialty]?.name}
-                </Text>
-                <Text style={styles.doctorLocation}>{doctor.location}</Text>
-                <Text style={styles.doctorPrice}>{doctor.price}</Text>
-                <Text style={styles.doctorRating}>{`⭐ ${doctor.rating}`}</Text>
+    <Sidebar title="Search By Specialty">
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView style={styles.container}>
+          <View style={styles.wrapper}>
+            {datas.map((doctor) => (
+              <View key={doctor.id} style={styles.card}>
+                <Image
+                  source={{ uri: doctor.image }}
+                  style={styles.doctorImage}
+                />
+                <View style={styles.doctorDetails}>
+                  <Text style={styles.doctorName}>{doctor.name}</Text>
+                  <Text style={styles.specialityName}>
+                    {specialities[doctor.specialty]?.name}
+                  </Text>
+                  <Text style={styles.doctorLocation}>{doctor.location}</Text>
+                  <Text style={styles.doctorPrice}>{doctor.price}</Text>
+                  <Text
+                    style={styles.doctorRating}
+                  >{`⭐ ${doctor.rating}`}</Text>
+                </View>
+                <TouchableOpacity style={styles.bookButton}>
+                  <Text
+                    onPress={() => router.push(doctor.url)}
+                    style={styles.bookButtonText}
+                  >
+                    Book Appointment
+                  </Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity style={styles.bookButton}>
-                <Text
-                  onPress={() => router.push(doctor.url)}
-                  style={styles.bookButtonText}
-                >
-                  Book Appointment
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+            ))}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </Sidebar>
   );
 }
 

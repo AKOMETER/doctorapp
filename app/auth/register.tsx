@@ -103,7 +103,7 @@ const RegisterScreen = () => {
       }, 2000);
     } catch (error: any) {
       console.log(error);
-      ErrorHandler("Error", "Login Failed" || error?.response?.data.msg);
+      ErrorHandler("Error", "Registration Failed" || error?.response?.data.msg);
     }
   };
 
