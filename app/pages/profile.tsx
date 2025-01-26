@@ -23,7 +23,7 @@ interface FormData {
 }
 
 export default function Profile() {
-  const { user } = useSidebar();
+  const { user, setUser } = useSidebar();
   const { control, handleSubmit, setValue } = useForm<FormData>({
     defaultValues: {
       firstName: "",
@@ -80,6 +80,7 @@ export default function Profile() {
   };
 
   const onSubmit = async (data: FormData) => {
+    console.log(profileImage, data);
     try {
       const formData = new FormData();
       formData.append("firstName", data.firstName);
@@ -97,16 +98,16 @@ export default function Profile() {
 
       const response = await updateUser(user?.id || 0, formData);
       if (response) {
+        if (response.user) {
+          setUser(response.user);
+        }
         Alert.alert(
           "Successful",
           response.msg || "Profile updated successfully"
         );
       }
     } catch (error) {
-      Alert.alert(
-        "Error",
-        error?.response?.data?.msg || "Failed to update profile."
-      );
+      Alert.alert("Error", "Failed to update profile.");
     }
   };
 

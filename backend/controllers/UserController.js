@@ -48,19 +48,10 @@ exports.delete = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    role,
-    country,
-    state,
-    city,
-    address,
-    email,
-    mobile,
-  } = req.body; // Retrieve fields from request body
+  const { firstName, lastName, role, email, mobile } = req.body; // Retrieve fields from the request body
   const userId = req.params.id; // Assuming user ID is passed as a URL parameter
 
+  console.log(firstName, lastName, role, email, mobile);
   try {
     // Find the user by primary key
     let user = await User.findByPk(userId);
@@ -98,10 +89,6 @@ exports.update = async (req, res) => {
         firstName: firstName || user.firstName,
         lastName: lastName || user.lastName,
         role: role || user.role,
-        country: country || user.country,
-        state: state || user.state,
-        city: city || user.city,
-        address: address || user.address,
         email: email || user.email,
         mobile: mobile || user.mobile,
         profileImage: profileImage,

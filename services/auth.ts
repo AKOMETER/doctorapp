@@ -115,7 +115,9 @@ export const isLogged = async () => {
 
 export const updateUser = async (id: string, data: Record<string, any>) => {
   try {
-    const response = await api.put(`/users/${id}`);
+    const response = await api.put(`/users/${id}`, data);
+
+    console.log(response.data);
     return response.data;
   } catch (error: any) {
     if (error.response.data.errors) {

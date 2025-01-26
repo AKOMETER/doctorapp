@@ -45,76 +45,78 @@ const Sidebar = ({
           </View>
 
           {/* Navigation Items with Icons */}
-          <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => {
-              router.push("/");
-              toggleSidebar();
-            }}
-          >
-            <FontAwesome name="home" size={20} color="#000000" />
-            <Text style={styles.navText}>Home</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => {
-              router.push("/pages/dashboard");
-              toggleSidebar();
-            }}
-          >
-            <FontAwesome name="tachometer" size={20} color="#000000" />
-            <Text style={styles.navText}>Dashboard</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => {
-              router.push("/pages/appointments");
-              toggleSidebar();
-            }}
-          >
-            <FontAwesome name="calendar" size={20} color="#000000" />
-            <Text style={styles.navText}>Appointments</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => {
-              router.push("/pages/message");
-              toggleSidebar();
-            }}
-          >
-            <FontAwesome name="envelope" size={20} color="#000000" />
-            <Text style={styles.navText}>Message</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              router.push("/pages/profile");
-              toggleSidebar();
-            }}
-            style={styles.navItem}
-          >
-            <FontAwesome name="user" size={20} color="#000000" />
-            <Text style={styles.navText}>My Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => {
-              router.push("/pages/settings");
-              toggleSidebar();
-            }}
-          >
-            <FontAwesome name="cogs" size={20} color="#000000" />
-            <Text style={styles.navText}>Settings</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.login}
-            onPress={() => {
-              router.push("/auth/login");
-              toggleSidebar();
-            }}
-          >
-            <FontAwesome name="sign-in" size={20} color="#fff" />
-            <Text style={styles.loginText}>Login</Text>
-          </TouchableOpacity>
+          <View style={styles.content_all}>
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => {
+                router.push("/");
+                toggleSidebar();
+              }}
+            >
+              <FontAwesome name="home" size={20} color="#000000" />
+              <Text style={styles.navText}>Home</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => {
+                router.push("/pages/dashboard");
+                toggleSidebar();
+              }}
+            >
+              <FontAwesome name="tachometer" size={20} color="#000000" />
+              <Text style={styles.navText}>Dashboard</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => {
+                router.push("/pages/appointments");
+                toggleSidebar();
+              }}
+            >
+              <FontAwesome name="calendar" size={20} color="#000000" />
+              <Text style={styles.navText}>Appointments</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => {
+                router.push("/pages/message");
+                toggleSidebar();
+              }}
+            >
+              <FontAwesome name="envelope" size={20} color="#000000" />
+              <Text style={styles.navText}>Message</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                router.push("/pages/profile");
+                toggleSidebar();
+              }}
+              style={styles.navItem}
+            >
+              <FontAwesome name="user" size={20} color="#000000" />
+              <Text style={styles.navText}>My Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => {
+                router.push("/pages/settings");
+                toggleSidebar();
+              }}
+            >
+              <FontAwesome name="cogs" size={20} color="#000000" />
+              <Text style={styles.navText}>Settings</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.login}
+              onPress={() => {
+                router.push("/auth/login");
+                toggleSidebar();
+              }}
+            >
+              <FontAwesome name="sign-in" size={20} color="#fff" />
+              <Text style={styles.loginText}>Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
       <View style={styles.content}>
@@ -134,6 +136,10 @@ const Sidebar = ({
 };
 
 const styles = StyleSheet.create({
+  content_all: {
+    backgroundColor: "#fff",
+    height: "100%",
+  },
   container: {
     flex: 1,
     flexDirection: "row",
