@@ -9,12 +9,11 @@ export default function Settings() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [messages, setMessages] = useState<{ [key: string]: Message[] }>({});
   const navigation = useNavigation();
   useEffect(() => {
     // Set header title dynamically
     navigation.setOptions({
-      title: "Settongs", // New title
+      title: "Settings", // New title
       headerStyle: { backgroundColor: "#00b4d8" },
       headerTintColor: "#fff",
     });

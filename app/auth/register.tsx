@@ -99,7 +99,7 @@ const RegisterScreen = () => {
 
       //redirect to dashboard
       setTimeout(() => {
-        router.push("/");
+        router.push("/auth/login");
       }, 2000);
     } catch (error: any) {
       console.log(error);
