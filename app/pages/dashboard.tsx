@@ -10,17 +10,17 @@ const Dashboard = () => {
     { id: 2, patient: "Jane Smith", status: "Pending", date: "2024-12-11" },
     { id: 3, patient: "Alice Brown", status: "Cancelled", date: "2024-12-12" },
   ];
-  async function getLogState() {
-    const result = await isLogged();
-    console.log(result);
-    if (result == undefined) {
-      router.push("/auth/login");
-    }
-  }
+  // async function getLogState() {
+  //   const result = await isLogged();
+  //   console.log(result);
+  //   if (result == undefined) {
+  //     router.push("/auth/login");
+  //   }
+  // }
 
-  useEffect(() => {
-    getLogState();
-  }, []);
+  // useEffect(() => {
+  //   getLogState();
+  // }, []);
 
   return (
     <Sidebar title={"Dashboard"}>

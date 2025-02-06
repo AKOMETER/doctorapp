@@ -99,6 +99,7 @@ export const forget_password_confirm = async (data: Record<string, any>) => {
 export const isLogged = async () => {
   try {
     const response = await api.get("/users/is_logged");
+    console.log("response", response);
     return response.data;
   } catch (error: any) {
     if (error.response.data.errors) {

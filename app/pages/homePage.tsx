@@ -8,60 +8,27 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { specialities } from "@/utils/data";
-import { doctors } from "@/utils/data";
+import { specialities, doctors } from "@/utils/data";
 import { router } from "expo-router";
 
 const HomePage = () => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f6f6" }}>
-      <ScrollView>
+    <SafeAreaView className="flex-1 bg-gray-100">
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
-
-        <View
-          style={{
-            backgroundColor: "#0077b6",
-            padding: 20,
-            borderBottomLeftRadius: 20,
-            borderBottomRightRadius: 20,
-          }}
-        >
+        <View className="bg-blue-700 p-5 rounded-b-2xl">
           {/* Search Inputs */}
-          <View
-            style={{
-              marginTop: 20,
-              backgroundColor: "white",
-              borderRadius: 10,
-              padding: 10,
-              elevation: 2,
-            }}
-          >
+          <View className="mt-5 bg-white rounded-lg p-4 shadow-md">
             <TextInput
               placeholder="Search City (Ex: Chennai, etc)"
-              style={{
-                backgroundColor: "#f0f0f0",
-                borderRadius: 8,
-                padding: 10,
-                marginBottom: 10,
-              }}
+              className="bg-gray-200 rounded-md p-3 mb-3"
             />
             <TextInput
               placeholder="Search Doctor name, Speciality"
-              style={{
-                backgroundColor: "#f0f0f0",
-                borderRadius: 8,
-                padding: 10,
-              }}
+              className="bg-gray-200 rounded-md p-3"
             />
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#00b4d8",
-                borderRadius: 8,
-                padding: 15,
-                marginTop: 10,
-              }}
-            >
-              <Text style={{ textAlign: "center", color: "white" }}>
+            <TouchableOpacity className="bg-cyan-500 rounded-md p-4 mt-3">
+              <Text className="text-center text-white font-semibold">
                 Search Now
               </Text>
             </TouchableOpacity>
@@ -69,105 +36,63 @@ const HomePage = () => {
         </View>
 
         {/* Specialities */}
-        <View style={{ padding: 20 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginBottom: 10,
-            }}
-          >
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              Specialties
-            </Text>
+        <View className="p-5">
+          <View className="flex-row justify-between mb-3">
+            <Text className="text-lg font-bold">Specialties</Text>
             <Text
-              style={{ color: "#0077b6" }}
-              onPress={() => router.push("/pages/specialities/index")}
+              className="text-blue-700"
+              onPress={() => router.push("/pages/specialities")}
             >
               View All
             </Text>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {specialities.slice(0, 4).map((item, index) => (
+            {specialities.slice(0, 5).map((item, index) => (
               <TouchableOpacity
                 key={index}
-                style={{
-                  alignItems: "center",
-                  marginRight: 20,
-                }}
-                onPress={() => router.push(item.url)}
+                className="items-center mr-5"
+                onPress={() => router.push(`/pages/specialities/${item.url}`)}
               >
-                <Image
-                  source={{ uri: item.icon }}
-                  style={{ width: 64, height: 64, marginBottom: 5 }}
-                />
-                <Text>{item.name}</Text>
+                <Image source={item.icon} className="w-16 h-16 mb-2" />
+                <Text className="text-center text-sm">{item.name}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
 
         {/* Doctors */}
-        <View style={{ padding: 20 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginBottom: 10,
-            }}
-          >
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              Find Doctors
-            </Text>
+        <View className="p-5">
+          <View className="flex-row justify-between mb-3">
+            <Text className="text-lg font-bold">Find Doctors</Text>
             <Text
-              style={{ color: "#0077b6" }}
-              onPress={() => router.push("/pages/doctor/index")}
+              className="text-blue-700"
+              onPress={() => router.push("/pages/doctor")}
             >
               View All
             </Text>
           </View>
-          {doctors.slice(0, 10).map((doctor, index) => (
+
+          {doctors.slice(0, 5).map((doctor) => (
             <View
               key={doctor.id}
-              style={{
-                flexDirection: "row",
-                backgroundColor: "white",
-                borderRadius: 10,
-                marginBottom: 10,
-                padding: 10,
-                elevation: 2,
-              }}
+              className="flex-row bg-white rounded-lg mb-4 p-4 shadow-md"
             >
               <Image
                 source={{ uri: doctor.image }}
-                style={{ width: 80, height: 80, borderRadius: 10 }}
+                className="w-20 h-20 rounded-lg"
               />
-              <View style={{ marginLeft: 10, flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                  {doctor.name}
-                </Text>
-                <Text style={{ color: "#777" }}>
-                  {specialities[doctor.specialty].name}
-                </Text>
-                <Text style={{ color: "#0077b6" }}>{doctor.location}</Text>
-                <Text>{doctor.price}</Text>
-                <Text>{`⭐ ${doctor.rating}`}</Text>
+              <View className="ml-4 flex-1">
+                <Text className="text-base font-bold">{doctor.name}</Text>
+                <Text className="text-gray-500">{doctor.specialty}</Text>
+                <Text className="text-blue-700">{doctor.location}</Text>
+                <Text className="text-gray-700">{doctor.price}</Text>
+                <Text className="text-yellow-500">{`⭐ ${doctor.rating}`}</Text>
               </View>
               <TouchableOpacity
-                style={{
-                  backgroundColor: "#00b4d8",
-                  borderRadius: 8,
-                  paddingVertical: 10,
-                  paddingHorizontal: 15,
-                  alignSelf: "center",
-                }}
+                className="bg-cyan-500 rounded-md px-4 py-2 self-center"
+                onPress={() => router.push(`/pages/doctor/${doctor.url}`)}
               >
-                <Text
-                  style={{ color: "white" }}
-                  onPress={() => router.push(doctor.url)}
-                >
-                  Book Appointment
-                </Text>
+                <Text className="text-white">Book Appointment</Text>
               </TouchableOpacity>
             </View>
           ))}

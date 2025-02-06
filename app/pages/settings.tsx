@@ -1,6 +1,14 @@
+import Sidebar from "@/components/sidebar";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Button, Modal, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Modal,
+  TouchableOpacity,
+} from "react-native";
 
 export default function Settings() {
   const [isPasswordModalVisible, setPasswordModalVisible] = useState(false);
@@ -10,10 +18,10 @@ export default function Settings() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
+
   useEffect(() => {
-    // Set header title dynamically
     navigation.setOptions({
-      title: "Settings", // New title
+      title: "Settings",
       headerStyle: { backgroundColor: "#00b4d8" },
       headerTintColor: "#fff",
     });
@@ -24,7 +32,6 @@ export default function Settings() {
       alert("Passwords do not match!");
       return;
     }
-    // Call the update user URL here
     alert("Password updated successfully!");
     setPasswordModalVisible(false);
   };
@@ -34,121 +41,101 @@ export default function Settings() {
       alert("Please enter a valid email!");
       return;
     }
-    // Call the update user URL here
     alert("Email updated successfully!");
     setEmailModalVisible(false);
   };
 
   return (
-    <View style={styles.container}>
-      {/* Change Password */}
-      <Button
-        title="Change Password"
-        onPress={() => setPasswordModalVisible(true)}
-      />
-      <Modal
-        visible={isPasswordModalVisible}
-        transparent={true}
-        animationType="slide"
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Change Password</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="New Password"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm Password"
-              secureTextEntry
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-            />
-            <View style={styles.buttonContainer}>
-              <Button title="Update Password" onPress={handlePasswordUpdate} />
-              <Button
-                title="Cancel"
-                onPress={() => setPasswordModalVisible(false)}
-                color="red"
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
+    <Sidebar title="Settings">
+      <View className="flex-1 p-5 bg-gray-100">
+        {/* Change Password */}
+        <TouchableOpacity
+          className="bg-blue-500 py-3 px-5 rounded-lg mb-4"
+          onPress={() => setPasswordModalVisible(true)}
+        >
+          <Text className="text-white text-center font-semibold">
+            Change Password
+          </Text>
+        </TouchableOpacity>
 
-      {/* Change Email */}
-      <Button title="Change Email" onPress={() => setEmailModalVisible(true)} />
-      <Modal
-        visible={isEmailModalVisible}
-        transparent={true}
-        animationType="slide"
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Change Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="New Email"
-              value={email}
-              onChangeText={setEmail}
-            />
-            <View style={styles.buttonContainer}>
-              <Button title="Update Email" onPress={handleEmailUpdate} />
-              <Button
-                title="Cancel"
-                onPress={() => setEmailModalVisible(false)}
-                color="red"
+        <Modal
+          visible={isPasswordModalVisible}
+          transparent
+          animationType="slide"
+        >
+          <View className="flex-1 justify-center items-center bg-black/50">
+            <View className="w-4/5 p-6 bg-white rounded-lg">
+              <Text className="text-lg font-bold mb-3">Change Password</Text>
+              <TextInput
+                className="border border-gray-300 p-3 rounded mb-3"
+                placeholder="New Password"
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
               />
+              <TextInput
+                className="border border-gray-300 p-3 rounded mb-3"
+                placeholder="Confirm Password"
+                secureTextEntry
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+              />
+              <View className="flex-row justify-between mt-4">
+                <TouchableOpacity
+                  className="bg-green-500 px-4 py-2 rounded"
+                  onPress={handlePasswordUpdate}
+                >
+                  <Text className="text-white font-semibold">Update</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className="bg-red-500 px-4 py-2 rounded"
+                  onPress={() => setPasswordModalVisible(false)}
+                >
+                  <Text className="text-white font-semibold">Cancel</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+
+        {/* Change Email */}
+        <TouchableOpacity
+          className="bg-blue-500 py-3 px-5 rounded-lg"
+          onPress={() => setEmailModalVisible(true)}
+        >
+          <Text className="text-white text-center font-semibold">
+            Change Email
+          </Text>
+        </TouchableOpacity>
+
+        <Modal visible={isEmailModalVisible} transparent animationType="slide">
+          <View className="flex-1 justify-center items-center bg-black/50">
+            <View className="w-4/5 p-6 bg-white rounded-lg">
+              <Text className="text-lg font-bold mb-3">Change Email</Text>
+              <TextInput
+                className="border border-gray-300 p-3 rounded mb-3"
+                placeholder="New Email"
+                value={email}
+                onChangeText={setEmail}
+              />
+              <View className="flex-row justify-between mt-4">
+                <TouchableOpacity
+                  className="bg-green-500 px-4 py-2 rounded"
+                  onPress={handleEmailUpdate}
+                >
+                  <Text className="text-white font-semibold">Update</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className="bg-red-500 px-4 py-2 rounded"
+                  onPress={() => setEmailModalVisible(false)}
+                >
+                  <Text className="text-white font-semibold">Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </Sidebar>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#f5f5f5",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalContent: {
-    width: "80%",
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 15,
-    margin: 3,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    marginBottom: 15,
-    borderRadius: 5,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-});

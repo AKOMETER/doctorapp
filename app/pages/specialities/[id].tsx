@@ -14,12 +14,14 @@ import Sidebar from "@/components/sidebar";
 
 export default function DoctorPage() {
   const { id }: { id: string } = useLocalSearchParams();
-  const specialtyId = id?.split("=")[1] ? parseInt(id.split("=")[1], 10) : NaN;
-  const datas = doctors.filter((item) => item.specialty === specialtyId);
+  // const specialtyId = id?.split("=")[1] ? parseInt(id.split("=")[1], 10) : NaN;
+  const datas = doctors.filter((item) => {
+    console.log(item.specialty, id);
+    return item.specialty == parseInt(id);
+  });
   const navigation = useNavigation();
 
   useEffect(() => {
-    // Set header title dynamically
     navigation.setOptions({
       title: "Search By Doctor", // New title
       headerStyle: { backgroundColor: "#00b4d8" },
@@ -28,7 +30,7 @@ export default function DoctorPage() {
   }, [navigation]);
 
   return (
-    <Sidebar title="Search By Specialty">
+    <Sidebar title={`Searched By ${specialities[parseInt(id)].name}`}>
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView style={styles.container}>
           <View style={styles.wrapper}>
@@ -51,7 +53,7 @@ export default function DoctorPage() {
                 </View>
                 <TouchableOpacity style={styles.bookButton}>
                   <Text
-                    onPress={() => router.push(doctor.url)}
+                    onPress={() => router.push(`/pages/doctor/${doctor.url}`)}
                     style={styles.bookButtonText}
                   >
                     Book Appointment

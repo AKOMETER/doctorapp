@@ -49,7 +49,7 @@ exports.login = async (req, res) => {
         res.json({
           user,
           token,
-          msg: `${user.name} was logged in successfully`,
+          msg: `${user.firstName} ${user.lastName} was logged in successfully`,
         });
       }
     );

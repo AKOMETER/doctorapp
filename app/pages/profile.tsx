@@ -5,14 +5,14 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  StyleSheet,
   Alert,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import * as ImagePicker from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
 import { useSidebar } from "@/context/SidebarContext";
 import { updateUser } from "@/services/auth";
 import { useNavigation, useRouter } from "expo-router";
+import Sidebar from "@/components/sidebar";
 
 interface FormData {
   firstName: string;
@@ -39,6 +39,19 @@ export default function Profile() {
   );
 
   useEffect(() => {
+    (async () => {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission Denied",
+          "Allow access to gallery to upload images"
+        );
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     if (!user) {
       router.replace("/");
     } else {
@@ -49,38 +62,21 @@ export default function Profile() {
     }
   }, [user, setValue, router]);
 
-  useEffect(() => {
-    navigation.setOptions({
-      title: "Profile",
-      headerStyle: { backgroundColor: "#00b4d8" },
-      headerTintColor: "#fff",
+  const handleSelectImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
     });
-  }, [navigation]);
 
-  const handleSelectImage = () => {
-    ImagePicker.launchImageLibrary(
-      {
-        mediaType: "photo",
-        maxWidth: 512,
-        maxHeight: 512,
-        quality: 1,
-      },
-      (response) => {
-        if (
-          !response.didCancel &&
-          !response.errorCode &&
-          response.assets?.length
-        ) {
-          const selectedImage = response.assets[0];
-          setProfileImage(selectedImage.uri || null);
-          setValue("profileImage", selectedImage.uri || null);
-        }
-      }
-    );
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
+      setValue("profileImage", result.assets[0].uri);
+    }
   };
 
   const onSubmit = async (data: FormData) => {
-    console.log(profileImage, data);
     try {
       const formData = new FormData();
       formData.append("firstName", data.firstName);
@@ -93,18 +89,13 @@ export default function Profile() {
           uri: profileImage,
           type: "image/jpeg",
           name: "profile.jpg",
-        } as unknown as Blob);
+        } as any);
       }
 
       const response = await updateUser(user?.id || 0, formData);
-      if (response) {
-        if (response.user) {
-          setUser(response.user);
-        }
-        Alert.alert(
-          "Successful",
-          response.msg || "Profile updated successfully"
-        );
+      if (response?.user) {
+        setUser(response.user);
+        Alert.alert("Success", response.msg || "Profile updated successfully");
       }
     } catch (error) {
       Alert.alert("Error", "Failed to update profile.");
@@ -112,119 +103,79 @@ export default function Profile() {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={handleSelectImage}
-        style={styles.avatarContainer}
-      >
-        {profileImage ? (
-          <Image source={{ uri: profileImage }} style={styles.avatar} />
-        ) : (
-          <Text style={styles.avatarPlaceholder}>Select Image</Text>
-        )}
-      </TouchableOpacity>
-      <View style={styles.form}>
-        <Controller
-          name="firstName"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="First Name"
-              value={value}
-              onChangeText={onChange}
-            />
+    <Sidebar title="User Profile">
+      <View className="flex-1 p-5 bg-white">
+        <TouchableOpacity
+          onPress={handleSelectImage}
+          className="self-center mb-5 w-36 h-36 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
+        >
+          {profileImage ? (
+            <Image source={{ uri: profileImage }} className="w-full h-full" />
+          ) : (
+            <Text className="text-white font-bold">Select Image</Text>
           )}
-        />
-        <Controller
-          name="lastName"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Last Name"
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
-        />
-        <Controller
-          name="email"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              keyboardType="email-address"
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
-        />
-        <Controller
-          name="mobile"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Mobile"
-              keyboardType="phone-pad"
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
-        />
+        </TouchableOpacity>
+
+        <View className="mb-5 space-y-3">
+          <Controller
+            name="firstName"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                className="border  m-3  border-gray-300 rounded p-3"
+                placeholder="First Name"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+          <Controller
+            name="lastName"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                className="border  m-3  border-gray-300 rounded p-3"
+                placeholder="Last Name"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                className="border  m-3  border-gray-300 rounded p-3"
+                placeholder="Email"
+                keyboardType="email-address"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+          <Controller
+            name="mobile"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                className="border border-gray-300 m-3 rounded p-3"
+                placeholder="Mobile"
+                keyboardType="phone-pad"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+        </View>
+
+        <TouchableOpacity
+          onPress={handleSubmit(onSubmit)}
+          className="bg-blue-500 p-4 rounded flex items-center"
+        >
+          <Text className="text-white font-bold">Update Profile</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.button}>
-        <Text style={styles.buttonText}>Update Profile</Text>
-      </TouchableOpacity>
-    </View>
+    </Sidebar>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-  },
-  avatarContainer: {
-    alignSelf: "center",
-    marginBottom: 20,
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  avatarPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: "#ccc",
-    textAlign: "center",
-    lineHeight: 100,
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  form: {
-    marginBottom: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: "#007bff",
-    padding: 15,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});

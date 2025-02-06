@@ -1,9 +1,8 @@
 import { SidebarProvider } from "@/context/SidebarContext";
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 import React, { useEffect } from "react";
 import "react-native-reanimated";
 import "../global.css";
-import Toast from "react-native-toast-message";
 import * as Notifications from "expo-notifications";
 import { appointments } from "@/utils/data";
 
@@ -62,87 +61,7 @@ export default function RootLayout() {
 
   return (
     <SidebarProvider>
-      <React.Fragment>
-        <Stack>
-          {/* Main Screens */}
-          <Stack.Screen
-            name="index"
-            options={{
-              title: "Home",
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="pages/appointments"
-            options={{
-              title: "Appointments",
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="pages/specialities/index"
-            options={{
-              title: "Specialties",
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="pages/specialities/[id]"
-            options={{
-              title: "Search By Specialty",
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="pages/doctor/index"
-            options={{
-              title: "Doctors",
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="pages/doctor/[id]"
-            options={{
-              title: "Doctor Details",
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="pages/dashboard"
-            options={{
-              title: "Dashboard",
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="auth/login"
-            options={{
-              title: "Login",
-              headerStyle: { backgroundColor: "blue" },
-              headerTintColor: "white",
-            }}
-          />
-          <Stack.Screen
-            name="auth/forget_password"
-            options={{
-              title: "Forget Password",
-              headerStyle: { backgroundColor: "blue" },
-              headerTintColor: "white",
-            }}
-          />
-          <Stack.Screen
-            name="auth/register"
-            options={{
-              title: "Register",
-              headerStyle: { backgroundColor: "blue" },
-              headerTintColor: "white",
-            }}
-          />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-
-        <Toast />
-      </React.Fragment>
+      <Slot />
     </SidebarProvider>
   );
 }
