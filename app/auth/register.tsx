@@ -11,7 +11,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { register } from "@/services/auth";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorHandler } from "@/utils/helperFunction";
+import { handleAlert } from "@/utils/helperFunction";
 const RegisterScreen = () => {
   const [selectedRole, setSelectedRole] = useState("Patient");
   const router = useRouter();
@@ -38,30 +38,30 @@ const RegisterScreen = () => {
 
     // Check if passwords match
     if (password !== confirmPassword || password.trim() === "") {
-      ErrorHandler("Error", "Passwords Do Not Match");
+      handleAlert("Error", "Passwords Do Not Match");
       return;
     }
 
     // Basic validation for required fields
     if (!first_name || first_name.trim() === "") {
-      ErrorHandler("Error", "First Name is required.");
+      handleAlert("Error", "First Name is required.");
       return;
     }
 
     if (!last_name || last_name.trim() === "") {
-      ErrorHandler("Error", "Last Name is required.");
+      handleAlert("Error", "Last Name is required.");
       return;
     }
 
     if (!email || email.trim() === "") {
-      ErrorHandler("Error", "Email is required.");
+      handleAlert("Error", "Email is required.");
       return;
     }
 
     // Email format validation using regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-      ErrorHandler("Error", "Please enter a valid email address.");
+      handleAlert("Error", "Please enter a valid email address.");
       return;
     }
 
@@ -80,7 +80,7 @@ const RegisterScreen = () => {
       if (!data) {
         return;
       }
-      ErrorHandler("Success", "Registration Successful");
+      handleAlert("Success", "Registration Successful");
       console.log(data);
       //clear form data
       setFormData({
@@ -103,7 +103,7 @@ const RegisterScreen = () => {
       }, 2000);
     } catch (error: any) {
       console.log(error);
-      ErrorHandler("Error", "Registration Failed" || error?.response?.data.msg);
+      handleAlert("Error", "Registration Failed" || error?.response?.data.msg);
     }
   };
 

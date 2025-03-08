@@ -20,13 +20,14 @@ const Appointment = sequelize.define(
         key: "id",
       },
     },
-    date: {
-      type: DataTypes.DATE,
+    dateTime: {
+      type: DataTypes.DATE, // Supports both date and time
       allowNull: false,
     },
-    time: {
-      type: DataTypes.TIME,
+    duration: {
+      type: DataTypes.INTEGER, // Duration in minutes
       allowNull: false,
+      defaultValue: 30, // Default appointment duration is 30 minutes
     },
     status: {
       type: DataTypes.ENUM("Pending", "Confirmed", "Cancelled", "Completed"),
@@ -34,6 +35,10 @@ const Appointment = sequelize.define(
     },
     reason: {
       type: DataTypes.STRING,
+      allowNull: true,
+    },
+    remarks: {
+      type: DataTypes.TEXT, // Additional notes by the doctor
       allowNull: true,
     },
   },

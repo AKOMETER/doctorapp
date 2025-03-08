@@ -9,27 +9,27 @@ import {
 import { forget_password } from "@/services/auth";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
-import { ErrorHandler } from "@/utils/helperFunction";
+import { handleAlert } from "@/utils/helperFunction";
 export default function ForgetPasswordScreen() {
   const [email, setEmail] = useState("");
   const router = useRouter();
   const handleSubmit = async () => {
     // Basic validation
     if (!email) {
-      ErrorHandler("Error", "Please fill in both fields.");
+      handleAlert("Error", "Please fill in both fields.");
       return;
     }
 
     // Email format validation using regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-      ErrorHandler("Error", "Please enter a valid email address.");
+      handleAlert("Error", "Please enter a valid email address.");
       return;
     }
 
     try {
       await forget_password(email);
-      ErrorHandler("Success", "Check Your Mail For Token");
+      handleAlert("Success", "Check Your Mail For Token");
 
       setTimeout(() => {
         router.push("/auth/forget_password_confirm");

@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { forget_password_confirm } from "@/services/auth";
 import { useRouter } from "expo-router";
-import { ErrorHandler } from "@/utils/helperFunction";
+import { handleAlert } from "@/utils/helperFunction";
 export default function ForgetPasswordScreen() {
   const [formData, setFormData] = useState({
     reset_token: "",
@@ -22,13 +22,13 @@ export default function ForgetPasswordScreen() {
       formData.password != formData.confirm_password ||
       formData.password == ""
     ) {
-      ErrorHandler("Error", "Please fill in both fields.");
+      handleAlert("Error", "Please fill in both fields.");
       return;
     }
 
     try {
       await forget_password_confirm(formData);
-      ErrorHandler("Success", "Password Reset Successfully");
+      handleAlert("Success", "Password Reset Successfully");
 
       setTimeout(() => {
         router.push("/auth/login");

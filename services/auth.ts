@@ -3,7 +3,7 @@ import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 
-const backendUrl = process.env.EXPO_PUBLIC_BACKENDURL; // Get the BACKENDURL from the .env file
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL; // Get the BACKENDURL from the .env file
 
 // Axios instance
 const api = axios.create({
