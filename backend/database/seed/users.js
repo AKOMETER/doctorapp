@@ -1,16 +1,15 @@
 const { faker } = require("@faker-js/faker");
-const bcrypt = require("bcryptjs");
 const sequelize = require("../index");
 const User = require("../models/User");
 
-export const seedUsers = async (count = 10) => {
+const seedUsers = async (count = 10) => {
   try {
-    await sequelize.sync(); // Ensure tables exist
+    // await sequelize.sync(); // Ensure tables exist
+    await sequelize.sync();
 
     let users = [];
     for (let i = 0; i < count; i++) {
       const plainPassword = "password123"; // Default password
-      const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
       users.push({
         firstName: faker.person.firstName(),
@@ -20,7 +19,7 @@ export const seedUsers = async (count = 10) => {
         email: faker.internet.email(),
         googleID: faker.datatype.boolean() ? faker.string.uuid() : null,
         facebookID: faker.datatype.boolean() ? faker.string.uuid() : null,
-        password: hashedPassword,
+        password: plainPassword,
         profileImage: faker.image.avatar(),
         role: faker.helpers.arrayElement(["Doctor", "Patient", "Labs"]),
         token: faker.datatype.boolean() ? faker.string.uuid() : null,
@@ -38,3 +37,5 @@ export const seedUsers = async (count = 10) => {
     process.exit(1);
   }
 };
+
+module.exports = seedUsers;

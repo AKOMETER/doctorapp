@@ -42,9 +42,10 @@ const specialties = [
   },
 ];
 
-export const seedSpecialties = async () => {
+const seedSpecialties = async () => {
   try {
-    await sequelize.sync({ force: false }); // Ensure database sync without dropping tables
+    // await sequelize.sync({ force: false }); // Ensure database sync without dropping tables
+    await sequelize.sync();
     await Specialty.bulkCreate(specialties);
     console.log("Specialties seeded successfully.");
   } catch (error) {
@@ -53,3 +54,4 @@ export const seedSpecialties = async () => {
     await sequelize.close();
   }
 };
+module.exports = seedSpecialties;

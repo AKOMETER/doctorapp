@@ -1,6 +1,15 @@
 const User = require("../database/models/User"); // Import the User model
 const fs = require("fs");
 const path = require("path");
+const Appointment = require("../database/models/Appointment");
+const Notification = require("../database/models/Notification");
+const Message = require("../database/models/Message");
+const Doctor = require("../database/models/Doctor");
+const MyDoctor = require("../database/models/MyDoctor");
+const Transaction = require("../database/models/Transaction");
+const Lab = require("../database/models/Lab");
+const Specialty = require("../database/models/Specialty");
+const PaymentMethod = require("../database/models/PaymentMethod");
 
 //get all users
 exports.get = async (req, res) => {
@@ -15,7 +24,63 @@ exports.get = async (req, res) => {
 //show specific user
 exports.show = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id);
+    const user = await User.findByPk(req.params.id, {
+      include: [
+        {
+          model: Appointment,
+          as: "AppointmentsAsPatient",
+          foreignKey: "patientId",
+        },
+        {
+          model: Appointment,
+          as: "AppointmentsAsDoctor",
+          foreignKey: "doctorId",
+        },
+        {
+          model: Notification,
+          foreignKey: "userId",
+        },
+        {
+          model: Message,
+          as: "SentMessages",
+          foreignKey: "senderId",
+        },
+        {
+          model: Message,
+          as: "ReceivedMessages",
+          foreignKey: "receiverId",
+        },
+        {
+          model: Doctor,
+          as: "doctor",
+          include: [
+            {
+              model: Lab,
+              through: { attributes: [] },
+            },
+            {
+              model: Specialty,
+              through: { attributes: [] },
+            },
+          ],
+        },
+        {
+          model: MyDoctor,
+          as: "MyDoctors",
+          include: [{ model: User, as: "Doctor" }],
+        },
+        {
+          model: MyDoctor,
+          as: "Patients",
+          include: [{ model: User, as: "Patient" }],
+        },
+        {
+          model: Transaction,
+          include: [PaymentMethod],
+        },
+      ],
+    });
+
     if (user) {
       res.json(user);
     } else {

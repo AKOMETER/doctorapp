@@ -32,18 +32,16 @@ const Appointments = () => {
     setSpecialtyId(null);
   }
 
-  console.log("Specialty ID:", specialtyId);
-
   return (
-    <Sidebar title="Appointment">
-      <ScrollView style={styles.container}>
-        {specialtyId === null ? (
-          <Appointment />
-        ) : (
-          <Calendar handleBook={handleBook} />
-        )}
-      </ScrollView>
-    </Sidebar>
+    // <Sidebar title="Appointment">
+    <ScrollView style={styles.container}>
+      {specialtyId === null ? (
+        <Appointment />
+      ) : (
+        <Calendar handleBook={handleBook} />
+      )}
+    </ScrollView>
+    // </Sidebar>
   );
 };
 

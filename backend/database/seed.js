@@ -1,14 +1,15 @@
-import { seedUsers } from "./seed/users";
-import { seedSpecialties } from "./seed/Specialty";
-import { seedLabs } from "./seed/Lab";
-import { seedDoctors } from "./seed/doctor";
-import { seedAppointments } from "./seed/appointment";
-import { seedPaymentMethods } from "./seed/paymentMethod";
-import { seedTransactions } from "./seed/transaction";
-seedUsers(10);
-seedSpecialties(10);
-seedLabs(10);
-seedPaymentMethods();
-seedDoctors(10);
+const seedUsers = require("./seed/users");
+const seedSpecialties = require("./seed/Specialty");
+const seedLabs = require("./seed/Lab");
+const seedDoctors = require("./seed/doctor");
+const seedAppointments = require("./seed/appointment");
+const seedPaymentMethods = require("./seed/paymentMethod");
+const seedTransactions = require("./seed/transaction");
+
+// seedUsers(10);
+// seedSpecialties(10);
+// seedLabs(10);
+// seedPaymentMethods();
+// seedDoctors(10);
 seedAppointments(10);
-seedTransactions(10);
+// seedTransactions(10);

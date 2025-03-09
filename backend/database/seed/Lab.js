@@ -1,11 +1,11 @@
 const { faker } = require("@faker-js/faker");
 const Lab = require("../models/Lab");
-const sequelize = require("../config/database");
+const sequelize = require("../index");
 
-export const seedLabs = async () => {
+const seedLabs = async () => {
   try {
-    await sequelize.sync({ force: false }); // Sync without dropping tables
-
+    // await sequelize.sync({ force: false }); // Sync without dropping tables
+    await sequelize.sync();
     const labs = [];
 
     for (let i = 0; i < 10; i++) {
@@ -25,3 +25,4 @@ export const seedLabs = async () => {
     process.exit();
   }
 };
+module.exports = seedLabs;

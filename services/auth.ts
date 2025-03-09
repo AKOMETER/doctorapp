@@ -5,6 +5,7 @@ import { Alert } from "react-native";
 
 const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL; // Get the BACKENDURL from the .env file
 
+console.log(backendUrl, "backendUrl");
 // Axios instance
 const api = axios.create({
   baseURL: backendUrl,
@@ -45,6 +46,7 @@ export const login = async (email: string, password: string) => {
 };
 
 export const register = async (data: Record<string, any>) => {
+  console.log("data in register", data);
   try {
     const response = await api.post("/auth/register", data);
     return response.data;

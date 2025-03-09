@@ -2,7 +2,7 @@ const { faker } = require("@faker-js/faker");
 const sequelize = require("../index"); // Sequelize instance
 const Doctor = require("../models/Doctor");
 
-export const seedDoctors = async (count = 10) => {
+const seedDoctors = async (count = 10) => {
   try {
     await sequelize.sync(); // Ensure tables exist
 
@@ -44,3 +44,4 @@ export const seedDoctors = async (count = 10) => {
     process.exit(1);
   }
 };
+module.exports = seedDoctors;

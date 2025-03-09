@@ -27,13 +27,15 @@ app.use(express.static(path.join(__dirname, "public")));
 // app.use(cors({ origin: "http://localhost:3001" }));
 
 // Synchronize the database when the app starts
-syncDatabase();
+// syncDatabase();
 
 // all routes
 app.use("/auth", require("./routes/auth"));
-app.use("/users", require("./routes/users"));
+app.use("/user", require("./routes/users"));
+app.use("/specialty", require("./routes/specialty"));
+app.use("/doctor", require("./routes/doctor"));
+app.use("/lab", require("./routes/lab"));
 // app.use("/appointment", require("./routes/appointment"));
-// app.use("/doctor", require("./routes/doctor"));
 // app.use("/message", require("./routes/message "));
 // app.use("/notification", require("./routes/notification"));
 

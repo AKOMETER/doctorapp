@@ -2,7 +2,7 @@ const { faker } = require("@faker-js/faker");
 const sequelize = require("../index");
 const Appointment = require("../models/Appointment");
 
-export const seedAppointments = async (count = 10) => {
+const seedAppointments = async (count = 10) => {
   try {
     await sequelize.sync(); // Ensure tables exist
 
@@ -11,14 +11,16 @@ export const seedAppointments = async (count = 10) => {
       appointments.push({
         patientId: faker.number.int({ min: 1, max: 10 }), // Assume users exist
         doctorId: faker.number.int({ min: 1, max: 10 }), // Assume doctors exist
-        dateTime: faker.date.future(), // Random future date
+        dateTime: faker.date.future(), // Generate a future date
         status: faker.helpers.arrayElement([
           "Pending",
           "Confirmed",
           "Cancelled",
           "Completed",
         ]),
+        duration: faker.number.int({ min: 1, max: 24 }), // Duration in hours
         reason: faker.lorem.sentence(),
+        remark: faker.lorem.sentence(),
       });
     }
 
@@ -30,3 +32,5 @@ export const seedAppointments = async (count = 10) => {
     process.exit(1);
   }
 };
+
+module.exports = seedAppointments;

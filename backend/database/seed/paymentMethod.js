@@ -1,9 +1,10 @@
 const PaymentMethod = require("../models/PaymentMethod");
 const sequelize = require("../index"); // Sequelize instance
 
-export const seedPaymentMethods = async () => {
+const seedPaymentMethods = async () => {
   try {
-    await sequelize.sync({ force: false });
+    // await sequelize.sync({ force: false });
+    await sequelize.sync();
 
     const methods = [
       { name: "Visa", type: "credit_card" },
@@ -21,3 +22,5 @@ export const seedPaymentMethods = async () => {
     process.exit();
   }
 };
+
+module.exports = seedPaymentMethods;

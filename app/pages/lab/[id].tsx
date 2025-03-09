@@ -23,7 +23,7 @@ export default function DoctorPage() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: "Search By Doctor", // New title
+      title: "Search By Lab", // New title
       headerStyle: { backgroundColor: "#00b4d8" },
       headerTintColor: "#fff",
     });

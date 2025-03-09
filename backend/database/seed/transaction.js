@@ -2,9 +2,10 @@ const { faker } = require("@faker-js/faker");
 const Transaction = require("../models/Transaction");
 const sequelize = require("../index"); // Sequelize instance
 
-export const seedTransactions = async (count) => {
+const seedTransactions = async (count) => {
   try {
-    await sequelize.sync({ force: false });
+    // await sequelize.sync({ force: false });
+    await sequelize.sync();
 
     const transactions = [];
     for (let i = 0; i < count; i++) {
@@ -26,3 +27,5 @@ export const seedTransactions = async (count) => {
     process.exit();
   }
 };
+
+module.exports = seedTransactions;

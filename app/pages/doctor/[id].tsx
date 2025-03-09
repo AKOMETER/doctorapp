@@ -33,27 +33,35 @@ export default function DoctorDetails() {
   console.log("doctor", doctor, "specialtyId", id);
 
   return (
-    <Sidebar title="Doctor Profile">
-      <Tab.Navigator
-        screenOptions={{
-          tabBarStyle: "absolute bg-white h-16 rounded-t-lg shadow-none", // Tailwind classes for the tabBar
-          tabBarPosition: "top", // Ensures tabs appear at the top
-        }}
-      >
-        {/* Overview Tab */}
-        <Tab.Screen
-          name="Overview"
-          options={{ title: "Overview" }}
-          children={() => <Overview doctor={doctor} id={parseInt(id)} />}
-        />
+    // <Sidebar title="Doctor Profile">
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          position: "absolute",
+          backgroundColor: "white",
+          height: 64, // h-16
+          borderTopLeftRadius: 16, // rounded-t-lg
+          borderTopRightRadius: 16,
+          elevation: 0, // shadow-none
+          shadowOpacity: 0,
+        },
+        tabBarPosition: "top", // Ensures tabs appear at the top
+      }}
+    >
+      {/* Overview Tab */}
+      <Tab.Screen
+        name="Overview"
+        options={{ title: "Overview" }}
+        children={() => <Overview doctor={doctor} id={parseInt(id)} />}
+      />
 
-        {/* Reviews Tab */}
-        <Tab.Screen
-          name="Reviews"
-          children={() => <Tab2 />}
-          options={{ title: "Review" }}
-        />
-      </Tab.Navigator>
-    </Sidebar>
+      {/* Reviews Tab */}
+      <Tab.Screen
+        name="Reviews"
+        children={() => <Tab2 />}
+        options={{ title: "Review" }}
+      />
+    </Tab.Navigator>
+    // </Sidebar>
   );
 }

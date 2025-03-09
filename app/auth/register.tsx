@@ -77,6 +77,7 @@ const RegisterScreen = () => {
 
     try {
       const data = await register(newData);
+      console.log("data", data);
       if (!data) {
         return;
       }

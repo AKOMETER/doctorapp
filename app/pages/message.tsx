@@ -112,51 +112,51 @@ export default function ChatApp() {
   );
 
   return (
-    <Sidebar title="Message">
-      <View className="flex-1 bg-gray-100 p-4">
-        {!selectedDoctor && (
-          <FlatList
-            data={doctors}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderDoctor}
-            contentContainerStyle={{ paddingBottom: 20 }}
-          />
-        )}
+    // <Sidebar title="Message">
+    <View className="flex-1 bg-gray-100 p-4">
+      {!selectedDoctor && (
+        <FlatList
+          data={doctors}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderDoctor}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
+      )}
 
-        {selectedDoctor && (
-          <View className="flex-1">
-            <Text className="text-lg font-bold text-gray-800 mb-4">
-              Chat with {selectedDoctor.name}
-            </Text>
-            <FlatList
-              data={messages[selectedDoctor.id.toString()] || []}
-              keyExtractor={(item) => item.id}
-              renderItem={renderMessage}
-              contentContainerStyle={{ flexGrow: 1, marginBottom: 16 }}
+      {selectedDoctor && (
+        <View className="flex-1">
+          <Text className="text-lg font-bold text-gray-800 mb-4">
+            Chat with {selectedDoctor.name}
+          </Text>
+          <FlatList
+            data={messages[selectedDoctor.id.toString()] || []}
+            keyExtractor={(item) => item.id}
+            renderItem={renderMessage}
+            contentContainerStyle={{ flexGrow: 1, marginBottom: 16 }}
+          />
+          <View className="flex-row items-center bg-white p-3 rounded-lg shadow-md">
+            <TextInput
+              className="flex-1 text-lg p-3 text-gray-800"
+              placeholder="Type your message..."
+              value={message}
+              onChangeText={setMessage}
             />
-            <View className="flex-row items-center bg-white p-3 rounded-lg shadow-md">
-              <TextInput
-                className="flex-1 text-lg p-3 text-gray-800"
-                placeholder="Type your message..."
-                value={message}
-                onChangeText={setMessage}
-              />
-              <TouchableOpacity
-                className="bg-blue-500 px-4 py-2 rounded-lg"
-                onPress={handleSendMessage}
-              >
-                <Text className="text-white font-bold">Send</Text>
-              </TouchableOpacity>
-            </View>
             <TouchableOpacity
-              className="mt-4 bg-gray-600 p-3 rounded-lg items-center"
-              onPress={() => setSelectedDoctor(null)}
+              className="bg-blue-500 px-4 py-2 rounded-lg"
+              onPress={handleSendMessage}
             >
-              <Text className="text-white font-bold">Back to Doctors</Text>
+              <Text className="text-white font-bold">Send</Text>
             </TouchableOpacity>
           </View>
-        )}
-      </View>
-    </Sidebar>
+          <TouchableOpacity
+            className="mt-4 bg-gray-600 p-3 rounded-lg items-center"
+            onPress={() => setSelectedDoctor(null)}
+          >
+            <Text className="text-white font-bold">Back to Doctors</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+    // </Sidebar>
   );
 }

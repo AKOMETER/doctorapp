@@ -103,79 +103,79 @@ export default function Profile() {
   };
 
   return (
-    <Sidebar title="User Profile">
-      <View className="flex-1 p-5 bg-white">
-        <TouchableOpacity
-          onPress={handleSelectImage}
-          className="self-center mb-5 w-36 h-36 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
-        >
-          {profileImage ? (
-            <Image source={{ uri: profileImage }} className="w-full h-full" />
-          ) : (
-            <Text className="text-white font-bold">Select Image</Text>
+    // <Sidebar title="User Profile">
+    <View className="flex-1 p-5 bg-white">
+      <TouchableOpacity
+        onPress={handleSelectImage}
+        className="self-center mb-5 w-36 h-36 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
+      >
+        {profileImage ? (
+          <Image source={{ uri: profileImage }} className="w-full h-full" />
+        ) : (
+          <Text className="text-white font-bold">Select Image</Text>
+        )}
+      </TouchableOpacity>
+
+      <View className="mb-5 space-y-3">
+        <Controller
+          name="firstName"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="border  m-3  border-gray-300 rounded p-3"
+              placeholder="First Name"
+              value={value}
+              onChangeText={onChange}
+            />
           )}
-        </TouchableOpacity>
-
-        <View className="mb-5 space-y-3">
-          <Controller
-            name="firstName"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                className="border  m-3  border-gray-300 rounded p-3"
-                placeholder="First Name"
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
-          <Controller
-            name="lastName"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                className="border  m-3  border-gray-300 rounded p-3"
-                placeholder="Last Name"
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
-          <Controller
-            name="email"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                className="border  m-3  border-gray-300 rounded p-3"
-                placeholder="Email"
-                keyboardType="email-address"
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
-          <Controller
-            name="mobile"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                className="border border-gray-300 m-3 rounded p-3"
-                placeholder="Mobile"
-                keyboardType="phone-pad"
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
-        </View>
-
-        <TouchableOpacity
-          onPress={handleSubmit(onSubmit)}
-          className="bg-blue-500 p-4 rounded flex items-center"
-        >
-          <Text className="text-white font-bold">Update Profile</Text>
-        </TouchableOpacity>
+        />
+        <Controller
+          name="lastName"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="border  m-3  border-gray-300 rounded p-3"
+              placeholder="Last Name"
+              value={value}
+              onChangeText={onChange}
+            />
+          )}
+        />
+        <Controller
+          name="email"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="border  m-3  border-gray-300 rounded p-3"
+              placeholder="Email"
+              keyboardType="email-address"
+              value={value}
+              onChangeText={onChange}
+            />
+          )}
+        />
+        <Controller
+          name="mobile"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="border border-gray-300 m-3 rounded p-3"
+              placeholder="Mobile"
+              keyboardType="phone-pad"
+              value={value}
+              onChangeText={onChange}
+            />
+          )}
+        />
       </View>
-    </Sidebar>
+
+      <TouchableOpacity
+        onPress={handleSubmit(onSubmit)}
+        className="bg-blue-500 p-4 rounded flex items-center"
+      >
+        <Text className="text-white font-bold">Update Profile</Text>
+      </TouchableOpacity>
+    </View>
+    // </Sidebar>
   );
 }
