@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -11,14 +11,19 @@ import {
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { doctors, specialities } from "@/utils/data";
 import Sidebar from "@/components/sidebar";
+import { useSidebar } from "@/context/SidebarContext";
+import { DoctorType } from "@/utils/dataTypes";
+import apiRequest from "@/services/apiRequest";
 
 export default function DoctorPage() {
+  const { user } = useSidebar();
   const { id }: { id: string } = useLocalSearchParams();
-  // const specialtyId = id?.split("=")[1] ? parseInt(id.split("=")[1], 10) : NaN;
-  const datas = doctors.filter((item) => {
-    console.log(item.specialty, id);
-    return item.specialty == parseInt(id);
-  });
+  const [doctors, setDoctors] = useState<DoctorType[]>([]);
+  useEffect(() => {
+    apiRequest.get(`/lab/${id}`).then((res) => {
+      setDoctors(res?.data);
+    });
+  }, []);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -34,29 +39,33 @@ export default function DoctorPage() {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <View style={styles.wrapper}>
-          {datas.map((doctor) => (
+          {doctors.map((doctor) => (
             <View key={doctor.id} style={styles.card}>
               <Image
                 source={{ uri: doctor.image }}
                 style={styles.doctorImage}
               />
               <View style={styles.doctorDetails}>
-                <Text style={styles.doctorName}>{doctor.name}</Text>
-                <Text style={styles.specialityName}>
-                  {specialities[doctor.specialty]?.name}
+                <Text style={styles.doctorName}>
+                  {doctor.user.firstName + " " + doctor.user.lastName}
                 </Text>
+                <Text style={styles.specialityName}>{doctor.labName}</Text>
                 <Text style={styles.doctorLocation}>{doctor.location}</Text>
                 <Text style={styles.doctorPrice}>{doctor.price}</Text>
-                <Text style={styles.doctorRating}>{`⭐ ${doctor.rating}`}</Text>
-              </View>
-              <TouchableOpacity style={styles.bookButton}>
                 <Text
-                  onPress={() => router.push(`/pages/doctor/${doctor.url}`)}
-                  style={styles.bookButtonText}
-                >
-                  Book Appointment
-                </Text>
-              </TouchableOpacity>
+                  style={styles.doctorRating}
+                >{`⭐ ${doctor.ratings}`}</Text>
+              </View>
+              {user?.role == "Patient" && (
+                <TouchableOpacity style={styles.bookButton}>
+                  <Text
+                    onPress={() => router.push(`/pages/doctor/${doctor.id}`)}
+                    style={styles.bookButtonText}
+                  >
+                    Book Appointment
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           ))}
         </View>

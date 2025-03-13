@@ -175,11 +175,9 @@ exports.update = async (req, res) => {
 
 exports.isLoggedIn = async (req, res) => {
   try {
-    const user = req.user;
-
+    const user = req.user?.user;
     if (user) {
-      const getUser = await User.findByPk(user.id, {});
-
+      const getUser = await User.findByPk(user.id);
       if (!getUser) {
         return res.status(404).json({ status: false });
       }

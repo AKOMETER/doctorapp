@@ -1,47 +1,66 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView, View } from "react-native";
 import Calendar from "@/components/calender";
 import Appointment from "@/components/appointment";
-import { appointments } from "@/utils/data";
 import { useSidebar } from "@/context/SidebarContext";
-import Sidebar from "@/components/sidebar";
+import { DoctorType } from "@/utils/dataTypes";
+import apiRequest from "@/services/apiRequest";
 
 const Appointments = () => {
   const navigation = useNavigation();
-  const { id } = useLocalSearchParams(); // Ensure `id` is retrieved correctly.
-  const [specialtyId, setSpecialtyId] = useState(id ? parseInt(id, 10) : null);
+  const { id }: { id: string } = useLocalSearchParams();
+  const [routeID, setRouteID] = useState<string | null>(id || null);
+  const [doctor, setDoctor] = useState<DoctorType | null>(null);
   const { user } = useSidebar();
+
   useEffect(() => {
-    // Set header title dynamically
     navigation.setOptions({
-      title: "Appointment", // New title
+      title: "Appointment",
       headerStyle: { backgroundColor: "#00b4d8" },
       headerTintColor: "#fff",
     });
   }, [navigation]);
 
-  function handleBook(datetime: any) {
-    appointments.push({
-      id: appointments.length + 1,
-      patient: user.firstName + " " + user.lastName,
-      status: "pending",
-      date: datetime,
-    });
+  useEffect(() => {
+    if (routeID) {
+      apiRequest.get(`/doctor/${routeID}`).then((res) => {
+        setDoctor(res?.data);
+      });
+    }
+  }, [routeID]);
 
-    setSpecialtyId(null);
-  }
+  const handleBook = (datetime: string, duration: number, reason: string) => {
+    if (!doctor) return;
+
+    const newData = {
+      patientId: user?.id,
+      doctorId: doctor?.id,
+      status: "pending",
+      dateTime: datetime,
+      duration,
+      reason,
+    };
+
+    apiRequest
+      .post("/appointment", newData)
+      .then((res) => {
+        console.log("Appointment created:", res);
+        setRouteID(null); // switch to Appointment view
+      })
+      .catch((err) => {
+        console.log("Booking error:", err);
+      });
+  };
 
   return (
-    // <Sidebar title="Appointment">
     <ScrollView style={styles.container}>
-      {specialtyId === null ? (
+      {routeID === null ? (
         <Appointment />
       ) : (
         <Calendar handleBook={handleBook} />
       )}
     </ScrollView>
-    // </Sidebar>
   );
 };
 

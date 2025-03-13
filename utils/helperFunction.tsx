@@ -1,4 +1,4 @@
-import { Alert } from "react-native";
+import { Alert, PermissionsAndroid, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import { appointments } from "@/utils/data";
 import Toast from "react-native-toast-message";
@@ -116,3 +116,22 @@ export function getSpecialtyImage(path: string) {
       break;
   }
 }
+
+export const requestNotificationPermission = async () => {
+  if (Platform.OS === "android") {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      {
+        title: "Notification Permission",
+        message:
+          "This app requires access to notifications to alert you about appointments.",
+        buttonNeutral: "Ask Me Later",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK",
+      }
+    );
+    if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+      console.log("Notification permission denied");
+    }
+  }
+};

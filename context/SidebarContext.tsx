@@ -6,6 +6,8 @@ interface SidebarContextType {
   toggleSidebar: () => void;
   user: any;
   setUser: any;
+  token: string;
+  setToken: any;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
@@ -21,12 +23,25 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [user, setUser] = useState<any>(null);
 
+  const [token, setToken] = useState<any>(null);
+
   async function getUser() {
     const _user = await AsyncStorage.getItem("user");
     if (_user) {
       setUser(JSON.parse(_user));
     }
+
+    const _token = await AsyncStorage.getItem("token");
+    if (_token) {
+      setToken(JSON.parse(_token));
+    }
   }
+
+  useEffect(() => {
+    if (typeof user == "string") {
+      setUser(JSON.parse(user));
+    }
+  }, [setUser, user]);
 
   useEffect(() => {
     getUser();
@@ -39,6 +54,8 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
         toggleSidebar: toggleSidebar,
         user: user,
         setUser,
+        token,
+        setToken,
       }}
     >
       {children}

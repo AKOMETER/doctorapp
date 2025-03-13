@@ -6,6 +6,9 @@ const crypto = require("crypto");
 const fs = require("fs");
 const transportMail = require("../config/nodemailer");
 const path = require("path");
+const Lab = require("../database/models/Lab");
+const Doctor = require("../database/models/Doctor");
+const { faker } = require("@faker-js/faker");
 
 //get all users
 exports.login = async (req, res) => {
@@ -61,41 +64,71 @@ exports.login = async (req, res) => {
 
 //create new user
 exports.register = async (req, res) => {
-  const { email } = req.body;
+  const { email, role } = req.body;
 
   try {
     // Check if user exists
     let user = await Users.findOne({ where: { email } });
     if (user) {
-      return res.status(400).json({ msg: "Users already exists" });
+      return res.status(400).json({ msg: "User already exists" });
     }
 
     // Create a new user
-    user = new Users(req.body);
+    user = await Users.create(req.body);
 
-    await user.save();
+    // Create dummy doctor if role is 'Doctor'
+    if (role === "Doctor") {
+      await Doctor.create({
+        userId: user.id,
+        lab: faker.number.int({ min: 1, max: 5 }),
+        specialty: faker.number.int({ min: 1, max: 5 }),
+        bio: faker.lorem.sentence(),
+        availableFrom: "09:00 AM",
+        availableTo: "05:00 PM",
+        ratings: faker.number.float({ min: 1, max: 5, precision: 0.1 }),
+        location: faker.location.city() + ", " + faker.location.country(),
+        price: faker.number.float({ min: 20, max: 200, precision: 0.01 }),
+        image: faker.image.avatar(),
+        education: JSON.stringify({
+          school: faker.person.jobTitle(),
+          location: faker.location.city(),
+          year: faker.number.int({ min: 2000, max: 2024 }),
+        }),
+        service: JSON.stringify(
+          ["Consultation", "Surgery", "Therapy"].slice(
+            0,
+            faker.number.int({ min: 1, max: 3 })
+          )
+        ),
+        experience: JSON.stringify({
+          name: faker.person.jobTitle(),
+          location: faker.location.city(),
+          year: faker.number.int({ min: 2010, max: 2024 }),
+        }),
+      });
+    }
+
+    // Create dummy lab if role is 'Lab'
+    if (role === "Labs") {
+      await Lab.create({
+        name: faker.company.name(),
+        image: faker.image.url(),
+        description: faker.lorem.sentence(),
+        location: faker.location.city() + ", " + faker.location.country(),
+      });
+    }
 
     // Generate JWT token
-    const payload = {
-      id: user.id,
-      name: user.name,
-    };
+    const payload = { id: user.id, name: user.name };
 
-    jwt.sign(
-      payload,
-      keys.secretOrKey,
-      { expiresIn: "1h" }, // Token expires in 1 hour
-      (err, token) => {
-        if (err) throw err;
-        res.json({
-          user,
-          token,
-          msg: `${
-            user.firstName + " " + user.lastName
-          } account has been Created`,
-        });
-      }
-    );
+    jwt.sign(payload, keys.secretOrKey, { expiresIn: "1h" }, (err, token) => {
+      if (err) throw err;
+      res.json({
+        user,
+        token,
+        msg: `${user.firstName} ${user.lastName} account has been created`,
+      });
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: err.message });

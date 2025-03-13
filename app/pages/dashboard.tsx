@@ -24,88 +24,90 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
-      {/* User Relationship Cards */}
-      <View style={styles.cardContainer}>
-        <View style={styles.card}>
-          <FontAwesome name="envelope" size={28} color="#4CAF50" />
-          <View style={styles.cardContent}>
-            <Text style={styles.cardLabel}>Sent Messages</Text>
-            <Text style={styles.cardValue}>
-              {newUser?.SentMessages?.length || 0}
-            </Text>
+    <Sidebar title="Dashboard">
+      <ScrollView style={styles.container}>
+        {/* User Relationship Cards */}
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <FontAwesome name="envelope" size={28} color="#4CAF50" />
+            <View style={styles.cardContent}>
+              <Text style={styles.cardLabel}>Sent Messages</Text>
+              <Text style={styles.cardValue}>
+                {newUser?.SentMessages?.length || 0}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.card}>
+            <MaterialIcons name="notifications" size={28} color="#FF9800" />
+            <View style={styles.cardContent}>
+              <Text style={styles.cardLabel}>Notifications</Text>
+              <Text style={styles.cardValue}>
+                {newUser?.Notifications?.length || 0}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.card}>
+            <FontAwesome name="envelope" size={28} color="blue" />
+            <View style={styles.cardContent}>
+              <Text style={styles.cardLabel}>Received Messages</Text>
+              <Text style={styles.cardValue}>
+                {newUser?.ReceivedMessages?.length || 0}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.card}>
+            <FontAwesome name="user-md" size={28} color="#4CAF50" />
+            <View style={styles.cardContent}>
+              <Text style={styles.cardLabel}>My Doctors</Text>
+              <Text style={styles.cardValue}>
+                {newUser?.MyDoctors?.length || 0}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.card}>
+            <FontAwesome name="money" size={28} color="yellow" />
+            <View style={styles.cardContent}>
+              <Text style={styles.cardLabel}>Transactions</Text>
+              <Text style={styles.cardValue}>
+                {newUser?.Transactions?.length || 0}
+              </Text>
+            </View>
           </View>
         </View>
 
-        <View style={styles.card}>
-          <MaterialIcons name="notifications" size={28} color="#FF9800" />
-          <View style={styles.cardContent}>
-            <Text style={styles.cardLabel}>Notifications</Text>
-            <Text style={styles.cardValue}>
-              {newUser?.Notifications?.length || 0}
-            </Text>
+        {/* System Stats */}
+        <Text style={styles.subTitle}>Resources Overview</Text>
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <Entypo name="briefcase" size={28} color="#3F51B5" />
+            <View style={styles.cardContent}>
+              <Text style={styles.cardLabel}>Specialties</Text>
+              <Text style={styles.cardValue}>{specialty.length}</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.card}>
-          <FontAwesome name="envelope" size={28} color="blue" />
-          <View style={styles.cardContent}>
-            <Text style={styles.cardLabel}>Received Messages</Text>
-            <Text style={styles.cardValue}>
-              {newUser?.ReceivedMessages?.length || 0}
-            </Text>
+          <View style={styles.card}>
+            <FontAwesome name="user-md" size={28} color="#009688" />
+            <View style={styles.cardContent}>
+              <Text style={styles.cardLabel}>Doctors</Text>
+              <Text style={styles.cardValue}>{doctors.length}</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.card}>
-          <FontAwesome name="user-md" size={28} color="#4CAF50" />
-          <View style={styles.cardContent}>
-            <Text style={styles.cardLabel}>My Doctors</Text>
-            <Text style={styles.cardValue}>
-              {newUser?.MyDoctors?.length || 0}
-            </Text>
+          <View style={styles.card}>
+            <MaterialIcons name="science" size={28} color="#E91E63" />
+            <View style={styles.cardContent}>
+              <Text style={styles.cardLabel}>Labs</Text>
+              <Text style={styles.cardValue}>{labs.length}</Text>
+            </View>
           </View>
         </View>
-
-        <View style={styles.card}>
-          <FontAwesome name="money" size={28} color="yellow" />
-          <View style={styles.cardContent}>
-            <Text style={styles.cardLabel}>Transactions</Text>
-            <Text style={styles.cardValue}>
-              {newUser?.Transactions?.length || 0}
-            </Text>
-          </View>
-        </View>
-      </View>
-
-      {/* System Stats */}
-      <Text style={styles.subTitle}>Resources Overview</Text>
-      <View style={styles.cardContainer}>
-        <View style={styles.card}>
-          <Entypo name="briefcase" size={28} color="#3F51B5" />
-          <View style={styles.cardContent}>
-            <Text style={styles.cardLabel}>Specialties</Text>
-            <Text style={styles.cardValue}>{specialty.length}</Text>
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <FontAwesome name="user-md" size={28} color="#009688" />
-          <View style={styles.cardContent}>
-            <Text style={styles.cardLabel}>Doctors</Text>
-            <Text style={styles.cardValue}>{doctors.length}</Text>
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <MaterialIcons name="science" size={28} color="#E91E63" />
-          <View style={styles.cardContent}>
-            <Text style={styles.cardLabel}>Labs</Text>
-            <Text style={styles.cardValue}>{labs.length}</Text>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </Sidebar>
   );
 };
 

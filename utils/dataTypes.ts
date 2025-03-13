@@ -15,15 +15,17 @@ export interface DoctorType {
   ratings: number;
   location: string;
   price: string;
+  specialtyName?: string;
+  labName?: string;
   image: string;
-  education: JSON;
+  education: string;
+  service: string;
+  experience: string;
   Specialties: SpecialtyType[];
   Labs: LabType[];
-  service: JSON;
-  experience: JSON;
   createdAt: string;
   updatedAt: string;
-  user: UserType;
+  user?: UserType;
 }
 
 export interface UserType {
@@ -53,4 +55,29 @@ export interface LabType {
   location: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AppointmentType {
+  id: number;
+  patientId: number;
+  doctorId: number;
+  dateTime: string;
+  duration: number;
+  status: string;
+  reason: string;
+  remarks: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  Patient: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+  Doctor: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 }

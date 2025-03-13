@@ -1,4 +1,5 @@
 import Sidebar from "@/components/sidebar";
+import { useSidebar } from "@/context/SidebarContext";
 import { doctors, specialities } from "@/utils/data";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -13,6 +14,7 @@ import {
 
 export default function Doctor() {
   const router = useRouter();
+  const { user } = useSidebar();
   return (
     // <Sidebar title="View All Doctors">
     <SafeAreaView>
@@ -45,18 +47,20 @@ export default function Doctor() {
                 <Text>{doctor.price}</Text>
                 <Text>{`⭐ ${doctor.rating}`}</Text>
               </View>
-              <TouchableOpacity
-                onPress={() => router.push(`/pages/doctor/${doctor.url}`)}
-                style={{
-                  backgroundColor: "#00b4d8",
-                  borderRadius: 8,
-                  paddingVertical: 10,
-                  paddingHorizontal: 15,
-                  alignSelf: "center",
-                }}
-              >
-                <Text style={{ color: "white" }}>Book Appointment</Text>
-              </TouchableOpacity>
+              {user?.role == "Patient" && (
+                <TouchableOpacity
+                  onPress={() => router.push(`/pages/doctor/${doctor.id}`)}
+                  style={{
+                    backgroundColor: "#00b4d8",
+                    borderRadius: 8,
+                    paddingVertical: 10,
+                    paddingHorizontal: 15,
+                    alignSelf: "center",
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Book Appointment</Text>
+                </TouchableOpacity>
+              )}
             </View>
           ))}
         </View>

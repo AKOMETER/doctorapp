@@ -12,12 +12,14 @@ import { router } from "expo-router";
 import apiRequest from "@/services/apiRequest";
 import { DoctorType, LabType, SpecialtyType } from "@/utils/dataTypes";
 import { getSpecialtyImage } from "@/utils/helperFunction";
+import { useSidebar } from "@/context/SidebarContext";
 
 const HomePage = () => {
   const [formData, setFormData] = useState({
     location: "",
     option: "",
   });
+  const { user } = useSidebar();
   const [specialty, setSpecialty] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [labs, setLabs] = useState([]);
@@ -31,7 +33,6 @@ const HomePage = () => {
     });
 
     apiRequest.get("/lab").then((res: any) => {
-      console.log("lab", res.data);
       setLabs(res.data);
     });
   }, []);
@@ -75,7 +76,6 @@ const HomePage = () => {
                 Search Now
               </Text>
             </TouchableOpacity>
-            ;
           </View>
         </View>
 
@@ -141,12 +141,14 @@ const HomePage = () => {
                 <Text className="text-gray-700">{doctor.price}</Text>
                 <Text className="text-yellow-500">{`⭐ ${doctor.ratings}`}</Text>
               </View>
-              <TouchableOpacity
-                className="bg-cyan-500 rounded-md px-4 py-2 self-center"
-                onPress={() => router.push(`/pages/doctor/${doctor.id}`)}
-              >
-                <Text className="text-white">Book Appointment</Text>
-              </TouchableOpacity>
+              {user?.role == "Patient" && (
+                <TouchableOpacity
+                  className="bg-cyan-500 rounded-md px-4 py-2 self-center"
+                  onPress={() => router.push(`/pages/doctor/${doctor.id}`)}
+                >
+                  <Text className="text-white">Book Appointment</Text>
+                </TouchableOpacity>
+              )}
             </View>
           ))}
         </View>

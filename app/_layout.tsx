@@ -23,7 +23,10 @@ export default function RootLayout() {
           options={{ title: "Search Result" }}
         />
         <Stack.Screen name="pages/homePage" options={{ title: "Home Page" }} />
-        <Stack.Screen name="pages/dashboard" options={{ title: "Dashboard" }} />
+        <Stack.Screen
+          name="pages/dashboard"
+          options={{ title: "Dashboard", headerShown: false }}
+        />
         <Stack.Screen
           name="pages/appointments"
           options={{ title: "Appointments" }}
@@ -65,6 +68,16 @@ export default function RootLayout() {
         {/* Others */}
         <Stack.Screen name="not-found" options={{ title: "Not Found" }} />
         <Stack.Screen name="about" options={{ title: "About" }} />
+
+        {/* doctor admins */}
+        <Stack.Screen
+          name="pages/doctorAdmin"
+          options={{ title: "Doctor Admin" }}
+        />
+        <Stack.Screen
+          name="pages/doctorEdit"
+          options={{ title: "Doctor Edit" }}
+        />
       </Stack>
     </SidebarProvider>
   );

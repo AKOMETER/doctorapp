@@ -34,10 +34,27 @@ const DoctorController = {
   // GET /doctor/:id
   async show(req, res) {
     try {
-      const Doctor = await Doctor.findByPk(req.params.id);
-      if (!Doctor) return res.status(404).json({ msg: "Doctor not found" });
+      const doctor = await Doctor.findByPk(req.params.id, {
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: { exclude: ["password"] },
+          },
+          {
+            model: Specialty,
+            through: { attributes: [] },
+          },
+          {
+            model: Lab,
+            through: { attributes: [] },
+          },
+        ],
+      });
 
-      return res.status(200).json({ data: Doctor });
+      if (!doctor) return res.status(404).json({ msg: "Doctor not found" });
+
+      return res.status(200).json({ data: doctor });
     } catch (error) {
       return res
         .status(500)
@@ -45,13 +62,43 @@ const DoctorController = {
     }
   },
 
+  async showByUserID(req, res) {
+    try {
+      const doctor = await Doctor.findOne({
+        where: { userId: req.params.id },
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: { exclude: ["password"] },
+          },
+          {
+            model: Specialty,
+            through: { attributes: [] },
+          },
+          {
+            model: Lab,
+            through: { attributes: [] },
+          },
+        ],
+      });
+
+      if (!doctor) return res.status(404).json({ msg: "Doctor not found" });
+
+      return res.status(200).json({ data: doctor });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ msg: "Server error", error: error.message });
+    }
+  },
   // POST /doctor
   async store(req, res) {
     try {
       const { name, description } = req.body;
-      const Doctor = await Doctor.create({ name, description });
+      const doctor = await Doctor.create({ name, description });
 
-      return res.status(201).json({ msg: "Doctor created", data: Doctor });
+      return res.status(201).json({ msg: "Doctor created", data: doctor });
     } catch (error) {
       return res
         .status(400)
@@ -62,20 +109,54 @@ const DoctorController = {
   // PUT /doctor/:id
   async update(req, res) {
     try {
-      const { name, description } = req.body;
-      const Doctor = await Doctor.findByPk(req.params.id);
-      if (!Doctor) return res.status(404).json({ msg: "Doctor not found" });
+      const {
+        bio,
+        availableFrom,
+        availableTo,
+        location,
+        price,
+        image,
+        education,
+        service,
+        experience,
+        labIds,
+        specificationIds,
+      } = req.body;
 
-      await Doctor.update({ name, description });
+      const doctor = await Doctor.findOne({ where: { userId: req.params.id } });
+      if (!doctor) return res.status(404).json({ msg: "Doctor not found" });
 
-      return res.status(200).json({ msg: "Doctor updated", data: Doctor });
+      await doctor.update({
+        bio,
+        availableFrom,
+        availableTo,
+        location,
+        price,
+        image,
+        education:
+          typeof education === "string" ? JSON.parse(education) : education,
+        service: typeof service === "string" ? JSON.parse(service) : service,
+        experience:
+          typeof experience === "string" ? JSON.parse(experience) : experience,
+      });
+
+      // Update Labs
+      if (labIds && Array.isArray(labIds)) {
+        await doctor.setLabs(labIds);
+      }
+
+      // Update Specialties
+      if (specificationIds && Array.isArray(specificationIds)) {
+        await doctor.setSpecialties(specificationIds);
+      }
+
+      return res.status(200).json({ msg: "Doctor updated", data: doctor });
     } catch (error) {
       return res
         .status(400)
         .json({ msg: "Update failed", error: error.message });
     }
   },
-
   // DELETE /doctor/:id
   async destroy(req, res) {
     try {

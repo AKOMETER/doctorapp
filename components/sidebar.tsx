@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { useSidebar } from "../context/SidebarContext";
 import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome for icons
 import { useRouter } from "expo-router";
+import apiRequest from "@/services/apiRequest";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const backendUrl = process.env.EXPO_PUBLIC_BACKENDURL;
 
@@ -13,14 +15,35 @@ const Sidebar = ({
   children: React.ReactNode;
   title: string;
 }) => {
-  const { isOpen, toggleSidebar, user } = useSidebar();
+  const { isOpen, toggleSidebar, user, token } = useSidebar();
   const router = useRouter();
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState({
+    status: false,
+    user: {},
+    msg: "",
+  });
+
+  async function handleLogout() {
+    await AsyncStorage.setItem("token", "");
+
+    router.push("/auth/login");
+  }
+
+  useEffect(() => {
+    apiRequest
+      .get("/user/is_logged")
+      .then((res) => {
+        setIsUserLoggedIn(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const name = user ? user.firstName + " " + user.lastName : "Guest";
   const imageUrl = user
     ? backendUrl + "/" + user.profileImage
     : "https://avatar.iran.liara.run/public/boy?username=Ash";
-
   return (
     <View style={styles.container}>
       {isOpen && (
@@ -66,16 +89,18 @@ const Sidebar = ({
               <FontAwesome name="tachometer" size={20} color="#000000" />
               <Text style={styles.navText}>Dashboard</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navItem}
-              onPress={() => {
-                router.push("/pages/appointments");
-                toggleSidebar();
-              }}
-            >
-              <FontAwesome name="calendar" size={20} color="#000000" />
-              <Text style={styles.navText}>Appointments</Text>
-            </TouchableOpacity>
+            {user?.role == "Patient" && (
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => {
+                  router.push("/pages/appointments");
+                  toggleSidebar();
+                }}
+              >
+                <FontAwesome name="calendar" size={20} color="#000000" />
+                <Text style={styles.navText}>Appointments</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               style={styles.navItem}
               onPress={() => {
@@ -86,6 +111,20 @@ const Sidebar = ({
               <FontAwesome name="envelope" size={20} color="#000000" />
               <Text style={styles.navText}>Message</Text>
             </TouchableOpacity>
+
+            {user?.role == "Doctor" && (
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => {
+                  router.push("/pages/doctorAdmin");
+                  toggleSidebar();
+                }}
+              >
+                <FontAwesome name="cube" size={20} color="#000000" />
+                <Text style={styles.navText}>Doctor Admin</Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               onPress={() => {
                 router.push("/pages/profile");
@@ -106,16 +145,29 @@ const Sidebar = ({
               <FontAwesome name="cogs" size={20} color="#000000" />
               <Text style={styles.navText}>Settings</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.login}
-              onPress={() => {
-                router.push("/auth/login");
-                toggleSidebar();
-              }}
-            >
-              <FontAwesome name="sign-in" size={20} color="#fff" />
-              <Text style={styles.loginText}>Login</Text>
-            </TouchableOpacity>
+
+            {isUserLoggedIn?.status && token ? (
+              <TouchableOpacity
+                style={styles.login}
+                onPress={() => {
+                  handleLogout();
+                }}
+              >
+                <FontAwesome name="sign-in" size={20} color="#fff" />
+                <Text style={styles.loginText}>Logout</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.login}
+                onPress={() => {
+                  router.push("/auth/login");
+                  toggleSidebar();
+                }}
+              >
+                <FontAwesome name="sign-in" size={20} color="#fff" />
+                <Text style={styles.loginText}>Login</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       )}

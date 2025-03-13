@@ -10,13 +10,14 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import apiRequest from "@/services/apiRequest";
 import { DoctorType } from "@/utils/dataTypes";
+import { useSidebar } from "@/context/SidebarContext";
 
 const Search = () => {
   const { location, option } = useLocalSearchParams();
   const router = useRouter();
   const [doctors, setDoctors] = useState<DoctorType[]>([]);
   const [filteredDoctors, setFilteredDoctors] = useState<DoctorType[]>([]);
-
+  const { user } = useSidebar();
   // location = lab location | option = doctor name or specialty
 
   useEffect(() => {
@@ -101,18 +102,20 @@ const Search = () => {
                     <Text>{doctor.price}</Text>
                     <Text>{`⭐ ${doctor.ratings}`}</Text>
                   </View>
-                  <TouchableOpacity
-                    onPress={() => router.push(`/pages/doctor/${doctor.id}`)}
-                    style={{
-                      backgroundColor: "#00b4d8",
-                      borderRadius: 8,
-                      paddingVertical: 10,
-                      paddingHorizontal: 15,
-                      alignSelf: "center",
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>Book Appointment</Text>
-                  </TouchableOpacity>
+                  {user?.role == "Patient" && (
+                    <TouchableOpacity
+                      onPress={() => router.push(`/pages/doctor/${doctor.id}`)}
+                      style={{
+                        backgroundColor: "#00b4d8",
+                        borderRadius: 8,
+                        paddingVertical: 10,
+                        paddingHorizontal: 15,
+                        alignSelf: "center",
+                      }}
+                    >
+                      <Text style={{ color: "white" }}>Book Appointment</Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               ))}
             </View>

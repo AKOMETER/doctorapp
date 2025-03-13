@@ -1,4 +1,5 @@
 const Lab = require("../database/models/Lab");
+const User = require("../database/models/User");
 
 const LabController = {
   // GET /labs
@@ -16,10 +17,26 @@ const LabController = {
   // GET /labs/:id
   async show(req, res) {
     try {
-      const Lab = await Lab.findByPk(req.params.id);
-      if (!Lab) return res.status(404).json({ msg: "Lab not found" });
+      const lab = await Lab.findByPk(req.params.id);
+      if (!lab) return res.status(404).json({ msg: "Lab not found" });
 
-      return res.status(200).json({ data: Lab });
+      const doctors = await lab.getDoctors({
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "firstName", "lastName", "email"],
+          },
+        ],
+      });
+
+      const doctorsWithLabName = doctors.map((doc) => {
+        const doctorObj = doc.toJSON();
+        doctorObj.labName = lab.name;
+        return doctorObj;
+      });
+
+      return res.status(200).json({ data: doctorsWithLabName });
     } catch (error) {
       return res
         .status(500)

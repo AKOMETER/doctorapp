@@ -1,5 +1,5 @@
 const Specialty = require("../database/models/Specialty");
-
+const User = require("../database/models/User");
 const SpecialtyController = {
   // GET /specialties
   async index(req, res) {
@@ -20,14 +20,30 @@ const SpecialtyController = {
       if (!specialty)
         return res.status(404).json({ msg: "Specialty not found" });
 
-      return res.status(200).json({ data: specialty });
+      const doctors = await specialty.getDoctors({
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "firstName", "lastName", "email"],
+          },
+        ],
+      });
+
+      // Add specialtyName to each doctor instance
+      const doctorsWithSpecialtyName = doctors.map((doc) => {
+        const doctorObj = doc.toJSON();
+        doctorObj.specialtyName = specialty.name;
+        return doctorObj;
+      });
+
+      return res.status(200).json({ data: doctorsWithSpecialtyName });
     } catch (error) {
       return res
         .status(500)
         .json({ msg: "Server error", error: error.message });
     }
   },
-
   // POST /specialties
   async store(req, res) {
     try {

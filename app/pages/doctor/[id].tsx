@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { doctors } from "@/utils/data";
 import Overview from "@/components/doctor_overview";
 import Sidebar from "@/components/sidebar";
+import apiRequest from "@/services/apiRequest";
+import { DoctorType } from "@/utils/dataTypes";
 
 const Tab = createBottomTabNavigator();
 
@@ -19,7 +21,7 @@ function Tab2() {
 export default function DoctorDetails() {
   const navigation = useNavigation();
   const { id }: { id: string } = useLocalSearchParams();
-  const doctor = doctors[parseInt(id) - 1];
+  const [doctor, setDoctor] = useState<DoctorType>();
 
   useEffect(() => {
     // Set header title dynamically
@@ -30,7 +32,11 @@ export default function DoctorDetails() {
     });
   }, [navigation]);
 
-  console.log("doctor", doctor, "specialtyId", id);
+  useEffect(() => {
+    apiRequest.get(`/doctor/${id}`).then((res) => {
+      setDoctor(res?.data);
+    });
+  }, []);
 
   return (
     // <Sidebar title="Doctor Profile">
@@ -52,7 +58,7 @@ export default function DoctorDetails() {
       <Tab.Screen
         name="Overview"
         options={{ title: "Overview" }}
-        children={() => <Overview doctor={doctor} id={parseInt(id)} />}
+        children={() => <Overview doctor={doctor} />}
       />
 
       {/* Reviews Tab */}

@@ -12,6 +12,7 @@ import Toast from "react-native-toast-message"; // Toast for notifications
 import { login } from "@/services/auth";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSidebar } from "@/context/SidebarContext";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const LoginScreen = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-
+  const { setUser, setToken } = useSidebar();
   // Handle form input changes (email, password)
   const handleFormChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
@@ -51,7 +52,6 @@ const LoginScreen = () => {
 
     try {
       const data = await login(email, password);
-      console.log(data);
       if (!data) {
         return;
       }
@@ -62,11 +62,34 @@ const LoginScreen = () => {
       });
 
       // Save token and user data to AsyncStorage
+
       await AsyncStorage.setItem("token", data?.token);
       await AsyncStorage.setItem("user", JSON.stringify(data?.user));
+      setUser(data?.user);
+      setToken(data?.token);
 
       setTimeout(() => {
-        router.push("/");
+        switch (data?.user?.role) {
+          case "Doctor":
+            router.push("/pages/dashboard");
+            break;
+
+          case "Labs":
+            router.push("/pages/dashboard");
+            break;
+
+          case "Patient":
+            router.push("/");
+            break;
+
+          case "Admin":
+            router.push("/pages/admin");
+            break;
+
+          default:
+            router.push("/pages/dashboard");
+            break;
+        }
       }, 2000);
     } catch (error: any) {
       console.log(error.message);
