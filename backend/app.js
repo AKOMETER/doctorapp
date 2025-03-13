@@ -36,8 +36,8 @@ app.use("/specialty", require("./routes/specialty"));
 app.use("/doctor", require("./routes/doctor"));
 app.use("/lab", require("./routes/lab"));
 app.use("/appointment", require("./routes/appointment"));
-// app.use("/message", require("./routes/message "));
-// app.use("/notification", require("./routes/notification"));
+app.use("/payment-method", require("./routes/payment_method"));
+app.use("/transaction", require("./routes/transaction"));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

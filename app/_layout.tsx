@@ -27,6 +27,13 @@ export default function RootLayout() {
           name="pages/dashboard"
           options={{ title: "Dashboard", headerShown: false }}
         />
+
+        {/* //payment gateways */}
+        <Stack.Screen name="pages/payment" options={{ title: "Payment" }} />
+        <Stack.Screen
+          name="pages/transaction"
+          options={{ title: "Transaction List" }}
+        />
         <Stack.Screen
           name="pages/appointments"
           options={{ title: "Appointments" }}
@@ -52,7 +59,6 @@ export default function RootLayout() {
           options={{ title: "Doctors" }}
         />
         <Stack.Screen name="pages/lab/index" options={{ title: "Labs" }} />
-
         {/* Auth Screens */}
         <Stack.Screen name="auth/login" options={{ title: "Login" }} />
         <Stack.Screen name="auth/register" options={{ title: "Register" }} />
@@ -64,11 +70,9 @@ export default function RootLayout() {
           name="auth/forget_password_confirm"
           options={{ title: "Confirm Reset" }}
         />
-
         {/* Others */}
         <Stack.Screen name="not-found" options={{ title: "Not Found" }} />
         <Stack.Screen name="about" options={{ title: "About" }} />
-
         {/* doctor admins */}
         <Stack.Screen
           name="pages/doctorAdmin"
@@ -77,6 +81,24 @@ export default function RootLayout() {
         <Stack.Screen
           name="pages/doctorEdit"
           options={{ title: "Doctor Edit" }}
+        />
+        {/* admin */}
+        {/* doctor admins */}
+        <Stack.Screen
+          name="pages/admin/index"
+          options={{ title: " Admin Dashboard" }}
+        />
+        <Stack.Screen
+          name="pages/admin/doctor"
+          options={{ title: "Admin Doctor Edit" }}
+        />
+        <Stack.Screen
+          name="pages/admin/labs"
+          options={{ title: "Admin Lab Edit" }}
+        />
+        <Stack.Screen
+          name="pages/admin/specification"
+          options={{ title: "Admin Specification Edit" }}
         />
       </Stack>
     </SidebarProvider>

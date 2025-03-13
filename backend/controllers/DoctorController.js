@@ -157,6 +157,32 @@ const DoctorController = {
         .json({ msg: "Update failed", error: error.message });
     }
   },
+
+  async adminUpdate(req, res) {
+    try {
+      const doctorId = req.params.id;
+      const { bio, availableFrom, availableTo, price, user } = req.body;
+
+      const doctor = await Doctor.findByPk(doctorId, {
+        include: [{ model: User, as: "user" }],
+      });
+
+      if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+
+      // Update Doctor fields
+      await doctor.update({ bio, availableFrom, availableTo, price });
+
+      // Update User.profileImage if user exists in payload
+      if (user?.profileImage && doctor.user) {
+        await doctor.user.update({ profileImage: user.profileImage });
+      }
+
+      res.json({ message: "Doctor updated successfully", doctor });
+    } catch (error) {
+      console.error("adminUpdate error:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  },
   // DELETE /doctor/:id
   async destroy(req, res) {
     try {

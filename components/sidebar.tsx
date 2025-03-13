@@ -44,6 +44,7 @@ const Sidebar = ({
   const imageUrl = user
     ? backendUrl + "/" + user.profileImage
     : "https://avatar.iran.liara.run/public/boy?username=Ash";
+
   return (
     <View style={styles.container}>
       {isOpen && (
@@ -64,6 +65,7 @@ const Sidebar = ({
             <View style={styles.greeting}>
               <Text style={styles.greetingText}>Hello</Text>
               <Text style={styles.guestText}>{name}</Text>
+              <Text style={styles.guestText}>$ {user?.amount || 0}</Text>
             </View>
           </View>
 
@@ -101,6 +103,33 @@ const Sidebar = ({
                 <Text style={styles.navText}>Appointments</Text>
               </TouchableOpacity>
             )}
+
+            {user?.role == "Patient" && (
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => {
+                  router.push("/pages/payment");
+                  toggleSidebar();
+                }}
+              >
+                <FontAwesome name="money" size={20} color="#000000" />
+                <Text style={styles.navText}>Payment</Text>
+              </TouchableOpacity>
+            )}
+
+            {user?.role == "Admin" && (
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => {
+                  router.push("/pages/admin");
+                  toggleSidebar();
+                }}
+              >
+                <FontAwesome name="crosshairs" size={20} color="#000000" />
+                <Text style={styles.navText}>Admin</Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               style={styles.navItem}
               onPress={() => {

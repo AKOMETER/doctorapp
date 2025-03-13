@@ -47,10 +47,10 @@ const LabController = {
   // POST /labs
   async store(req, res) {
     try {
-      const { name, description } = req.body;
-      const Lab = await Lab.create({ name, description });
+      const { name, description, image, location } = req.body;
+      const lab = await Lab.create({ name, description, image, location });
 
-      return res.status(201).json({ msg: "Lab created", data: Lab });
+      return res.status(201).json({ msg: "Lab created", data: lab });
     } catch (error) {
       return res
         .status(400)
@@ -61,27 +61,26 @@ const LabController = {
   // PUT /labs/:id
   async update(req, res) {
     try {
-      const { name, description } = req.body;
-      const Lab = await Lab.findByPk(req.params.id);
-      if (!Lab) return res.status(404).json({ msg: "Lab not found" });
+      const { name, description, image, location } = req.body;
+      const lab = await Lab.findByPk(req.params.id);
+      if (!lab) return res.status(404).json({ msg: "Lab not found" });
 
-      await Lab.update({ name, description });
+      await lab.update({ name, description, image, location });
 
-      return res.status(200).json({ msg: "Lab updated", data: Lab });
+      return res.status(200).json({ msg: "Lab updated", data: lab });
     } catch (error) {
       return res
         .status(400)
         .json({ msg: "Update failed", error: error.message });
     }
   },
-
   // DELETE /labs/:id
   async destroy(req, res) {
     try {
-      const Lab = await Lab.findByPk(req.params.id);
-      if (!Lab) return res.status(404).json({ msg: "Lab not found" });
+      const lab = await Lab.findByPk(req.params.id);
+      if (!lab) return res.status(404).json({ msg: "Lab not found" });
 
-      await Lab.destroy();
+      await lab.destroy();
       return res.status(200).json({ msg: "Lab deleted" });
     } catch (error) {
       return res

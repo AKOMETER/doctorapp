@@ -1,5 +1,5 @@
 export interface SpecialtyType {
-  id: number;
+  id?: number;
   name: string;
   icon: string;
   createdAt: string;
@@ -7,7 +7,7 @@ export interface SpecialtyType {
 }
 
 export interface DoctorType {
-  id: number;
+  id?: number;
   userId: number;
   bio: string;
   availableFrom: string;

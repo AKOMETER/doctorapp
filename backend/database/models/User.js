@@ -18,6 +18,10 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    amount: {
+      type: DataTypes.DECIMAL(10, 2), // 10 digits total, 2 after decimal
+      allowNull: true,
+    },
     mobile: {
       type: DataTypes.STRING,
       allowNull: true,
