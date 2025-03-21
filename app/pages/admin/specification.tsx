@@ -7,7 +7,6 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import axios from "axios";
 import { SpecialtyType } from "@/utils/dataTypes";
 import apiRequest from "@/services/apiRequest";
 
@@ -20,7 +19,7 @@ export default function Specification() {
 
   const fetchSpecialties = async () => {
     apiRequest.get("/specialty").then((res) => {
-      setSpecialties(res.data);
+      setSpecialties(res?.data.data);
     });
   };
 
@@ -40,7 +39,7 @@ export default function Specification() {
     setEditId(item.id);
   };
 
-  const handleDelete = async (id: number | undefined) => {
+  const handleDelete = async (id: string | undefined) => {
     apiRequest.delete(`/specialty/${id}`);
     fetchSpecialties();
   };
@@ -80,7 +79,7 @@ export default function Specification() {
             <TouchableOpacity onPress={() => handleEdit(item)}>
               <Text style={{ color: "blue" }}>Edit</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleDelete(item.id)}>
+            <TouchableOpacity onPress={() => handleDelete(item?.id || "")}>
               <Text style={{ color: "red" }}>Delete</Text>
             </TouchableOpacity>
           </View>

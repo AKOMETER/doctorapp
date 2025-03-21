@@ -25,7 +25,7 @@ type DoctorFormType = {
 export default function Doctor() {
   const [doctors, setDoctors] = useState<DoctorType[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
+  const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>(null);
   const [form, setForm] = useState<DoctorFormType>({
     profileImage: "",
     bio: "",
@@ -41,14 +41,14 @@ export default function Doctor() {
   const fetchDoctors = async () => {
     try {
       const res = await apiRequest.get("/doctor");
-      setDoctors(res.data);
+      setDoctors(res?.data?.data);
     } catch (err) {
       console.error("Fetch Error:", err);
     }
   };
 
   const openEditModal = (doctor: DoctorType) => {
-    setSelectedDoctorId(doctor.id);
+    setSelectedDoctorId(doctor.id || "");
     setForm({
       profileImage: doctor?.user?.profileImage || "",
       bio: doctor.bio || "",

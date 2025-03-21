@@ -8,6 +8,7 @@ const {
   validateEmail,
   returnValidation,
 } = require("../middleware/validations");
+
 const upload = require("../config/multerConfig");
 
 // Add the /is_logged route before the /:id route

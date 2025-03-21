@@ -24,12 +24,7 @@ router.post(
 );
 
 // send forget password mail
-router.post(
-  "/forget_password",
-  validateEmail,
-  returnValidation,
-  Controller.forget_password
-);
+router.post("/send_token", Controller.send_token);
 
 // confirm password reset
 router.post(
@@ -40,12 +35,8 @@ router.post(
 );
 
 // send reset email mail
-router.post("/reset_email", isAuth, Controller.reset_email);
-
-// send reset email mail
 router.post(
   "/reset_email_confirm",
-  isAuth,
   validateEmail,
   returnValidation,
   Controller.reset_email_confirm

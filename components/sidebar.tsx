@@ -5,6 +5,8 @@ import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome for icon
 import { useRouter } from "expo-router";
 import apiRequest from "@/services/apiRequest";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserType } from "@/utils/dataTypes";
+import { defaultUser } from "@/utils/default";
 
 const backendUrl = process.env.EXPO_PUBLIC_BACKENDURL;
 
@@ -17,9 +19,13 @@ const Sidebar = ({
 }) => {
   const { isOpen, toggleSidebar, user, token } = useSidebar();
   const router = useRouter();
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState({
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState<{
+    status: Boolean;
+    user: UserType;
+    msg: string;
+  }>({
     status: false,
-    user: {},
+    user: defaultUser,
     msg: "",
   });
 
@@ -33,17 +39,25 @@ const Sidebar = ({
     apiRequest
       .get("/user/is_logged")
       .then((res) => {
-        setIsUserLoggedIn(res);
+        if (res) {
+          setIsUserLoggedIn(res?.data);
+        }
+
+        console.log(isUserLoggedIn);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  const name = user ? user.firstName + " " + user.lastName : "Guest";
-  const imageUrl = user
-    ? backendUrl + "/" + user.profileImage
-    : "https://avatar.iran.liara.run/public/boy?username=Ash";
+  const name =
+    user && isUserLoggedIn.status
+      ? user.firstName + " " + user.lastName
+      : "Guest";
+  const imageUrl =
+    user && isUserLoggedIn.status
+      ? backendUrl + "/" + user.profileImage
+      : "https://avatar.iran.liara.run/public/boy?username=Ash";
 
   return (
     <View style={styles.container}>
@@ -65,7 +79,9 @@ const Sidebar = ({
             <View style={styles.greeting}>
               <Text style={styles.greetingText}>Hello</Text>
               <Text style={styles.guestText}>{name}</Text>
-              <Text style={styles.guestText}>$ {user?.amount || 0}</Text>
+              <Text style={styles.guestText}>
+                $ {isUserLoggedIn.user?.amount || 0}
+              </Text>
             </View>
           </View>
 
@@ -126,7 +142,7 @@ const Sidebar = ({
                 }}
               >
                 <FontAwesome name="crosshairs" size={20} color="#000000" />
-                <Text style={styles.navText}>Admin</Text>
+                <Text style={styles.navText}>Manager</Text>
               </TouchableOpacity>
             )}
 
@@ -150,7 +166,7 @@ const Sidebar = ({
                 }}
               >
                 <FontAwesome name="cube" size={20} color="#000000" />
-                <Text style={styles.navText}>Doctor Admin</Text>
+                <Text style={styles.navText}>Admin</Text>
               </TouchableOpacity>
             )}
 
@@ -175,17 +191,7 @@ const Sidebar = ({
               <Text style={styles.navText}>Settings</Text>
             </TouchableOpacity>
 
-            {isUserLoggedIn?.status && token ? (
-              <TouchableOpacity
-                style={styles.login}
-                onPress={() => {
-                  handleLogout();
-                }}
-              >
-                <FontAwesome name="sign-in" size={20} color="#fff" />
-                <Text style={styles.loginText}>Logout</Text>
-              </TouchableOpacity>
-            ) : (
+            {!isUserLoggedIn?.status && user ? (
               <TouchableOpacity
                 style={styles.login}
                 onPress={() => {
@@ -195,6 +201,16 @@ const Sidebar = ({
               >
                 <FontAwesome name="sign-in" size={20} color="#fff" />
                 <Text style={styles.loginText}>Login</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.login}
+                onPress={() => {
+                  handleLogout();
+                }}
+              >
+                <FontAwesome name="sign-in" size={20} color="#fff" />
+                <Text style={styles.loginText}>Logout</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -322,7 +338,7 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   loginText: {
-    marginLeft: 10,
+    marginLeft: 5,
     fontSize: 20,
     color: "#fff",
   },

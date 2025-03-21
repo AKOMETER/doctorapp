@@ -15,6 +15,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { AppointmentType } from "@/utils/dataTypes";
 import apiRequest from "@/services/apiRequest";
+import Toast from "react-native-toast-message";
 
 export default function DoctorAdmin() {
   const navigation = useNavigation();
@@ -38,7 +39,7 @@ export default function DoctorAdmin() {
   const fetchAppointments = async () => {
     try {
       const res = await apiRequest.get("/appointment/focus");
-      setAppointments(res.data);
+      setAppointments(res?.data?.data);
     } catch (err) {
       Alert.alert("Error", "Failed to fetch appointments");
     } finally {
@@ -138,6 +139,7 @@ export default function DoctorAdmin() {
           </View>
         </View>
       </Modal>
+      <Toast />
     </ScrollView>
   );
 }

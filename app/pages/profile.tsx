@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  Alert,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
 import { useSidebar } from "@/context/SidebarContext";
 import { updateUser } from "@/services/auth";
 import { useNavigation, useRouter } from "expo-router";
 import Sidebar from "@/components/sidebar";
+import { showToast } from "@/utils/helperFunction";
+import Toast from "react-native-toast-message";
 
 interface FormData {
   firstName: string;
   lastName: string;
-  email: string;
   mobile: string;
   profileImage?: string | null;
 }
@@ -28,7 +22,6 @@ export default function Profile() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      email: "",
       mobile: "",
     },
   });
@@ -43,7 +36,8 @@ export default function Profile() {
       const { status } =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert(
+        showToast(
+          "error",
           "Permission Denied",
           "Allow access to gallery to upload images"
         );
@@ -57,7 +51,6 @@ export default function Profile() {
     } else {
       setValue("firstName", user.firstName || "");
       setValue("lastName", user.lastName || "");
-      setValue("email", user.email || "");
       setValue("mobile", user.mobile || "");
     }
   }, [user, setValue, router]);
@@ -81,7 +74,6 @@ export default function Profile() {
       const formData = new FormData();
       formData.append("firstName", data.firstName);
       formData.append("lastName", data.lastName);
-      formData.append("email", data.email);
       formData.append("mobile", data.mobile);
 
       if (profileImage) {
@@ -93,12 +85,15 @@ export default function Profile() {
       }
 
       const response = await updateUser(user?.id || 0, formData);
-      if (response?.user) {
-        setUser(response.user);
-        Alert.alert("Success", response.msg || "Profile updated successfully");
+      if (response?.status == 200) {
+        setUser(response?.data.user);
+        showToast(
+          "success",
+          response?.data.msg || "Profile updated successfully"
+        );
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to update profile.");
+      showToast("error", "Failed to update profile.");
     }
   };
 
@@ -141,19 +136,7 @@ export default function Profile() {
             />
           )}
         />
-        <Controller
-          name="email"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              className="border  m-3  border-gray-300 rounded p-3"
-              placeholder="Email"
-              keyboardType="email-address"
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
-        />
+
         <Controller
           name="mobile"
           control={control}
@@ -175,6 +158,9 @@ export default function Profile() {
       >
         <Text className="text-white font-bold">Update Profile</Text>
       </TouchableOpacity>
+
+      {user?.role == "Patient" && <></>}
+      <Toast />
     </View>
     // </Sidebar>
   );

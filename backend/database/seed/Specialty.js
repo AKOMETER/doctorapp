@@ -54,4 +54,6 @@ const seedSpecialties = async () => {
     await sequelize.close();
   }
 };
+
+// seedSpecialties();
 module.exports = seedSpecialties;

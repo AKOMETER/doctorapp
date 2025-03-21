@@ -25,15 +25,15 @@ const HomePage = () => {
   const [labs, setLabs] = useState([]);
   useEffect(() => {
     apiRequest.get("/specialty").then((res: any) => {
-      setSpecialty(res.data);
+      setSpecialty(res.data.data);
     });
 
     apiRequest.get("/doctor").then((res: any) => {
-      setDoctors(res.data);
+      setDoctors(res.data.data);
     });
 
     apiRequest.get("/lab").then((res: any) => {
-      setLabs(res.data);
+      setLabs(res.data.data);
     });
   }, []);
 
@@ -119,38 +119,41 @@ const HomePage = () => {
             </Text>
           </View>
 
-          {doctors.slice(0, 5).map((doctor: DoctorType) => (
-            <View
-              key={doctor.id}
-              className="flex-row bg-white rounded-lg mb-4 p-4 shadow-md"
-            >
-              <Image
-                source={{ uri: doctor.image }}
-                className="w-20 h-20 rounded-lg"
-              />
-              <View className="ml-4 flex-1">
-                <Text className="text-base font-bold">
-                  {doctor.user.firstName + " " + doctor.user.lastName}
-                </Text>
-                <Text className="text-gray-500">
-                  {doctor.Specialties.slice(0, 3).map((item) => {
-                    return <Text key={item?.id}>{item?.name}</Text>;
-                  })}
-                </Text>
-                <Text className="text-blue-700">{doctor.location}</Text>
-                <Text className="text-gray-700">{doctor.price}</Text>
-                <Text className="text-yellow-500">{`⭐ ${doctor.ratings}`}</Text>
+          {doctors.slice(0, 5).map((doctor: DoctorType) => {
+            console.log("doctor", doctor);
+            return (
+              <View
+                key={doctor.id}
+                className="flex-row bg-white rounded-lg mb-4 p-4 shadow-md"
+              >
+                <Image
+                  source={{ uri: doctor.image }}
+                  className="w-20 h-20 rounded-lg"
+                />
+                <View className="ml-4 flex-1">
+                  <Text className="text-base font-bold">
+                    {doctor?.user?.firstName + " " + doctor?.user?.lastName}
+                  </Text>
+                  <Text className="text-gray-500">
+                    {doctor.Specialties.slice(0, 3).map((item) => {
+                      return <Text key={item?.id}>{item?.name} </Text>;
+                    })}
+                  </Text>
+                  <Text className="text-blue-700">{doctor.location}</Text>
+                  <Text className="text-gray-700">{doctor.price}</Text>
+                  <Text className="text-yellow-500">{`⭐ ${doctor.ratings}`}</Text>
+                </View>
+                {user?.role == "Patient" && (
+                  <TouchableOpacity
+                    className="bg-cyan-500 rounded-md px-4 py-2 self-center"
+                    onPress={() => router.push(`/pages/doctor/${doctor.id}`)}
+                  >
+                    <Text className="text-white">Book Appointment</Text>
+                  </TouchableOpacity>
+                )}
               </View>
-              {user?.role == "Patient" && (
-                <TouchableOpacity
-                  className="bg-cyan-500 rounded-md px-4 py-2 self-center"
-                  onPress={() => router.push(`/pages/doctor/${doctor.id}`)}
-                >
-                  <Text className="text-white">Book Appointment</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          ))}
+            );
+          })}
         </View>
 
         {/* labs */}

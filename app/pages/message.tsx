@@ -6,38 +6,28 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { doctors } from "@/utils/data";
 import { useNavigation } from "expo-router";
-import Sidebar from "@/components/sidebar";
-
-interface Message {
-  id: string;
-  sender: "user" | "doctor";
-  text: string;
-  timestamp: string;
-}
-
-interface Doctor {
-  id: number;
-  name: string;
-  image: string;
-}
+import apiRequest from "@/services/apiRequest";
+import { MessageType, UserType } from "@/utils/dataTypes";
+import { FontAwesome } from "@expo/vector-icons";
+import { useSidebar } from "@/context/SidebarContext";
+import Toast from "react-native-toast-message";
 
 export default function ChatApp() {
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const { user } = useSidebar();
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<{ [key: string]: Message[] }>({});
+  const [messages, setMessages] = useState<MessageType[]>([]);
+  const [users, setUsers] = useState<UserType[]>([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const loadMessages = async () => {
-      const storedMessages = await AsyncStorage.getItem("chatMessages");
-      if (storedMessages) {
-        setMessages(JSON.parse(storedMessages));
-      }
-    };
-    loadMessages();
+    apiRequest.get("/user").then((res) => {
+      const filtered = (res?.data || [])
+        .filter((item: UserType) => !(item.role === "Admin"))
+        .filter((item: UserType) => !(item.id === user?.id));
+      setUsers(filtered);
+    });
   }, []);
 
   useEffect(() => {
@@ -48,92 +38,115 @@ export default function ChatApp() {
     });
   }, [navigation]);
 
-  useEffect(() => {
-    const saveMessages = async () => {
-      await AsyncStorage.setItem("chatMessages", JSON.stringify(messages));
-    };
-    saveMessages();
-  }, [messages]);
+  const handleSendMessage = (selectedUser: UserType) => {
+    if (!message.trim() || !selectedUser) return;
 
-  const handleSendMessage = () => {
-    if (!message.trim() || !selectedDoctor) return;
-
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      sender: "user",
-      text: message,
-      timestamp: new Date().toLocaleString(),
+    const tempId = Date.now().toString(); // temporary ID for display
+    const newMessage: MessageType = {
+      id: tempId,
+      senderId: user?.id,
+      receiverId: selectedUser?.id || "",
+      content: message,
+      isRead: false,
+      failed: false, // custom flag for UI
     };
 
-    const doctorId = selectedDoctor.id.toString();
-    setMessages((prevMessages) => ({
-      ...prevMessages,
-      [doctorId]: [...(prevMessages[doctorId] || []), newMessage],
-    }));
-
+    // Show message instantly
+    setMessages((prev) => [...prev, newMessage]);
     setMessage("");
 
-    setTimeout(() => {
-      const replyMessage: Message = {
-        id: Date.now().toString(),
-        sender: "doctor",
-        text: `Hello, this is ${selectedDoctor.name}. How can I help you?`,
-        timestamp: new Date().toLocaleString(),
-      };
-      setMessages((prevMessages) => ({
-        ...prevMessages,
-        [doctorId]: [...(prevMessages[doctorId] || []), replyMessage],
-      }));
-    }, 1000);
+    apiRequest
+      .post("/message", newMessage)
+      .then((res) => {
+        // Optionally replace temporary message with response if needed
+      })
+      .catch(() => {
+        // Mark last message as failed
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === tempId ? { ...msg, failed: true } : msg
+          )
+        );
+      });
   };
 
-  const renderMessage = ({ item }: { item: Message }) => (
+  function handleSelectUser(item: UserType) {
+    setSelectedUser(item);
+    apiRequest.get(`/message/${user?.id}/${item.id}`).then((res) => {
+      setMessages(res?.data || []);
+    });
+  }
+
+  const renderMessage = ({
+    item,
+  }: {
+    item: MessageType & { failed?: boolean };
+  }) => (
     <View
       className={`p-3 rounded-lg mb-2 ${
-        item.sender === "user"
-          ? "bg-blue-200 self-end"
+        item.senderId != user?.id
+          ? item.failed
+            ? "bg-red-300 self-end"
+            : "bg-blue-200 self-end"
           : "bg-gray-300 self-start"
       }`}
     >
-      <Text className="text-gray-800">{item.text}</Text>
-      <Text className="text-xs text-gray-500 mt-1">{item.timestamp}</Text>
+      <Text className="text-gray-800">{item.content}</Text>
+      <Text className="text-xs text-gray-500 mt-1">
+        {new Date(item?.createdAt ?? "").toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      </Text>
     </View>
   );
 
-  const renderDoctor = ({ item }: { item: Doctor }) => (
+  const renderUsers = ({ item }: { item: UserType }) => (
     <TouchableOpacity
       className={`p-4 mb-2 rounded-lg shadow-md ${
-        selectedDoctor?.id === item.id ? "bg-blue-300" : "bg-white"
+        selectedUser?.id === item.id ? "bg-blue-300" : "bg-white"
       }`}
-      onPress={() => setSelectedDoctor(item)}
+      onPress={() => handleSelectUser(item)}
     >
-      <Text className="text-lg font-bold text-gray-800">{item.name}</Text>
+      <View className="flex-row items-center space-x-2 gap-3">
+        <FontAwesome
+          name={user?.role === "Doctor" ? "user-md" : "user"}
+          size={28}
+          color="#4CAF50"
+        />
+        <Text className="text-lg font-bold text-gray-800">
+          {item.firstName} {item.lastName}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 
   return (
-    // <Sidebar title="Message">
     <View className="flex-1 bg-gray-100 p-4">
-      {!selectedDoctor && (
+      {!selectedUser ? (
         <FlatList
-          data={doctors}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderDoctor}
+          data={users}
+          keyExtractor={(item, index) =>
+            item?.id?.toString() ?? index.toString()
+          }
+          renderItem={renderUsers}
           contentContainerStyle={{ paddingBottom: 20 }}
         />
-      )}
-
-      {selectedDoctor && (
+      ) : (
         <View className="flex-1">
           <Text className="text-lg font-bold text-gray-800 mb-4">
-            Chat with {selectedDoctor.name}
+            Chat with {selectedUser.firstName} {selectedUser.lastName}
           </Text>
+
           <FlatList
-            data={messages[selectedDoctor.id.toString()] || []}
-            keyExtractor={(item) => item.id}
+            data={messages}
+            keyExtractor={(item, index) =>
+              item?.id?.toString() ?? index.toString()
+            }
             renderItem={renderMessage}
             contentContainerStyle={{ flexGrow: 1, marginBottom: 16 }}
           />
+
           <View className="flex-row items-center bg-white p-3 rounded-lg shadow-md">
             <TextInput
               className="flex-1 text-lg p-3 text-gray-800"
@@ -143,20 +156,21 @@ export default function ChatApp() {
             />
             <TouchableOpacity
               className="bg-blue-500 px-4 py-2 rounded-lg"
-              onPress={handleSendMessage}
+              onPress={() => handleSendMessage(selectedUser)}
             >
               <Text className="text-white font-bold">Send</Text>
             </TouchableOpacity>
           </View>
+
           <TouchableOpacity
             className="mt-4 bg-gray-600 p-3 rounded-lg items-center"
-            onPress={() => setSelectedDoctor(null)}
+            onPress={() => setSelectedUser(null)}
           >
-            <Text className="text-white font-bold">Back to Doctors</Text>
+            <Text className="text-white font-bold">Back to List</Text>
           </TouchableOpacity>
+          <Toast />
         </View>
       )}
     </View>
-    // </Sidebar>
   );
 }

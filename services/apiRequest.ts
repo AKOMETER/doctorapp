@@ -1,6 +1,6 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert } from "react-native";
+import { showToast } from "@/utils/helperFunction";
 
 // Base URL from env
 const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -13,7 +13,7 @@ const apiRequest = {
       const response = await axios.get(buildUrl(path, options.query), {
         headers,
       });
-      return response.data;
+      return response;
     } catch (error: any) {
       handleError(error);
     }
@@ -25,8 +25,9 @@ const apiRequest = {
       const headers = buildHeaders(token);
       const response = await axios.post(`${backendUrl}${path}`, data, {
         headers,
+        ...options,
       });
-      return response.data;
+      return response;
     } catch (error: any) {
       handleError(error);
     }
@@ -38,8 +39,9 @@ const apiRequest = {
       const headers = buildHeaders(token);
       const response = await axios.put(`${backendUrl}${path}`, data, {
         headers,
+        ...options,
       });
-      return response.data;
+      return response;
     } catch (error: any) {
       handleError(error);
     }
@@ -51,8 +53,9 @@ const apiRequest = {
       const headers = buildHeaders(token);
       const response = await axios.patch(`${backendUrl}${path}`, data, {
         headers,
+        ...options,
       });
-      return response.data;
+      return response;
     } catch (error: any) {
       handleError(error);
     }
@@ -62,8 +65,11 @@ const apiRequest = {
     try {
       const token = await AsyncStorage.getItem("token");
       const headers = buildHeaders(token);
-      const response = await axios.delete(`${backendUrl}${path}`, { headers });
-      return response.data;
+      const response = await axios.delete(`${backendUrl}${path}`, {
+        headers,
+        ...options,
+      });
+      return response;
     } catch (error: any) {
       handleError(error);
     }
@@ -73,7 +79,6 @@ const apiRequest = {
 // Helpers
 const buildHeaders = (token: string | null) => ({
   Accept: "application/json",
-  "Content-Type": "application/json",
   ...(token && { Authorization: `Bearer ${token}` }),
 });
 
@@ -90,10 +95,16 @@ const buildUrl = (path: string, query?: Record<string, any>) => {
 const handleError = (error: any) => {
   if (error?.response?.data?.errors) {
     error.response.data.errors.forEach((err: any) => {
-      Alert.alert("Error", err.msg || "Something went wrong");
+      showToast("error", err.msg || "Something went wrong");
     });
   } else {
-    Alert.alert("Error", error?.response?.data?.msg || "Something went wrong");
+    // console.log(error?.response?.data?.msg);
+    if (
+      error?.response?.data?.msg == "Unauthorized. Token is invalid or expired."
+    ) {
+      //redirect to login
+    }
+    showToast("error", error?.response?.data?.msg || "Something went wrong");
   }
 };
 

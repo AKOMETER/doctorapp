@@ -8,7 +8,7 @@ const MedicalRecord = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "User",
+        model: "Users",
         key: "id",
       },
     },

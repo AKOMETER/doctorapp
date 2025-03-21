@@ -35,9 +35,15 @@ app.use("/user", require("./routes/users"));
 app.use("/specialty", require("./routes/specialty"));
 app.use("/doctor", require("./routes/doctor"));
 app.use("/lab", require("./routes/lab"));
+app.use("/product", require("./routes/product"));
 app.use("/appointment", require("./routes/appointment"));
 app.use("/payment-method", require("./routes/payment_method"));
 app.use("/transaction", require("./routes/transaction"));
+app.use("/cart", require("./routes/cart"));
+app.use("/product", require("./routes/product"));
+app.use("/record", require("./routes/record"));
+app.use("/medical_record", require("./routes/medical_record"));
+app.use("/message", require("./routes/message.js"));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

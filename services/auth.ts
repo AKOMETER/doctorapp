@@ -1,11 +1,10 @@
 import axios from "axios";
-import Toast from "react-native-toast-message";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert } from "react-native";
+import { showToast } from "@/utils/helperFunction";
 
 const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL; // Get the BACKENDURL from the .env file
 
-console.log(backendUrl, "backendUrl");
 // Axios instance
 const api = axios.create({
   baseURL: backendUrl,
@@ -37,11 +36,11 @@ export const login = async (email: string, password: string) => {
       const errs: any[] = error.response.data.errors;
 
       errs.forEach((err) => {
-        Alert.alert("Error", err.msg || "Something went wrong");
+        showToast("error", err.msg || "Something went wrong");
       });
     }
 
-    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
+    showToast("error", error.response?.data?.msg || "Something went wrong");
   }
 };
 
@@ -55,46 +54,45 @@ export const register = async (data: Record<string, any>) => {
       const errs: any[] = error.response.data.errors;
 
       errs.forEach((err) => {
-        Alert.alert("Error", err.msg || "Something went wrong");
+        showToast("error", err.msg || "Something went wrong");
       });
     }
 
-    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
+    showToast("error", error.response?.data?.msg || "Something went wrong");
   }
 };
 
-export const forget_password = async (email: string) => {
+export const forget_password = async (data: Record<string, any>) => {
   try {
-    const response = await api.post("/auth/forget_password", email);
-    console.log(response);
-    return response.data;
+    const response = await api.post("/auth/forget_password", data);
+    return response;
   } catch (error: any) {
     if (error.response.data.errors) {
       const errs: any[] = error.response.data.errors;
 
       errs.forEach((err) => {
-        Alert.alert("Error", err.msg || "Something went wrong");
+        showToast("error", err.msg || "Something went wrong");
       });
     }
 
-    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
+    showToast("error", error.response?.data?.msg || "Something went wrong");
   }
 };
 
 export const forget_password_confirm = async (data: Record<string, any>) => {
   try {
     const response = await api.post("/auth/forget_password_confirm", data);
-    return response.data;
+    return response;
   } catch (error: any) {
     if (error.response.data.errors) {
       const errs: any[] = error.response.data.errors;
 
       errs.forEach((err) => {
-        Alert.alert("Error", err.msg || "Something went wrong");
+        showToast("error", err.msg || "Something went wrong");
       });
     }
 
-    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
+    showToast("error", error.response?.data?.msg || "Something went wrong");
   }
 };
 
@@ -108,29 +106,27 @@ export const isLogged = async () => {
       const errs: any[] = error.response.data.errors;
 
       errs.forEach((err) => {
-        Alert.alert("Error", err.msg || "Something went wrong");
+        showToast("error", err.msg || "Something went wrong");
       });
     }
 
-    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
+    showToast("error", error.response?.data?.msg || "Something went wrong");
   }
 };
 
 export const updateUser = async (id: string, data: Record<string, any>) => {
   try {
-    const response = await api.put(`/users/${id}`, data);
-
-    console.log(response.data);
-    return response.data;
+    const response = await api.put(`/user/${id}`, data);
+    return response;
   } catch (error: any) {
     if (error.response.data.errors) {
       const errs: any[] = error.response.data.errors;
 
       errs.forEach((err) => {
-        Alert.alert("Error", err.msg || "Something went wrong");
+        showToast("error", err.msg || "Something went wrong");
       });
     }
-
-    Alert.alert("Error", error.response?.data?.msg || "Something went wrong");
+    console.log("data", error);
+    showToast("error", error.response?.data?.msg || "Something went wrong");
   }
 };

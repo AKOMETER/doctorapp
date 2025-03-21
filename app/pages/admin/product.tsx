@@ -13,69 +13,79 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import apiRequest from "@/services/apiRequest";
-import { LabType } from "@/utils/dataTypes";
+import NumberInput from "@/components/number_input";
+import { ProductType } from "@/utils/dataTypes";
 
-export default function AdminLabScreen() {
-  const [labs, setLabs] = useState<LabType[]>([]);
+export default function AdminProductScreen() {
+  const [products, setProducts] = useState<ProductType[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [form, setForm] = useState<LabType>({
+  const [form, setForm] = useState<ProductType>({
     name: "",
     image: "",
     description: "",
-    location: "",
+    price: 0,
+    stock: 0,
+    category: "",
   });
   const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchLabs();
+    fetchProducts();
   }, []);
 
-  const fetchLabs = async () => {
+  const fetchProducts = async () => {
     try {
-      const res = await apiRequest.get("/lab");
-      setLabs(res?.data.data);
+      const res = await apiRequest.get("/product");
+      setProducts(res?.data);
     } catch (err) {
-      console.error("Fetch labs error:", err);
+      console.error("Fetch products error:", err);
     }
   };
 
   const openCreateModal = () => {
-    setForm({ name: "", image: "", description: "", location: "" });
+    setForm({
+      name: "",
+      image: "",
+      description: "",
+      price: 0,
+      stock: 0,
+      category: "",
+    });
     setEditingId(null);
     setModalVisible(true);
   };
 
-  const openEditModal = (lab: LabType) => {
-    setForm(lab);
-    setEditingId(lab.id!);
+  const openEditModal = (product: ProductType) => {
+    setForm(product);
+    setEditingId(product.id!);
     setModalVisible(true);
   };
 
   const handleSave = async () => {
     try {
       if (editingId) {
-        await apiRequest.put(`/lab/${editingId}`, form);
+        await apiRequest.put(`/product/${editingId}`, form);
       } else {
-        await apiRequest.post("/lab", form);
+        await apiRequest.post("/product", form);
       }
       setModalVisible(false);
-      fetchLabs();
+      fetchProducts();
     } catch (err) {
-      console.error("Save lab error:", err);
+      console.error("Save product error:", err);
     }
   };
 
   const handleDelete = async (id: string) => {
-    Alert.alert("Delete Lab", "Are you sure?", [
+    Alert.alert("Delete Product", "Are you sure?", [
       { text: "Cancel" },
       {
         text: "Delete",
         onPress: async () => {
           try {
-            await apiRequest.delete(`/lab/${id}`);
-            fetchLabs();
+            await apiRequest.delete(`/product/${id}`);
+            fetchProducts();
           } catch (err) {
-            console.error("Delete lab error:", err);
+            console.error("Delete product error:", err);
           }
         },
       },
@@ -84,22 +94,22 @@ export default function AdminLabScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Button title="Create New Lab" onPress={openCreateModal} />
+      <Button title="Create New Product" onPress={openCreateModal} />
 
-      {labs.map((lab) => (
-        <View key={lab.id} style={styles.card}>
-          {lab.image ? (
-            <Image source={{ uri: lab.image }} style={styles.image} />
+      {products.map((product) => (
+        <View key={product.id} style={styles.card}>
+          {product.image ? (
+            <Image source={{ uri: product.image }} style={styles.image} />
           ) : null}
-          <Text style={styles.title}>{lab.name}</Text>
-          <Text>{lab.description}</Text>
-          <Text>Location: {lab.location}</Text>
+          <Text style={styles.title}>{product.name}</Text>
+          <Text>{product.description}</Text>
+          <Text>Description: {product.description}</Text>
 
           <View style={styles.iconRow}>
-            <TouchableOpacity onPress={() => openEditModal(lab)}>
+            <TouchableOpacity onPress={() => openEditModal(product)}>
               <FontAwesome name="edit" size={20} color="blue" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleDelete(lab.id!)}>
+            <TouchableOpacity onPress={() => handleDelete(product.id!)}>
               <FontAwesome
                 name="trash"
                 size={20}
@@ -115,14 +125,16 @@ export default function AdminLabScreen() {
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalView}>
           <Text style={styles.modalTitle}>
-            {editingId ? "Edit Lab" : "Create Lab"}
+            {editingId ? "Edit Product" : "Create Product"}
           </Text>
 
           <TextInput
             style={styles.input}
-            placeholder="Lab Name"
+            placeholder="Product Name"
             value={form.name}
-            onChangeText={(text) => setForm({ ...form, name: text })}
+            onChangeText={(text) =>
+              setForm({ ...form, name: text.trimStart() })
+            }
           />
           <TextInput
             style={styles.input}
@@ -136,11 +148,25 @@ export default function AdminLabScreen() {
             value={form.description}
             onChangeText={(text) => setForm({ ...form, description: text })}
           />
+
+          <NumberInput
+            value={form.price}
+            onChangeValue={(val) => setForm({ ...form, price: val })}
+            float={true}
+            placeholder="Enter Price"
+          />
+
+          <NumberInput
+            value={form.stock}
+            placeholder="Enter Stock"
+            onChangeValue={(val) => setForm({ ...form, stock: val })}
+          />
+
           <TextInput
             style={styles.input}
-            placeholder="Location"
-            value={form.location}
-            onChangeText={(text) => setForm({ ...form, location: text })}
+            placeholder="Enter Category"
+            value={form.category}
+            onChangeText={(text) => setForm({ ...form, category: text })}
           />
 
           <View style={styles.modalButtons}>

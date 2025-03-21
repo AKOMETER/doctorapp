@@ -8,7 +8,8 @@ import {
 } from "react-native";
 import { forget_password_confirm } from "@/services/auth";
 import { useRouter } from "expo-router";
-import { handleAlert } from "@/utils/helperFunction";
+import { showToast } from "@/utils/helperFunction";
+import Toast from "react-native-toast-message";
 export default function ForgetPasswordScreen() {
   const [formData, setFormData] = useState({
     reset_token: "",
@@ -22,13 +23,13 @@ export default function ForgetPasswordScreen() {
       formData.password != formData.confirm_password ||
       formData.password == ""
     ) {
-      handleAlert("Error", "Please fill in both fields.");
+      showToast("error", "Please fill in both fields.");
       return;
     }
 
     try {
       await forget_password_confirm(formData);
-      handleAlert("Success", "Password Reset Successfully");
+      showToast("success", "Password Reset Successfully");
 
       setTimeout(() => {
         router.push("/auth/login");
@@ -72,6 +73,7 @@ export default function ForgetPasswordScreen() {
       <TouchableOpacity style={styles.resetButton} onPress={handleSubmit}>
         <Text style={styles.resetButtonText}>Send Reset Link</Text>
       </TouchableOpacity>
+      <Toast />
     </View>
   );
 }

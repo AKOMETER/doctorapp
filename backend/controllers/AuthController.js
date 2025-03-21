@@ -136,12 +136,12 @@ exports.register = async (req, res) => {
 };
 
 // forgotten password send email
-exports.forget_password = async (req, res) => {
-  const { email } = req.body;
+exports.send_token = async (req, res) => {
+  const { user_id, title } = req.body;
 
   try {
     // Find the user by email
-    const user = await Users.findOne({ where: { email } });
+    const user = await Users.findOne({ where: { id: user_id } });
 
     // Check if user is null
     if (!user) {
@@ -149,25 +149,31 @@ exports.forget_password = async (req, res) => {
     }
 
     // Generate a reset token
-    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetToken = crypto.randomBytes(3).toString("hex");
     user.resetToken = resetToken;
     user.resetTokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
     await user.save();
 
     // Read the HTML template
-    const filePath = path.join(__dirname, "../mails/forgetpassword.html");
+    const filePath = path.join(__dirname, "../mails/send_token.html");
     let mailTemplate = fs.readFileSync(filePath, "utf-8");
-
     // Replace the reset token in the template
     mailTemplate = mailTemplate.replace("{{token}}", resetToken);
-
+    mailTemplate = mailTemplate.replace(
+      "{{name}}",
+      user?.firstName + " " + user?.lastName
+    );
+    mailTemplate = mailTemplate.replace(
+      "{{company_name}}",
+      process.env.DB_NAME
+    );
     // Send email
 
     const transporter = transportMail;
 
     const mailOptions = {
-      to: email,
-      subject: "Password Reset",
+      to: user?.email,
+      subject: title,
       html: mailTemplate, // Use the modified HTML template
     };
 
@@ -182,14 +188,14 @@ exports.forget_password = async (req, res) => {
 //set new  password
 exports.forget_password_confirm = async (req, res) => {
   // Find the user by ID
-  const { confirm_password, password, reset_token } = req.body; // Get new password from body
+  const { confirm_password, password, reset_token, user_id } = req.body; // Get new password from body
 
-  if (!id) {
+  if (!user_id) {
     return res.status(400).json({ msg: "User ID is required" });
   }
 
   try {
-    const user = await Users.findOne({ where: { id } });
+    const user = await Users.findOne({ where: { id: user_id } });
 
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
@@ -224,56 +230,10 @@ exports.forget_password_confirm = async (req, res) => {
   }
 };
 
-//reset email || send email
-exports.reset_email = async (req, res) => {
-  const { email } = req.body;
-
-  try {
-    // Find the user by email
-    const user = await Users.findOne({ where: { email } });
-
-    // Check if user is null
-    if (!user) {
-      return res.status(404).json({ msg: "User not found" }); // Return 404 if user not found
-    }
-
-    // Generate a reset token
-    const resetToken = crypto.randomBytes(32).toString("hex");
-    user.resetToken = resetToken;
-    user.resetTokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
-    await user.save();
-
-    // Read the HTML template
-    const filePath = path.join(__dirname, "../mails/resetemail.html");
-    let mailTemplate = fs.readFileSync(filePath, "utf-8");
-
-    // Replace the reset link in the template
-    const resetLink = `${process.env.FRONTEND_URL}reset_email_confirm?resetToken=${resetToken}&id=${user.id}`;
-    mailTemplate = mailTemplate.replace("{{resetLink}}", resetLink);
-
-    // Configure email transport
-    const transporter = transportMail;
-
-    const mailOptions = {
-      to: email,
-      subject: "Email Reset Request",
-      html: mailTemplate, // Use the modified HTML template
-    };
-
-    await transporter.sendMail(mailOptions);
-    return res
-      .status(200)
-      .json({ msg: "Reset email sent to your email address." });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ msg: "Server error" });
-  }
-};
-
 // set new email
 exports.reset_email_confirm = async (req, res) => {
-  const { reset_token, id } = req.query; // Get reset_token from params
-  const { email } = req.body; // Get new email from body
+  // const {} = req.query; // Get reset_token from params
+  const { email, reset_token, id } = req.body; // Get new email from body
 
   if (!id) {
     return res.status(400).json({ msg: "User ID is required" });

@@ -60,14 +60,16 @@ Your final-year project, a mobile app for healthcare appointment booking, should
 • System Logs & Reports
 
 8.⁠ ⁠Additional Features to Consider
-• Telemedicine (Video Consultation)
+• Telemedicine (Video Consultation)w
 • E-Prescriptions & Medical Records
 • Ratings & Reviews for Doctors
 
 //patient
 profile page -> patient medical record
 appointment -> change delete to cancel
-settings -> send token on password reset
+
+<!-- settings -> send token on password reset -->
+
 prescription page
 
 auth
@@ -77,7 +79,9 @@ login and register -> change image
 complete doctor page
 populate with real life data
 checkout appointment logic
-change doctor admin to doctor
+
+<!-- change doctor admin to doctor -->
 
 //admin
-create admin account
+
+<!-- create admin account -->

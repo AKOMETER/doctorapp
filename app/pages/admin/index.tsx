@@ -43,6 +43,16 @@ export default function index() {
           <FontAwesome name="users" size={20} color="#000000" />
           <Text style={styles.navText}>Specification Edit </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => {
+            router.push("/pages/admin/product");
+          }}
+        >
+          <FontAwesome name="product-hunt" size={20} color="#000000" />
+          <Text style={styles.navText}>Product Edit </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

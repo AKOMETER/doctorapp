@@ -11,7 +11,9 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { register } from "@/services/auth";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { handleAlert } from "@/utils/helperFunction";
+import { showToast } from "@/utils/helperFunction";
+import Toast from "react-native-toast-message";
+("@/utils/helperFunction");
 const RegisterScreen = () => {
   const [selectedRole, setSelectedRole] = useState("Patient");
   const router = useRouter();
@@ -38,30 +40,30 @@ const RegisterScreen = () => {
 
     // Check if passwords match
     if (password !== confirmPassword || password.trim() === "") {
-      handleAlert("Error", "Passwords Do Not Match");
+      showToast("error", "Passwords Do Not Match");
       return;
     }
 
     // Basic validation for required fields
     if (!first_name || first_name.trim() === "") {
-      handleAlert("Error", "First Name is required.");
+      showToast("error", "First Name is required.");
       return;
     }
 
     if (!last_name || last_name.trim() === "") {
-      handleAlert("Error", "Last Name is required.");
+      showToast("error", "Last Name is required.");
       return;
     }
 
     if (!email || email.trim() === "") {
-      handleAlert("Error", "Email is required.");
+      showToast("error", "Email is required.");
       return;
     }
 
     // Email format validation using regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-      handleAlert("Error", "Please enter a valid email address.");
+      showToast("error", "Please enter a valid email address.");
       return;
     }
 
@@ -81,7 +83,7 @@ const RegisterScreen = () => {
       if (!data) {
         return;
       }
-      handleAlert("Success", "Registration Successful");
+      showToast("success", "Registration Successful");
       console.log(data);
       //clear form data
       setFormData({
@@ -104,7 +106,7 @@ const RegisterScreen = () => {
       }, 2000);
     } catch (error: any) {
       console.log(error);
-      handleAlert("Error", "Registration Failed" || error?.response?.data.msg);
+      showToast("error", "Registration Failed" || error?.response?.data.msg);
     }
   };
 
@@ -244,6 +246,7 @@ const RegisterScreen = () => {
           Login Now!
         </Text>
       </Text>
+      <Toast />
     </View>
   );
 };

@@ -9,6 +9,7 @@ import CardiologistImage from "../assets/images/cardiologist.jpg";
 import DermatologistImage from "../assets/images/Dermatologist.jpg";
 import PediatricianImage from "../assets/images/Pediatrician.png";
 import PsychiatristImage from "../assets/images/Pulmonologist.jpg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function handleAlert(title: string, message: string) {
   Alert.alert(
@@ -134,4 +135,35 @@ export const requestNotificationPermission = async () => {
       console.log("Notification permission denied");
     }
   }
+};
+
+export const getToken = async (): Promise<string | null> => {
+  try {
+    return await AsyncStorage.getItem("token");
+  } catch (err) {
+    console.error("Error getting token:", err);
+    return null;
+  }
+};
+
+export const getUser = async (): Promise<any | null> => {
+  try {
+    const user = await AsyncStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
+  } catch (err) {
+    console.error("Error getting user:", err);
+    return null;
+  }
+};
+
+export const showToast = (
+  type: "success" | "error" | "info",
+  title: string,
+  message?: string
+) => {
+  Toast.show({
+    type,
+    text1: title || "Error, PLease try again",
+    text2: message,
+  });
 };

@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import "react-native-reanimated";
 import "../global.css";
 import { setupNotifications } from "@/utils/helperFunction";
+import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
   useEffect(() => {
@@ -74,14 +75,12 @@ export default function RootLayout() {
         <Stack.Screen name="not-found" options={{ title: "Not Found" }} />
         <Stack.Screen name="about" options={{ title: "About" }} />
         {/* doctor admins */}
-        <Stack.Screen
-          name="pages/doctorAdmin"
-          options={{ title: "Doctor Admin" }}
-        />
+        <Stack.Screen name="pages/doctorAdmin" options={{ title: "Admin" }} />
         <Stack.Screen
           name="pages/doctorEdit"
-          options={{ title: "Doctor Edit" }}
+          options={{ title: "Admin Edit" }}
         />
+
         {/* admin */}
         {/* doctor admins */}
         <Stack.Screen
@@ -100,7 +99,12 @@ export default function RootLayout() {
           name="pages/admin/specification"
           options={{ title: "Admin Specification Edit" }}
         />
+        <Stack.Screen
+          name="pages/admin/product"
+          options={{ title: "Admin Product Edit" }}
+        />
       </Stack>
+      <Toast />
     </SidebarProvider>
   );
 }

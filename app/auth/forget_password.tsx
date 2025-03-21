@@ -6,37 +6,40 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { forget_password } from "@/services/auth";
-import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
-import { handleAlert } from "@/utils/helperFunction";
+import { getUser, showToast } from "@/utils/helperFunction";
+import apiRequest from "@/services/apiRequest";
+import Toast from "react-native-toast-message";
+
 export default function ForgetPasswordScreen() {
   const [email, setEmail] = useState("");
   const router = useRouter();
-  const handleSubmit = async () => {
+  const handleSubmit = async (title: string) => {
     // Basic validation
     if (!email) {
-      handleAlert("Error", "Please fill in both fields.");
+      showToast("error", "Please fill in both fields.");
       return;
     }
 
     // Email format validation using regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-      handleAlert("Error", "Please enter a valid email address.");
+      showToast("error", "Please enter a valid email address.");
       return;
     }
+    const user = await getUser();
 
-    try {
-      await forget_password(email);
-      handleAlert("Success", "Check Your Mail For Token");
-
-      setTimeout(() => {
-        router.push("/auth/forget_password_confirm");
-      }, 2000);
-    } catch (error) {
-      console.log(error);
-    }
+    apiRequest
+      .post("/auth/send_token", { user_id: user?.id, title })
+      .then((res) => {
+        if (res?.status == 200) {
+          showToast("success", res?.data?.msg);
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+        showToast("error", err?.data?.msg);
+      });
   };
 
   return (
@@ -52,9 +55,13 @@ export default function ForgetPasswordScreen() {
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
-      <TouchableOpacity style={styles.resetButton} onPress={handleSubmit}>
+      <TouchableOpacity
+        style={styles.resetButton}
+        onPress={() => handleSubmit("Forget Password Token")}
+      >
         <Text style={styles.resetButtonText}>Send Reset Link</Text>
       </TouchableOpacity>
+      <Toast />
     </View>
   );
 }

@@ -1,13 +1,6 @@
 // DoctorEditForm.tsx
 import React, { useEffect, useState } from "react";
-import {
-  ScrollView,
-  Text,
-  View,
-  Button,
-  ActivityIndicator,
-  Alert,
-} from "react-native";
+import { Text, Button, ActivityIndicator } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MultiSelect from "react-native-multiple-select";
 import apiRequest from "@/services/apiRequest";
@@ -17,6 +10,8 @@ import { defaultDoctor } from "@/utils/default";
 import BasicInput from "@/components/BasicInput";
 import EducationExperienceForm from "@/components/EducationExperienceForm";
 import TimeInput from "@/components/TimeInput";
+import { showToast } from "@/utils/helperFunction";
+import Toast from "react-native-toast-message";
 
 export default function DoctorEditForm() {
   const [formData, setFormData] = useState<DoctorType>(defaultDoctor);
@@ -97,12 +92,12 @@ export default function DoctorEditForm() {
     setLoading((prev) => ({ ...prev, doctor: true }));
     try {
       const res = await apiRequest.get(`/doctor/get_by_user_id/${user.id}`);
-      const doctorData = res.data;
+      const doctorData = res?.data.data;
       setFormData(doctorData);
       setSelectedSpecs(doctorData.Specialties?.map((s: any) => s.id) || []);
       setSelectedLabs(doctorData.Labs?.map((l: any) => l.id) || []);
     } catch {
-      Alert.alert("Error", "Failed to load doctor data");
+      showToast("error", "Failed to load doctor data");
     } finally {
       setLoading((prev) => ({ ...prev, doctor: false }));
     }
@@ -112,9 +107,9 @@ export default function DoctorEditForm() {
     setLoading((prev) => ({ ...prev, specialty: true }));
     try {
       const res = await apiRequest.get(`/specialty`);
-      setSpecifications(res.data);
+      setSpecifications(res?.data.data);
     } catch {
-      Alert.alert("Error", "Failed to load specialties");
+      showToast("error", "Failed to load specialties");
     } finally {
       setLoading((prev) => ({ ...prev, specialty: false }));
     }
@@ -124,9 +119,9 @@ export default function DoctorEditForm() {
     setLoading((prev) => ({ ...prev, lab: true }));
     try {
       const res = await apiRequest.get(`/lab`);
-      setLabs(res.data);
+      setLabs(res?.data.data);
     } catch {
-      Alert.alert("Error", "Failed to load labs");
+      showToast("error", "Failed to load labs");
     } finally {
       setLoading((prev) => ({ ...prev, lab: false }));
     }
@@ -154,9 +149,9 @@ export default function DoctorEditForm() {
 
     try {
       await apiRequest.put(`/doctor/${user?.id}`, newData);
-      Alert.alert("Success", "Doctor profile updated");
+      showToast("success", "Doctor profile updated");
     } catch {
-      Alert.alert("Error", "Failed to update profile");
+      showToast("error", "Failed to update profile");
     }
   };
 
@@ -256,6 +251,7 @@ export default function DoctorEditForm() {
       />
 
       <Button title="Update Doctor" onPress={handleSave} />
+      <Toast />
     </KeyboardAwareScrollView>
   );
 }

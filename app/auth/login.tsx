@@ -193,8 +193,6 @@ const LoginScreen = () => {
           Sign up Now!
         </Text>
       </Text>
-
-      {/* Toast Container */}
       <Toast />
     </View>
   );

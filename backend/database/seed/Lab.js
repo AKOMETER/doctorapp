@@ -25,4 +25,6 @@ const seedLabs = async () => {
     process.exit();
   }
 };
+
+// seedLabs();
 module.exports = seedLabs;
