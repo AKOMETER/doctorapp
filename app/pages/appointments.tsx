@@ -45,7 +45,7 @@ const Appointments = () => {
     apiRequest
       .post("/appointment", newData)
       .then((res) => {
-        console.log("Appointment created:", res);
+        // console.log("Appointment created:", res);
         setRouteID(null); // switch to Appointment view
       })
       .catch((err) => {

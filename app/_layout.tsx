@@ -8,7 +8,11 @@ import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
   useEffect(() => {
-    setupNotifications();
+    async function startNotify() {
+      await setupNotifications();
+    }
+
+    startNotify();
   }, []);
 
   return (

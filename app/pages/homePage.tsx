@@ -46,7 +46,6 @@ const HomePage = () => {
       if (res) setProducts(res.data);
     });
   }, []);
-
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -164,8 +163,10 @@ const HomePage = () => {
                 className="flex-row bg-white rounded-lg mb-4 p-4 shadow-md"
               >
                 <Image
-                  source={{ uri: doctor.image }}
-                  className="w-20 h-20 rounded-lg"
+                  source={{
+                    uri: "https://thumbs.dreamstime.com/b/female-doctor-uniform-standing-alone-put-her-hands-pocket-side-view-photo-262399601.jpg",
+                  }}
+                  style={{ width: 100, height: 100 }}
                 />
                 <View className="ml-4 flex-1">
                   <Text className="text-base font-bold">

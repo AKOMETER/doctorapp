@@ -1,6 +1,5 @@
 import { Alert, PermissionsAndroid, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
-import { appointments } from "@/utils/data";
 import Toast from "react-native-toast-message";
 import DentistImage from "../assets/images/dentist.png";
 import NeurologistImage from "../assets/images/neurologist.png";
@@ -10,6 +9,7 @@ import DermatologistImage from "../assets/images/Dermatologist.jpg";
 import PediatricianImage from "../assets/images/Pediatrician.png";
 import PsychiatristImage from "../assets/images/Pulmonologist.jpg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import apiRequest from "@/services/apiRequest";
 
 export function handleAlert(title: string, message: string) {
   Alert.alert(
@@ -40,49 +40,63 @@ export function handleAlert(title: string, message: string) {
 }
 
 export const setupNotifications = async () => {
-  // Request Notification Permissions
-  const { status } = await Notifications.getPermissionsAsync();
-  if (status !== "granted") {
+  // 1. Request Notification Permissions
+  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+
+  if (existingStatus !== "granted") {
     const { status: newStatus } = await Notifications.requestPermissionsAsync();
-    if (newStatus !== "granted") {
-      console.warn("Permission for notifications was not granted.");
-      return;
-    }
+    finalStatus = newStatus;
   }
 
-  // Schedule Notifications
-  for (let appointment of appointments) {
-    const appointmentDate = new Date(appointment.date);
+  if (finalStatus !== "granted") {
+    console.warn("Notification permission not granted.");
+    return;
+  }
 
-    const alerts = [
-      {
-        time: new Date(appointmentDate.getTime() - 24 * 60 * 60 * 1000),
-        type: "alert",
-      }, // 1 day before
-      {
-        time: new Date(appointmentDate.getTime() - 60 * 60 * 1000),
-        type: "alert",
-      }, // 1 hour before
-      {
-        time: new Date(appointmentDate.getTime() - 10 * 60 * 1000),
-        type: "warning",
-      }, // 10 minutes before
-    ];
+  // 2. Fetch appointments
+  try {
+    const response = await apiRequest.get("/appointment");
+    const appointments = response?.data?.data || [];
 
-    for (let alert of alerts) {
-      if (alert.time > new Date()) {
-        await Notifications.scheduleNotificationAsync({
-          content: {
-            title: "Appointment Reminder",
-            body: `${appointment.patient}'s appointment is ${
-              alert.type === "warning" ? "VERY close!" : "approaching soon."
-            }`,
-            sound: true,
-          },
-          trigger: alert.time,
-        });
+    // 3. Schedule notifications
+    for (const appointment of appointments) {
+      const appointmentDate = new Date(appointment.dateTime);
+
+      const alertTimes = [
+        {
+          time: new Date(appointmentDate.getTime() - 24 * 60 * 60 * 1000), // 1 day before
+          message: "is coming up tomorrow.",
+        },
+        {
+          time: new Date(appointmentDate.getTime() - 60 * 60 * 1000), // 1 hour before
+          message: "starts in 1 hour.",
+        },
+        {
+          time: new Date(appointmentDate.getTime() - 10 * 60 * 1000), // 10 mins before
+          message: "is starting in 10 minutes!",
+        },
+      ];
+
+      for (const alert of alertTimes) {
+        if (alert.time > new Date()) {
+          await Notifications.scheduleNotificationAsync({
+            content: {
+              title: "Appointment Reminder",
+              body: `Patient ${appointment.patientId}'s appointment ${alert.message}`,
+              sound: true,
+              priority: Notifications.AndroidNotificationPriority.HIGH,
+            },
+            trigger: alert.time,
+          });
+        }
       }
     }
+  } catch (err) {
+    console.error(
+      "Failed to fetch appointments or schedule notifications:",
+      err
+    );
   }
 };
 

@@ -23,7 +23,8 @@ export default function PatientMedicalProfile() {
   useEffect(() => {
     const fetchMedicalRecord = async () => {
       try {
-        const res = await apiRequest.get(`/medical-record/${userId}`);
+        const res = await apiRequest.get(`/medical_record/${userId}`);
+        console.log("userId", userId, "Res", res);
         if (res) setForm(res.data);
       } catch (err) {
         console.log("No existing record");
@@ -40,7 +41,9 @@ export default function PatientMedicalProfile() {
 
   const handleSubmit = async () => {
     try {
-      await apiRequest.post("/medical-record", { userId, ...form });
+      const res = await apiRequest.post("/medical_record", { userId, ...form });
+
+      console.log("res", res);
       showToast("success", "Success", "Medical record saved successfully");
     } catch (err) {
       showToast("error", "Error", "Failed to save record");
@@ -51,24 +54,65 @@ export default function PatientMedicalProfile() {
 
   return (
     <ScrollView className="p-4">
-      {Object.keys(form).map((field) => (
-        <View key={field} className="mb-4">
-          <Text className="font-semibold mb-1 capitalize">{field}</Text>
-          <TextInput
-            className="border border-gray-300 rounded px-3 py-2 text-base"
-            value={(form as any)[field]}
-            multiline={["allergies", "chronicDiseases", "medicalNote"].includes(
-              field
-            )}
-            onChangeText={(text) =>
-              handleChange(field as keyof MedicalRecordType, text)
-            }
-          />
-        </View>
-      ))}
+      <View className="mb-4">
+        <Text className="font-semibold mb-1">Blood Group</Text>
+        <TextInput
+          className="border border-gray-300 rounded px-3 py-2"
+          value={form.bloodGroup}
+          onChangeText={(text) => handleChange("bloodGroup", text)}
+        />
+      </View>
+
+      <View className="mb-4">
+        <Text className="font-semibold mb-1">Blood Type</Text>
+        <TextInput
+          className="border border-gray-300 rounded px-3 py-2"
+          value={form.bloodType}
+          onChangeText={(text) => handleChange("bloodType", text)}
+        />
+      </View>
+
+      <View className="mb-4">
+        <Text className="font-semibold mb-1">Genotype</Text>
+        <TextInput
+          className="border border-gray-300 rounded px-3 py-2"
+          value={form.genotype}
+          onChangeText={(text) => handleChange("genotype", text)}
+        />
+      </View>
+
+      <View className="mb-4">
+        <Text className="font-semibold mb-1">Allergies</Text>
+        <TextInput
+          className="border border-gray-300 rounded px-3 py-2"
+          value={form.allergies}
+          multiline
+          onChangeText={(text) => handleChange("allergies", text)}
+        />
+      </View>
+
+      <View className="mb-4">
+        <Text className="font-semibold mb-1">Chronic Diseases</Text>
+        <TextInput
+          className="border border-gray-300 rounded px-3 py-2"
+          value={form.chronicDiseases}
+          multiline
+          onChangeText={(text) => handleChange("chronicDiseases", text)}
+        />
+      </View>
+
+      <View className="mb-4">
+        <Text className="font-semibold mb-1">Medical Note</Text>
+        <TextInput
+          className="border border-gray-300 rounded px-3 py-2"
+          value={form.medicalNote}
+          multiline
+          onChangeText={(text) => handleChange("medicalNote", text)}
+        />
+      </View>
 
       <TouchableOpacity
-        className="bg-blue-600 rounded p-3 mt-4"
+        className="bg-blue-600 rounded p-3 mt-4 mb-7"
         onPress={handleSubmit}
       >
         <Text className="text-white text-center font-semibold">

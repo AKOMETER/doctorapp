@@ -14,12 +14,12 @@ const Dashboard = () => {
   const [newUser, setUser] = useState<any>({});
 
   useEffect(() => {
-    apiRequest.get("/specialty").then((res) => setSpecialty(res.data));
-    apiRequest.get("/doctor").then((res) => setDoctors(res.data));
-    apiRequest.get("/lab").then((res) => setLabs(res.data));
+    apiRequest.get("/specialty").then((res) => setSpecialty(res?.data?.data));
+    apiRequest.get("/doctor").then((res) => setDoctors(res?.data.data));
+    apiRequest.get("/lab").then((res) => setLabs(res?.data?.data));
 
     apiRequest.get(`/user/${user?.id}`).then((res) => {
-      setUser(res.data); // assuming response has .data
+      setUser(res?.data?.data); // assuming response has .data
     });
   }, []);
 

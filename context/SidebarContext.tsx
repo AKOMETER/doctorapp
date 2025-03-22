@@ -1,8 +1,15 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IsUserLoggedInType } from "@/utils/dataTypes";
 import { defaultIsUserLogged } from "@/utils/default";
 import apiRequest from "@/services/apiRequest";
+import { useFocusEffect } from "expo-router";
 
 interface SidebarContextType {
   isOpen: boolean;
@@ -26,20 +33,16 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsOpen((prev) => !prev);
   };
 
-  useEffect(() => {
-    apiRequest
-      .get("/user/is_logged")
-      .then((res) => {
-        if (res) {
-          setIsUserLoggedIn(res?.data);
-        }
-
-        console.log(isUserLoggedIn);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      apiRequest
+        .get("/user/is_logged")
+        .then((res) => {
+          if (res) setIsUserLoggedIn(res?.data);
+        })
+        .catch((err) => console.log(err));
+    }, [])
+  );
 
   const [user, setUser] = useState<any>(null);
   const [isUserLoggedIn, setIsUserLoggedIn] =

@@ -12,7 +12,6 @@ exports.createRecord = async (req, res) => {
       chronicDiseases,
       medicalNote,
     } = req.body;
-
     const record = await MedicalRecord.create({
       userId,
       bloodGroup,
@@ -40,10 +39,11 @@ exports.getAllRecords = async (req, res) => {
 };
 
 // Get Record by ID
-exports.getRecordById = async (req, res) => {
+exports.getRecordByUserId = async (req, res) => {
   try {
     const { id } = req.params;
-    const record = await MedicalRecord.findByPk(id);
+    const record = await MedicalRecord.findOne({ where: { userId: id } });
+
     if (!record) return res.status(404).json({ message: "Record not found" });
 
     res.status(200).json(record);

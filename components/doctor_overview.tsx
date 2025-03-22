@@ -14,7 +14,7 @@ export default function Overview({
     return;
   }
   const { user } = useSidebar();
-  console.log("doctor", doctor);
+
   return (
     <View className="flex-1 bg-gray-100">
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
