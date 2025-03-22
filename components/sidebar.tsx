@@ -5,7 +5,7 @@ import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome for icon
 import { useRouter } from "expo-router";
 import apiRequest from "@/services/apiRequest";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserType } from "@/utils/dataTypes";
+import { CartItemType, IsUserLoggedInType, UserType } from "@/utils/dataTypes";
 import { defaultUser } from "@/utils/default";
 
 const backendUrl = process.env.EXPO_PUBLIC_BACKENDURL;
@@ -17,38 +17,14 @@ const Sidebar = ({
   children: React.ReactNode;
   title: string;
 }) => {
-  const { isOpen, toggleSidebar, user, token } = useSidebar();
   const router = useRouter();
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState<{
-    status: Boolean;
-    user: UserType;
-    msg: string;
-  }>({
-    status: false,
-    user: defaultUser,
-    msg: "",
-  });
+  const { toggleSidebar, isOpen, user, isUserLoggedIn } = useSidebar();
 
   async function handleLogout() {
     await AsyncStorage.setItem("token", "");
 
     router.push("/auth/login");
   }
-
-  useEffect(() => {
-    apiRequest
-      .get("/user/is_logged")
-      .then((res) => {
-        if (res) {
-          setIsUserLoggedIn(res?.data);
-        }
-
-        console.log(isUserLoggedIn);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
   const name =
     user && isUserLoggedIn.status
@@ -156,6 +132,28 @@ const Sidebar = ({
               <FontAwesome name="envelope" size={20} color="#000000" />
               <Text style={styles.navText}>Message</Text>
             </TouchableOpacity>
+            {user?.role !== "Admin" && (
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => {
+                  router.push("/pages/cart");
+                  toggleSidebar();
+                }}
+              >
+                <View className="flex-row items-center space-x-2">
+                  <FontAwesome name="shopping-cart" size={20} color="#000000" />
+                  <Text style={styles.navText}>Cart</Text>
+                </View>
+
+                {(isUserLoggedIn?.cart?.length || 0) > 0 && (
+                  <View className="bg-red-600 w-6 h-6 rounded-full items-center justify-center ml-2">
+                    <Text className="text-white text-xs font-bold">
+                      {isUserLoggedIn?.cart?.length || 0}
+                    </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            )}
 
             {user?.role == "Doctor" && (
               <TouchableOpacity

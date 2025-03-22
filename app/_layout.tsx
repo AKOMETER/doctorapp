@@ -44,6 +44,7 @@ export default function RootLayout() {
           options={{ title: "Prescriptions" }}
         />
         <Stack.Screen name="pages/medicines" options={{ title: "Medicines" }} />
+        <Stack.Screen name="pages/cart" options={{ title: "Cart Items" }} />
         <Stack.Screen name="pages/profile" options={{ title: "Profile" }} />
         <Stack.Screen name="pages/message" options={{ title: "Messages" }} />
         <Stack.Screen name="pages/settings" options={{ title: "Settings" }} />
@@ -60,6 +61,10 @@ export default function RootLayout() {
           options={{ title: "Doctors" }}
         />
         <Stack.Screen name="pages/lab/index" options={{ title: "Labs" }} />
+        <Stack.Screen
+          name="pages/product/index"
+          options={{ title: "Product" }}
+        />
         {/* Auth Screens */}
         <Stack.Screen name="auth/login" options={{ title: "Login" }} />
         <Stack.Screen name="auth/register" options={{ title: "Register" }} />

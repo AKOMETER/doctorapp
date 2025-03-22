@@ -14,6 +14,7 @@ export default function Overview({
     return;
   }
   const { user } = useSidebar();
+  console.log("doctor", doctor);
   return (
     <View className="flex-1 bg-gray-100">
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
@@ -49,19 +50,19 @@ export default function Overview({
           {
             title: "Education",
             icon: "school",
-            data: JSON.parse(String(doctor.education)),
+            data: JSON.parse(JSON.parse(String(doctor.education))),
             isArray: false,
           },
           {
             title: "Work Experience",
             icon: "work",
-            data: JSON.parse(String(doctor.experience)),
+            data: JSON.parse(JSON.parse(String(doctor.experience))),
             isArray: false,
           },
           {
             title: "Services",
             icon: "engineering",
-            data: JSON.parse(String(doctor.service)),
+            data: JSON.parse(JSON.parse(String(doctor.service))),
             isArray: true,
           },
         ].map((section, index) => (

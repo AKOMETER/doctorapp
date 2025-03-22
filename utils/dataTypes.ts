@@ -33,6 +33,7 @@ export interface UserType extends TimeStampType {
   email: string;
   googleID: null;
   amount: number;
+  cartItem?: CartItemType[];
   facebookID: string;
   profileImage: string;
   role: string;
@@ -60,13 +61,13 @@ export interface AppointmentType extends TimeStampType {
   reason: string;
   remarks: string | null;
   Patient: {
-    id: number;
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
   };
   Doctor: {
-    id: number;
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -94,4 +95,29 @@ export interface ProductType extends TimeStampType {
   price: number | string;
   stock: number | string;
   category: string;
+}
+
+export interface CartItemType extends TimeStampType {
+  id?: string;
+  userId?: string;
+  productId?: string;
+  Product?: ProductType;
+  quantity: number;
+}
+
+export interface IsUserLoggedInType {
+  status: Boolean;
+  user: UserType;
+  msg: string;
+  cart?: CartItemType[];
+}
+
+export interface MedicalRecordType extends TimeStampType {
+  id?: string;
+  bloodGroup: string;
+  bloodType: string;
+  genotype: string;
+  allergies: string;
+  chronicDiseases: string;
+  medicalNote: string;
 }

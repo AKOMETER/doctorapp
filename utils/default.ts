@@ -6,10 +6,12 @@ import {
   SpecialtyType,
   LabType,
   AppointmentType,
+  IsUserLoggedInType,
+  MedicalRecordType,
 } from "./dataTypes"; // adjust path as needed
 
 export const defaultUser: UserType = {
-  id: 0,
+  id: "",
   firstName: "",
   lastName: "",
   code: "",
@@ -17,8 +19,10 @@ export const defaultUser: UserType = {
   email: "",
   googleID: null,
   facebookID: "",
+  amount: 0,
   profileImage: "",
   role: "",
+  cartItem: [],
   token: "",
   rememberToken: "",
   resetToken: null,
@@ -28,7 +32,7 @@ export const defaultUser: UserType = {
 };
 
 export const defaultSpecialty: SpecialtyType = {
-  id: 0,
+  id: "",
   name: "",
   icon: "",
   createdAt: "",
@@ -36,7 +40,7 @@ export const defaultSpecialty: SpecialtyType = {
 };
 
 export const defaultLab: LabType = {
-  id: 0,
+  id: "",
   name: "",
   image: "",
   description: "",
@@ -46,7 +50,7 @@ export const defaultLab: LabType = {
 };
 
 export const defaultDoctor: DoctorType = {
-  id: 0,
+  id: "",
   userId: 0,
   bio: "",
   availableFrom: "",
@@ -69,7 +73,7 @@ export const defaultDoctor: DoctorType = {
 };
 
 export const defaultAppointment: AppointmentType = {
-  id: 0,
+  id: "",
   patientId: 0,
   doctorId: 0,
   dateTime: "",
@@ -77,18 +81,34 @@ export const defaultAppointment: AppointmentType = {
   status: "",
   reason: "",
   remarks: null,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: "",
+  updatedAt: "",
   Patient: {
-    id: 0,
+    id: "",
     firstName: "",
     lastName: "",
     email: "",
   },
   Doctor: {
-    id: 0,
+    id: "",
     firstName: "",
     lastName: "",
     email: "",
   },
+};
+
+export const defaultIsUserLogged: IsUserLoggedInType = {
+  status: false,
+  user: defaultUser,
+  msg: "",
+  cart: [],
+};
+
+export const defaultMedicalRecord: MedicalRecordType = {
+  bloodGroup: "",
+  bloodType: "",
+  genotype: "",
+  allergies: "",
+  chronicDiseases: "",
+  medicalNote: "",
 };

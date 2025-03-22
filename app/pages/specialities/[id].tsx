@@ -20,7 +20,7 @@ export default function DoctorPage() {
   const { user } = useSidebar();
   useEffect(() => {
     apiRequest.get(`/specialty/${id}`).then((res) => {
-      setDoctors(res?.data);
+      if (res) setDoctors(res?.data?.data);
     });
   }, []);
 
@@ -47,7 +47,7 @@ export default function DoctorPage() {
               />
               <View style={styles.doctorDetails}>
                 <Text style={styles.doctorName}>
-                  {doctor.user.firstName + " " + doctor.user.lastName}
+                  {doctor?.user?.firstName + " " + doctor?.user?.lastName}
                 </Text>
                 <Text style={styles.specialityName}>
                   {doctor.specialtyName}

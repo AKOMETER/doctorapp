@@ -8,6 +8,7 @@ import { useNavigation, useRouter } from "expo-router";
 import Sidebar from "@/components/sidebar";
 import { showToast } from "@/utils/helperFunction";
 import Toast from "react-native-toast-message";
+import PatientMedicalProfile from "@/components/PatientMedicalProfile";
 
 interface FormData {
   firstName: string;
@@ -159,7 +160,7 @@ export default function Profile() {
         <Text className="text-white font-bold">Update Profile</Text>
       </TouchableOpacity>
 
-      {user?.role == "Patient" && <></>}
+      {user?.role == "Patient" && <PatientMedicalProfile />}
       <Toast />
     </View>
     // </Sidebar>

@@ -10,6 +10,7 @@ const Transaction = require("../database/models/Transaction");
 const Lab = require("../database/models/Lab");
 const Specialty = require("../database/models/Specialty");
 const PaymentMethod = require("../database/models/PaymentMethod");
+const CartItem = require("../database/models/CartItem");
 
 //get all users
 exports.get = async (req, res) => {
@@ -177,14 +178,25 @@ exports.isLoggedIn = async (req, res) => {
   try {
     const user = req.user?.user;
     if (user) {
-      const getUser = await User.findByPk(user.id);
+      const getUser = await User.findByPk(user.id, {
+        include: [
+          {
+            model: CartItem,
+            as: "CartItems", // optional alias, adjust if you've set one
+          },
+        ],
+      });
+
       if (!getUser) {
         return res.status(404).json({ status: false });
       }
 
-      return res
-        .status(200)
-        .json({ msg: "User is logged in", status: true, user: getUser });
+      return res.status(200).json({
+        msg: "User is logged in",
+        status: true,
+        user: getUser,
+        cart: getUser.CartItems || [],
+      });
     }
 
     return res.status(401).json({ status: false });

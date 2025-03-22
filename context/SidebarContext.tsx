@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IsUserLoggedInType } from "@/utils/dataTypes";
+import { defaultIsUserLogged } from "@/utils/default";
+import apiRequest from "@/services/apiRequest";
 
 interface SidebarContextType {
   isOpen: boolean;
@@ -8,6 +11,8 @@ interface SidebarContextType {
   setUser: any;
   token: string;
   setToken: any;
+  isUserLoggedIn: Record<string, any>;
+  setIsUserLoggedIn: any;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
@@ -21,7 +26,24 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsOpen((prev) => !prev);
   };
 
+  useEffect(() => {
+    apiRequest
+      .get("/user/is_logged")
+      .then((res) => {
+        if (res) {
+          setIsUserLoggedIn(res?.data);
+        }
+
+        console.log(isUserLoggedIn);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   const [user, setUser] = useState<any>(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] =
+    useState<IsUserLoggedInType>(defaultIsUserLogged);
 
   const [token, setToken] = useState<any>(null);
 
@@ -55,6 +77,8 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
         user: user,
         setUser,
         token,
+        isUserLoggedIn,
+        setIsUserLoggedIn,
         setToken,
       }}
     >

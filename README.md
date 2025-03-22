@@ -70,15 +70,16 @@ appointment -> change delete to cancel
 
 <!-- settings -> send token on password reset -->
 
-prescription page
+<!-- prescription page -->
 
 auth
 login and register -> change image
 
 //doctor
-complete doctor page
-populate with real life data
-checkout appointment logic
+
+<!-- complete doctor page -->
+<!-- populate with real life data
+checkout appointment logic -->
 
 <!-- change doctor admin to doctor -->
 

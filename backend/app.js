@@ -40,6 +40,7 @@ app.use("/appointment", require("./routes/appointment"));
 app.use("/payment-method", require("./routes/payment_method"));
 app.use("/transaction", require("./routes/transaction"));
 app.use("/cart", require("./routes/cart"));
+app.use("/order", require("./routes/order"));
 app.use("/product", require("./routes/product"));
 app.use("/record", require("./routes/record"));
 app.use("/medical_record", require("./routes/medical_record"));

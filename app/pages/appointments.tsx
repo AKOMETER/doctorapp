@@ -25,7 +25,7 @@ const Appointments = () => {
   useEffect(() => {
     if (routeID) {
       apiRequest.get(`/doctor/${routeID}`).then((res) => {
-        setDoctor(res?.data);
+        setDoctor(res?.data.data);
       });
     }
   }, [routeID]);

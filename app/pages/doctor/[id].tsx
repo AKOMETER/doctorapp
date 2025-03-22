@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { doctors } from "@/utils/data";
 import Overview from "@/components/doctor_overview";
-import Sidebar from "@/components/sidebar";
 import apiRequest from "@/services/apiRequest";
 import { DoctorType } from "@/utils/dataTypes";
 
@@ -34,7 +32,7 @@ export default function DoctorDetails() {
 
   useEffect(() => {
     apiRequest.get(`/doctor/${id}`).then((res) => {
-      setDoctor(res?.data);
+      if (res) setDoctor(res?.data.data);
     });
   }, []);
 

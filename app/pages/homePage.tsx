@@ -10,7 +10,12 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import apiRequest from "@/services/apiRequest";
-import { DoctorType, LabType, SpecialtyType } from "@/utils/dataTypes";
+import {
+  DoctorType,
+  LabType,
+  ProductType,
+  SpecialtyType,
+} from "@/utils/dataTypes";
 import { getSpecialtyImage } from "@/utils/helperFunction";
 import { useSidebar } from "@/context/SidebarContext";
 
@@ -23,17 +28,22 @@ const HomePage = () => {
   const [specialty, setSpecialty] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [labs, setLabs] = useState([]);
+  const [products, setProducts] = useState<ProductType[]>([]);
   useEffect(() => {
     apiRequest.get("/specialty").then((res: any) => {
-      setSpecialty(res.data.data);
+      if (res) setSpecialty(res.data.data);
     });
 
     apiRequest.get("/doctor").then((res: any) => {
-      setDoctors(res.data.data);
+      if (res) setDoctors(res.data.data);
     });
 
     apiRequest.get("/lab").then((res: any) => {
-      setLabs(res.data.data);
+      if (res) setLabs(res.data.data);
+    });
+
+    apiRequest.get("/product").then((res: any) => {
+      if (res) setProducts(res.data);
     });
   }, []);
 
@@ -79,6 +89,34 @@ const HomePage = () => {
           </View>
         </View>
 
+        {/* products */}
+        <View className="p-5">
+          <View className="flex-row justify-between mb-3">
+            <Text className="text-lg font-bold">Products</Text>
+            <Text
+              className="text-blue-700"
+              onPress={() => router.push("/pages/product")}
+            >
+              View All {products.length}
+            </Text>
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {products.slice(0, 5).map((item: ProductType, index) => (
+              <TouchableOpacity
+                key={index}
+                className="items-center mr-5"
+                onPress={() => router.push(`/pages/product/${item?.id}`)}
+              >
+                <Image
+                  source={getSpecialtyImage(item?.image)}
+                  className="w-16 h-16 mb-2"
+                />
+                <Text className="text-center text-sm">{item?.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
         {/* Specialities */}
         <View className="p-5">
           <View className="flex-row justify-between mb-3">
@@ -120,7 +158,6 @@ const HomePage = () => {
           </View>
 
           {doctors.slice(0, 5).map((doctor: DoctorType) => {
-            console.log("doctor", doctor);
             return (
               <View
                 key={doctor.id}
@@ -140,7 +177,7 @@ const HomePage = () => {
                     })}
                   </Text>
                   <Text className="text-blue-700">{doctor.location}</Text>
-                  <Text className="text-gray-700">{doctor.price}</Text>
+                  <Text className="text-gray-700">${doctor.price}</Text>
                   <Text className="text-yellow-500">{`⭐ ${doctor.ratings}`}</Text>
                 </View>
                 {user?.role == "Patient" && (

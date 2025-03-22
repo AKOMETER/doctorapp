@@ -7,11 +7,12 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import axios from "axios";
 import { useSidebar } from "@/context/SidebarContext";
 import apiRequest from "@/services/apiRequest";
 import { useRouter } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
+import { showToast } from "@/utils/helperFunction";
+import Toast from "react-native-toast-message";
 
 export default function Payment() {
   const [paymentMethods, setPaymentMethods] = useState([]);
@@ -22,7 +23,7 @@ export default function Payment() {
   const fetchPaymentMethods = async () => {
     try {
       apiRequest.get("/payment-method").then((res) => {
-        setPaymentMethods(res);
+        setPaymentMethods(res?.data);
       });
     } catch (error) {
       console.error("Failed to load methods", error);
@@ -30,7 +31,8 @@ export default function Payment() {
   };
 
   const handleTransaction = async () => {
-    if (!selectedMethodId || !amount) return alert("Select method & amount");
+    if (!selectedMethodId || !amount)
+      return showToast("error", "Select method & amount");
 
     const payload = {
       userId: user?.id, // Replace with actual user ID
@@ -47,7 +49,7 @@ export default function Payment() {
       setAmount("");
     } catch (err) {
       console.error("Transaction error:", err);
-      alert("Transaction failed");
+      showToast("error", "Transaction failed");
     }
   };
 
@@ -114,6 +116,7 @@ export default function Payment() {
       />
 
       <Button title="Make Payment" onPress={handleTransaction} />
+      <Toast />
     </ScrollView>
   );
 }

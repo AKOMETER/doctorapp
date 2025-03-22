@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { SpecialtyType } from "@/utils/dataTypes";
 import apiRequest from "@/services/apiRequest";
+import Toast from "react-native-toast-message";
 
 export default function Specification() {
   const [specialties, setSpecialties] = useState<SpecialtyType[]>([]);
@@ -83,6 +84,7 @@ export default function Specification() {
               <Text style={{ color: "red" }}>Delete</Text>
             </TouchableOpacity>
           </View>
+          <Toast />
         </View>
       ))}
     </ScrollView>

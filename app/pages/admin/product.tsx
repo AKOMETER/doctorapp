@@ -15,6 +15,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import apiRequest from "@/services/apiRequest";
 import NumberInput from "@/components/number_input";
 import { ProductType } from "@/utils/dataTypes";
+import Toast from "react-native-toast-message";
 
 export default function AdminProductScreen() {
   const [products, setProducts] = useState<ProductType[]>([]);
@@ -175,6 +176,7 @@ export default function AdminProductScreen() {
           </View>
         </View>
       </Modal>
+      <Toast />
     </ScrollView>
   );
 }

@@ -14,6 +14,7 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import apiRequest from "@/services/apiRequest";
 import { LabType } from "@/utils/dataTypes";
+import Toast from "react-native-toast-message";
 
 export default function AdminLabScreen() {
   const [labs, setLabs] = useState<LabType[]>([]);
@@ -149,6 +150,7 @@ export default function AdminLabScreen() {
           </View>
         </View>
       </Modal>
+      <Toast />
     </ScrollView>
   );
 }

@@ -13,6 +13,7 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import apiRequest from "@/services/apiRequest";
 import { DoctorType } from "@/utils/dataTypes";
+import Toast from "react-native-toast-message";
 
 type DoctorFormType = {
   profileImage: string;
@@ -152,6 +153,7 @@ export default function Doctor() {
           </View>
         </View>
       </Modal>
+      <Toast />
     </ScrollView>
   );
 }

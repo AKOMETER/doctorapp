@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
+import Toast from "react-native-toast-message";
 export default function index() {
   const router = useRouter();
   return (
@@ -54,6 +55,7 @@ export default function index() {
           <Text style={styles.navText}>Product Edit </Text>
         </TouchableOpacity>
       </View>
+      <Toast />
     </ScrollView>
   );
 }
