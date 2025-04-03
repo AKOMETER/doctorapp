@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  ScrollView,
+  SafeAreaView,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Toast from "react-native-toast-message"; // Toast for notifications
@@ -13,6 +15,8 @@ import { login } from "@/services/auth";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSidebar } from "@/context/SidebarContext";
+import { showToast } from "@/utils/helperFunction";
+const loginImage = require("../../assets/images/login.webp");
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -33,20 +37,12 @@ const LoginScreen = () => {
 
     // Basic validation
     if (!email || !password) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Please fill in both fields.",
-      });
+      showToast("error", "Error", "Please fill in both fields.");
       return;
     }
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Please enter a valid email address.",
-      });
+      showToast("error", "Error", "Please enter a valid email address.");
       return;
     }
 
@@ -55,11 +51,7 @@ const LoginScreen = () => {
       if (!data) {
         return;
       }
-      Toast.show({
-        type: "success",
-        text1: "Login Successful",
-        text2: "You are now logged in!",
-      });
+      showToast("success", "Login Successful", "You are now logged in!");
 
       // Save token and user data to AsyncStorage
 
@@ -93,11 +85,7 @@ const LoginScreen = () => {
       }, 2000);
     } catch (error: any) {
       console.log(error.message);
-      Toast.show({
-        type: "error",
-        text1: "Login Failed",
-        text2: error?.message,
-      });
+      showToast("error", "Login Failed", error?.message);
     }
   };
 
@@ -106,95 +94,97 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Close Button */}
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={() => router.back()}
-      >
-        <Icon name="close" size={20} color="#000" />
-      </TouchableOpacity>
-
-      {/* Illustration */}
-      <View style={styles.imageContainer}>
-        <Image
-          source={{
-            uri: "https://cdn-icons-png.flaticon.com/512/2913/2913608.png",
-          }}
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </View>
-
-      {/* Login Text */}
-      <Text style={styles.title}>LOGIN Book Doctor Appointment</Text>
-
-      {/* Form */}
-      <View style={styles.inputContainer}>
-        {/* Email Input */}
-        <View style={styles.inputWrapper}>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={formData.email}
-            onChangeText={(text) => handleFormChange("email", text)}
-          />
-          <Icon
-            name="envelope"
-            size={20}
-            color="#000"
-            style={styles.inputIcon}
-          />
-        </View>
-
-        {/* Password Input */}
-        <View style={styles.inputWrapper}>
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry={!showPassword}
-            value={formData.password}
-            onChangeText={(text) => handleFormChange("password", text)}
-          />
-          <TouchableOpacity onPress={togglePasswordVisibility}>
-            <Icon
-              name={showPassword ? "eye-slash" : "eye"}
-              size={20}
-              color="#000"
-              style={styles.inputIcon}
-            />
+    <ScrollView>
+      <SafeAreaView>
+        <View style={styles.container}>
+          {/* Close Button */}
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => router.back()}
+          >
+            <Icon name="close" size={20} color="#000" />
           </TouchableOpacity>
+
+          {/* Illustration */}
+          <View style={styles.imageContainer}>
+            <Image
+              source={loginImage}
+              style={styles.image}
+              resizeMode="contain"
+            />
+          </View>
+
+          {/* Login Text */}
+          <Text style={styles.title}>LOGIN Book Doctor Appointment</Text>
+
+          {/* Form */}
+          <View style={styles.inputContainer}>
+            {/* Email Input */}
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                value={formData.email}
+                onChangeText={(text) => handleFormChange("email", text)}
+              />
+              <Icon
+                name="envelope"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
+              />
+            </View>
+
+            {/* Password Input */}
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry={!showPassword}
+                value={formData.password}
+                onChangeText={(text) => handleFormChange("password", text)}
+              />
+              <TouchableOpacity onPress={togglePasswordVisibility}>
+                <Icon
+                  name={showPassword ? "eye-slash" : "eye"}
+                  size={20}
+                  color="#000"
+                  style={styles.inputIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Forgot Password */}
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/auth/forget_password"); // This will navigate to /auth/login
+            }}
+          >
+            <Text style={styles.forgotPassword}>Forgot Password?</Text>
+          </TouchableOpacity>
+
+          {/* Login Button */}
+          <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
+            <Text style={styles.loginButtonText}>Login Now</Text>
+          </TouchableOpacity>
+
+          {/* Sign Up Link */}
+          <Text style={styles.signUpText}>
+            Don't have a Login?{" "}
+            <Text
+              style={styles.signUpLink}
+              onPress={() => {
+                router.push("/auth/register"); // This will navigate to /auth/login
+              }}
+            >
+              Sign up Now!
+            </Text>
+          </Text>
         </View>
-      </View>
-
-      {/* Forgot Password */}
-      <TouchableOpacity
-        onPress={() => {
-          router.push("/auth/forget_password"); // This will navigate to /auth/login
-        }}
-      >
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-      </TouchableOpacity>
-
-      {/* Login Button */}
-      <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
-        <Text style={styles.loginButtonText}>Login Now</Text>
-      </TouchableOpacity>
-
-      {/* Sign Up Link */}
-      <Text style={styles.signUpText}>
-        Don't have a Login?{" "}
-        <Text
-          style={styles.signUpLink}
-          onPress={() => {
-            router.push("/auth/register"); // This will navigate to /auth/login
-          }}
-        >
-          Sign up Now!
-        </Text>
-      </Text>
+      </SafeAreaView>
       <Toast />
-    </View>
+    </ScrollView>
   );
 };
 

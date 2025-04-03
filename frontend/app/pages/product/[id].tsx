@@ -28,7 +28,7 @@ export default function DoctorPage() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: "Product Details",
+      title: "Prescription Details",
       headerStyle: { backgroundColor: "#00b4d8" },
       headerTintColor: "#fff",
     });

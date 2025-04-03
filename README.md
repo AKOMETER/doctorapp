@@ -64,25 +64,21 @@ Your final-year project, a mobile app for healthcare appointment booking, should
 • E-Prescriptions & Medical Records
 • Ratings & Reviews for Doctors
 
-//patient
-profile page -> patient medical record
-appointment -> change delete to cancel
+appointment
 
-<!-- settings -> send token on password reset -->
-
-<!-- prescription page -->
-
-auth
-login and register -> change image
-
-//doctor
-
-<!-- complete doctor page -->
-<!-- populate with real life data
-checkout appointment logic -->
-
-<!-- change doctor admin to doctor -->
-
-//admin
-
-<!-- create admin account -->
+1. change status on appointment cancel
+2. add appointment show page
+3. add toast on product detail (change to description)
+4. on add checkout to cart
+5. change currency to pounds
+6. populate tables
+7. Medical Records
+8. search by doctor name
+9. medical record page
+10. correct message icon to user.role // item user
+11. add medical record page
+12. update profile ui
+13. add back location and name search
+14. add medical to client dashboard
+15. change to new dashboard add existing cards
+16. add user medical record on doctor appointment card as a toolkit

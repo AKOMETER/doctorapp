@@ -20,10 +20,7 @@ import { getSpecialtyImage } from "@/utils/helperFunction";
 import { useSidebar } from "@/context/SidebarContext";
 
 const HomePage = () => {
-  const [formData, setFormData] = useState({
-    location: "",
-    option: "",
-  });
+  const [name, setName] = useState("");
   const { user } = useSidebar();
   const [specialty, setSpecialty] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -54,28 +51,17 @@ const HomePage = () => {
           {/* Search Inputs */}
           <View className="mt-5 bg-white rounded-lg p-4 shadow-md">
             <TextInput
-              placeholder="Search Location (Ex: Chennai, etc)"
-              className="bg-gray-200 rounded-md p-3 mb-3"
-              value={formData.location}
-              onChangeText={(text) =>
-                setFormData((prev) => ({ ...prev, location: text }))
-              }
-            />
-            <TextInput
-              placeholder="Search Doctor name, Specialty"
+              placeholder="Search By Doctor name"
               className="bg-gray-200 rounded-md p-3"
-              value={formData.option}
-              onChangeText={(text) =>
-                setFormData((prev) => ({ ...prev, option: text }))
-              }
+              value={name}
+              onChangeText={(text) => setName(text)}
             />
             <TouchableOpacity
               onPress={() => {
                 router.push({
                   pathname: "/pages/search",
                   params: {
-                    location: formData.location,
-                    option: formData.option,
+                    name: name,
                   },
                 });
               }}
@@ -91,7 +77,7 @@ const HomePage = () => {
         {/* products */}
         <View className="p-5">
           <View className="flex-row justify-between mb-3">
-            <Text className="text-lg font-bold">Products</Text>
+            <Text className="text-lg font-bold">Prescription</Text>
             <Text
               className="text-blue-700"
               onPress={() => router.push("/pages/product")}
@@ -107,7 +93,7 @@ const HomePage = () => {
                 onPress={() => router.push(`/pages/product/${item?.id}`)}
               >
                 <Image
-                  source={getSpecialtyImage(item?.image)}
+                  source={{ uri: item?.image }}
                   className="w-16 h-16 mb-2"
                 />
                 <Text className="text-center text-sm">{item?.name}</Text>
@@ -164,7 +150,7 @@ const HomePage = () => {
               >
                 <Image
                   source={{
-                    uri: "https://thumbs.dreamstime.com/b/female-doctor-uniform-standing-alone-put-her-hands-pocket-side-view-photo-262399601.jpg",
+                    uri: doctor.image,
                   }}
                   style={{ width: 100, height: 100 }}
                 />

@@ -26,14 +26,12 @@ const Sidebar = ({
     router.push("/auth/login");
   }
 
-  const name =
-    user && isUserLoggedIn.status
-      ? user.firstName + " " + user.lastName
-      : "Guest";
-  const imageUrl =
-    user && isUserLoggedIn.status
-      ? backendUrl + "/" + user.profileImage
-      : "https://avatar.iran.liara.run/public/boy?username=Ash";
+  const name = isUserLoggedIn.status
+    ? user.firstName + " " + user.lastName
+    : "Guest";
+  const imageUrl = isUserLoggedIn.status
+    ? backendUrl + "/" + user.profileImage
+    : "https://avatar.iran.liara.run/public/boy?username=Ash";
 
   return (
     <View style={styles.container}>
@@ -189,7 +187,7 @@ const Sidebar = ({
               <Text style={styles.navText}>Settings</Text>
             </TouchableOpacity>
 
-            {!isUserLoggedIn?.status && user ? (
+            {isUserLoggedIn?.status ? (
               <TouchableOpacity
                 style={styles.login}
                 onPress={() => {

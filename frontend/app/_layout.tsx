@@ -67,7 +67,7 @@ export default function RootLayout() {
         <Stack.Screen name="pages/lab/index" options={{ title: "Labs" }} />
         <Stack.Screen
           name="pages/product/index"
-          options={{ title: "Product" }}
+          options={{ title: "Prescription" }}
         />
         {/* Auth Screens */}
         <Stack.Screen name="auth/login" options={{ title: "Login" }} />
