@@ -1,9 +1,9 @@
 import Sidebar from "@/components/sidebar";
 import { useSidebar } from "@/context/SidebarContext";
 import apiRequest from "@/services/apiRequest";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { FontAwesome, MaterialIcons, Entypo } from "@expo/vector-icons";
 
 const Dashboard = () => {
@@ -12,7 +12,7 @@ const Dashboard = () => {
   const [doctors, setDoctors] = useState([]);
   const [labs, setLabs] = useState([]);
   const [newUser, setUser] = useState<any>({});
-
+  const router = useRouter();
   useEffect(() => {
     apiRequest.get("/specialty").then((res) => setSpecialty(res?.data?.data));
     apiRequest.get("/doctor").then((res) => setDoctors(res?.data.data));
@@ -82,29 +82,58 @@ const Dashboard = () => {
         {/* System Stats */}
         <Text style={styles.subTitle}>Resources Overview</Text>
         <View style={styles.cardContainer}>
-          <View style={styles.card}>
+          <Pressable
+            style={styles.card}
+            onPress={() => {
+              router.push("/pages/specialities");
+            }}
+          >
             <Entypo name="briefcase" size={28} color="#3F51B5" />
             <View style={styles.cardContent}>
               <Text style={styles.cardLabel}>Specialties</Text>
               <Text style={styles.cardValue}>{specialty.length}</Text>
             </View>
-          </View>
+          </Pressable>
 
-          <View style={styles.card}>
+          <Pressable
+            style={styles.card}
+            onPress={() => {
+              router.push("/pages/doctor");
+            }}
+          >
             <FontAwesome name="user-md" size={28} color="#009688" />
             <View style={styles.cardContent}>
               <Text style={styles.cardLabel}>Doctors</Text>
               <Text style={styles.cardValue}>{doctors.length}</Text>
             </View>
-          </View>
+          </Pressable>
 
-          <View style={styles.card}>
+          <Pressable
+            style={styles.card}
+            onPress={() => {
+              router.push("/pages/lab");
+            }}
+          >
             <MaterialIcons name="science" size={28} color="#E91E63" />
             <View style={styles.cardContent}>
               <Text style={styles.cardLabel}>Labs</Text>
               <Text style={styles.cardValue}>{labs.length}</Text>
             </View>
-          </View>
+          </Pressable>
+
+          {user?.role === "Patient" && (
+            <Pressable
+              style={styles.card}
+              onPress={() => {
+                router.push("/pages/medicalRecord");
+              }}
+            >
+              <MaterialIcons name="book" size={28} color="#E91E63" />
+              <View style={styles.cardContent}>
+                <Text style={styles.cardLabel}>Medical Record</Text>
+              </View>
+            </Pressable>
+          )}
         </View>
       </ScrollView>
     </Sidebar>

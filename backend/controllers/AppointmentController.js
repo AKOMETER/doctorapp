@@ -1,4 +1,5 @@
 const Appointment = require("../database/models/Appointment");
+const Doctor = require("../database/models/Doctor");
 const User = require("../database/models/User");
 
 const AppointmentController = {
@@ -94,6 +95,44 @@ const AppointmentController = {
         .json({ msg: "Server error", error: error.message });
     }
   },
+
+  // GET /appointments/:id
+  async getOne(req, res) {
+    try {
+      const id = req.params.id;
+
+      const appointment = await Appointment.findOne({
+        where: { id },
+        include: [
+          {
+            model: User,
+            as: "Patient",
+          },
+          {
+            model: Doctor,
+            as: "doctorProfile", // this matches the alias you just added
+            include: [
+              {
+                model: User,
+                as: "user",
+              },
+            ],
+          },
+        ],
+      });
+
+      if (!appointment) {
+        return res.status(404).json({ msg: "Appointment not found" });
+      }
+
+      return res.status(200).json({ data: appointment });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ msg: "Server error", error: error.message });
+    }
+  },
+
   // POST /appointments
   async store(req, res) {
     try {

@@ -53,9 +53,16 @@ export default function DoctorPage() {
       quantity,
       userId: user?.id,
     };
-    apiRequest.post("/cart", payload).then(() => {
-      showToast("success", `${product.name} (${quantity}) added to cart.`);
-    });
+    apiRequest
+      .post("/cart", payload)
+      .then(() => {
+        showToast("success", `${product.name} (${quantity}) added to cart.`);
+      })
+      .then((res) => {
+        setTimeout(() => {
+          router.push("/pages/cart");
+        }, 1000);
+      });
   };
 
   if (!product) return null;
@@ -84,7 +91,7 @@ export default function DoctorPage() {
 
           <View className="flex-row justify-between mb-4">
             <Text className="text-lg font-bold text-green-700">
-              ₦{product.price}
+              £ {product.price}
             </Text>
             <Text className="text-sm text-gray-600">
               Stock: {product.stock}

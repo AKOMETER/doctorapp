@@ -13,7 +13,7 @@ import { DoctorType } from "@/utils/dataTypes";
 import { useSidebar } from "@/context/SidebarContext";
 
 const Search = () => {
-  const { location, option } = useLocalSearchParams();
+  const { location, name } = useLocalSearchParams();
   const router = useRouter();
   const [doctors, setDoctors] = useState<DoctorType[]>([]);
   const [filteredDoctors, setFilteredDoctors] = useState<DoctorType[]>([]);
@@ -22,28 +22,26 @@ const Search = () => {
 
   useEffect(() => {
     apiRequest.get("/doctor").then((res: any) => {
-      const allDoctors: DoctorType[] = res.data;
+      const allDoctors: DoctorType[] = res.data?.data;
 
       let filtered = allDoctors;
 
-      // Filter by lab location
+      // Filter by Doctor location
       if (location) {
         filtered = filtered.filter((doctor) =>
-          doctor.Labs.some((lab) =>
-            lab.location
-              .toLowerCase()
-              .includes((location as string).toLowerCase())
-          )
+          doctor.location
+            .toLowerCase()
+            .includes((location as string).toLowerCase())
         );
       }
 
       // Filter by doctor name or specialty name
-      if (option) {
-        const search = (option as string).toLowerCase();
+      if (name) {
+        const search = (name as string).toLowerCase();
 
         filtered = filtered.filter(
           (doctor) =>
-            `${doctor.user.firstName} ${doctor.user.lastName}`
+            `${doctor.user?.firstName} ${doctor.user?.lastName}`
               .toLowerCase()
               .includes(search) ||
             doctor.Specialties.some((s) =>
@@ -60,13 +58,13 @@ const Search = () => {
   return (
     <SafeAreaView>
       <ScrollView>
-        {(location || option) && (
+        {(location || name) && (
           <View style={{ padding: 20 }}>
             <Text
               style={{ fontSize: 15, fontWeight: "bold", marginBottom: 10 }}
             >
-              {location && `For Doctor Lab: ${location}`}{" "}
-              {option && ` | Specification: ${option}`}
+              {location && `For Doctor Location: ${location}`}{" "}
+              {name && ` | Name : ${name}`}
             </Text>
           </View>
         )}
@@ -91,7 +89,7 @@ const Search = () => {
                   />
                   <View style={{ marginLeft: 10, flex: 1 }}>
                     <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                      {doctor.user.firstName + " " + doctor.user.lastName}
+                      {doctor.user?.firstName + " " + doctor.user?.lastName}
                     </Text>
                     <Text style={{ color: "#777" }}>
                       {doctor.Specialties.slice(0, 3).map((item, index) => (

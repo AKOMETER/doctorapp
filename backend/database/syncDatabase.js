@@ -28,6 +28,10 @@ User.hasMany(Appointment, {
 Appointment.belongsTo(User, { as: "Patient", foreignKey: "patientId" });
 Appointment.belongsTo(User, { as: "Doctor", foreignKey: "doctorId" });
 
+//doctor and appointment
+Appointment.belongsTo(Doctor, { foreignKey: "doctorId", as: "doctorProfile" });
+Doctor.hasMany(Appointment, { foreignKey: "doctorId" });
+
 //notification
 User.hasMany(Notification, { foreignKey: "userId" });
 Notification.belongsTo(User, { foreignKey: "userId" });

@@ -83,6 +83,11 @@ export default function RootLayout() {
         {/* Others */}
         <Stack.Screen name="not-found" options={{ title: "Not Found" }} />
         <Stack.Screen name="about" options={{ title: "About" }} />
+        <Stack.Screen
+          name="pages/medicalRecord"
+          options={{ title: "Medical Record" }}
+        />
+
         {/* doctor admins */}
         <Stack.Screen name="pages/doctorAdmin" options={{ title: "Admin" }} />
         <Stack.Screen

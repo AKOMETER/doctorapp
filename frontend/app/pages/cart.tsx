@@ -81,7 +81,7 @@ export default function CartScreen() {
     <View className="flex-row justify-between items-center mb-4 p-4 border rounded-xl bg-white shadow">
       <View>
         <Text className="text-base font-semibold">{item.Product.name}</Text>
-        <Text className="text-sm text-gray-500">₦{item.Product.price}</Text>
+        <Text className="text-sm text-gray-500">£{item.Product.price}</Text>
       </View>
 
       <View className="flex-row items-center space-x-2">
@@ -120,7 +120,7 @@ export default function CartScreen() {
       {cart.length > 0 && (
         <View className="mt-6">
           <Text className="text-right text-lg font-bold mb-3">
-            Total: ₦{getTotal()}
+            Total: £ {getTotal()}
           </Text>
 
           <TouchableOpacity
@@ -147,11 +147,11 @@ export default function CartScreen() {
                 Wallet Balance:
               </Text>
               <Text className="text-lg font-semibold mb-2">
-                ₦{user.amount || 0}
+                £ {user.amount || 0}
               </Text>
 
               <Text className="text-base mb-1 text-gray-600">Total Cost:</Text>
-              <Text className="text-lg font-semibold">₦{getTotal()}</Text>
+              <Text className="text-lg font-semibold">£ {getTotal()}</Text>
             </View>
 
             <View className="flex-row justify-between mt-6 space-x-3">

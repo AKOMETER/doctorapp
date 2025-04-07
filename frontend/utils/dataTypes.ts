@@ -7,6 +7,8 @@ export interface SpecialtyType extends TimeStampType {
 export interface DoctorType extends TimeStampType {
   id?: string;
   userId: number;
+  firstName: string;
+  lastName: string;
   bio: string;
   availableFrom: string;
   availableTo: string;
@@ -66,12 +68,8 @@ export interface AppointmentType extends TimeStampType {
     lastName: string;
     email: string;
   };
-  Doctor: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
+  doctorProfile?: DoctorType;
+  Doctor?: DoctorType;
 }
 export interface MessageType extends TimeStampType {
   id?: string;

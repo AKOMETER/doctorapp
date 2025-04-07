@@ -13,6 +13,7 @@ const AppointmentController = require("../controllers/AppointmentController");
 router.get("/", AppointmentController.index);
 router.get("/focus", isAuth, AppointmentController.focus);
 router.get("/:id", AppointmentController.show);
+router.get("/get_one/:id", AppointmentController.getOne);
 router.post("/", AppointmentController.store);
 router.put("/:id", AppointmentController.update);
 router.delete("/:id", AppointmentController.destroy);

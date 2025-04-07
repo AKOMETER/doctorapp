@@ -21,6 +21,7 @@ import { useSidebar } from "@/context/SidebarContext";
 
 const HomePage = () => {
   const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
   const { user } = useSidebar();
   const [specialty, setSpecialty] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -51,17 +52,26 @@ const HomePage = () => {
           {/* Search Inputs */}
           <View className="mt-5 bg-white rounded-lg p-4 shadow-md">
             <TextInput
+              placeholder="Search By Location name"
+              className="bg-gray-200 my-3 rounded-md p-3"
+              value={location}
+              onChangeText={(text) => setLocation(text)}
+            />
+
+            <TextInput
               placeholder="Search By Doctor name"
               className="bg-gray-200 rounded-md p-3"
               value={name}
               onChangeText={(text) => setName(text)}
             />
+
             <TouchableOpacity
               onPress={() => {
                 router.push({
                   pathname: "/pages/search",
                   params: {
                     name: name,
+                    location: location,
                   },
                 });
               }}

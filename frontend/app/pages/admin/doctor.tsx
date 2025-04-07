@@ -96,7 +96,7 @@ export default function Doctor() {
           <Text>
             Available: {doctor.availableFrom} - {doctor.availableTo}
           </Text>
-          <Text>Price: ₦{doctor.price}</Text>
+          <Text>Price: £ {doctor.price}</Text>
 
           <TouchableOpacity
             style={styles.editIcon}

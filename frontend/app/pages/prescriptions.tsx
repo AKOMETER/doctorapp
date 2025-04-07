@@ -32,7 +32,9 @@ const Prescriptions = () => {
       {prescriptions.map((prescription) => (
         <View key={prescription.id} style={styles.card}>
           <Image
-            source={{ uri: "https://cdn.iconscout.com/icon/free/png-256/free-prescription-icon-download-in-svg-png-gif-file-formats--medicine-medical-report-document-hand-services-pack-healthcare-icons-1607962.png" }}
+            source={{
+              uri: "https://cdn.iconscout.com/icon/free/png-256/free-prescription-icon-download-in-svg-png-gif-file-formats--medicine-medical-report-document-hand-services-pack-healthcare-icons-1607962.png",
+            }}
             style={styles.avatar}
           />
           <View style={styles.cardContent}>

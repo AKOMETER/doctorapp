@@ -1,7 +1,8 @@
 import apiRequest from "@/services/apiRequest";
 import { ProductType } from "@/utils/dataTypes";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -10,20 +11,39 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
+  Pressable,
 } from "react-native";
 
-export default function Labs() {
+export default function Products() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    location: "",
-    option: "",
-  });
+  const [formData, setFormData] = useState({ name: "" });
+  const all = useRef<ProductType[]>([]); // ✅ Corrected type
   const [products, setProducts] = useState<ProductType[]>([]);
+
   useEffect(() => {
     apiRequest.get("/product").then((res: any) => {
-      if (res) setProducts(res?.data);
+      if (res) {
+        setProducts(res.data);
+        all.current = res.data;
+      }
     });
   }, []);
+
+  function handleClear() {
+    setProducts(all.current);
+    setFormData((prev) => ({ ...prev, name: "" }));
+  }
+
+  function handleSearch() {
+    if (formData?.name) {
+      const filtered = all.current.filter((product) =>
+        product.name.toLowerCase().includes(formData.name.toLowerCase())
+      );
+      setProducts(filtered);
+    } else {
+      setProducts(all.current);
+    }
+  }
 
   return (
     // <Sidebar title="All Specialist">
@@ -40,23 +60,29 @@ export default function Labs() {
                 setFormData((prev) => ({ ...prev, location: text }))
               }
             /> */}
-            <TextInput
-              placeholder="Search By Prescription name"
-              className="bg-gray-200 rounded-md p-3"
-              value={formData.option}
-              onChangeText={(text) =>
-                setFormData((prev) => ({ ...prev, option: text }))
-              }
-            />
+            <View>
+              <TextInput
+                placeholder="Search By Prescription name"
+                className="bg-gray-200 rounded-md p-3"
+                value={formData.name}
+                onChangeText={(text) =>
+                  setFormData((prev) => ({ ...prev, name: text }))
+                }
+              />
+
+              <MaterialIcons
+                className="absolute right-5 top-3 rounded-lg bg-black p-1 "
+                name="close"
+                color={"white"}
+                onPress={() => {
+                  handleClear();
+                }}
+              />
+            </View>
+
             <TouchableOpacity
               onPress={() => {
-                router.push({
-                  pathname: "/pages/search",
-                  params: {
-                    location: formData.location,
-                    option: formData.option,
-                  },
-                });
+                handleSearch();
               }}
               className="bg-cyan-500 rounded-md p-4 mt-3"
             >
@@ -72,7 +98,7 @@ export default function Labs() {
             <TouchableOpacity
               key={item.id}
               className="items-center mr-2"
-              onPress={() => router.push(`/pages/specialities/${item.id}`)}
+              onPress={() => router.push(`/pages/product/${item.id}`)}
             >
               <View key={item.id} className="items-center w-24 mb-4">
                 <Image

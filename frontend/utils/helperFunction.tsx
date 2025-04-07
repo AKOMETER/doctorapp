@@ -23,20 +23,6 @@ export function handleAlert(title: string, message: string) {
     ],
     { cancelable: true }
   );
-
-  // if (title.toLowerCase() == "success") {
-  //   Toast.show({
-  //     type: "success",
-  //     text1: "Register Successful",
-  //     text2: message,
-  //   });
-  // } else {
-  //   Toast.show({
-  //     type: "error",
-  //     text1: "Error",
-  //     text2: message,
-  //   });
-  // }
 }
 
 export const setupNotifications = async () => {
@@ -180,4 +166,10 @@ export const showToast = (
     text1: title || "Error, PLease try again",
     text2: message,
   });
+};
+
+export const showPreview = (text: string, count: number) => {
+  const words = text?.split(" ");
+  if (!words) return "";
+  return words.length > count ? words.slice(0, count).join(" ") + "..." : text;
 };

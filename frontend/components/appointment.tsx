@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
+  Pressable,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -13,6 +14,8 @@ import apiRequest from "@/services/apiRequest";
 import { useSidebar } from "@/context/SidebarContext";
 import { AppointmentType } from "@/utils/dataTypes";
 import { showToast } from "@/utils/helperFunction";
+import StatusBadge from "./StatusBadge";
+import { useRouter } from "expo-router";
 
 export default function Appointment() {
   const { user } = useSidebar();
@@ -55,7 +58,7 @@ export default function Appointment() {
       setSelectedDeleteId(null);
     }
   };
-
+  const router = useRouter();
   return (
     <ScrollView className="bg-gray-100 p-4">
       {showUpdateForm && currentAppointment ? (
@@ -73,7 +76,10 @@ export default function Appointment() {
         />
       ) : (
         appointmentsList.map((appointment) => (
-          <View
+          <Pressable
+            onPress={() => {
+              router.push(`/pages/appointments/${appointment?.id}`);
+            }}
             key={appointment.id}
             className="bg-white rounded-xl p-4 mb-4 shadow flex-row items-center justify-between"
           >
@@ -86,12 +92,26 @@ export default function Appointment() {
               />
               <View>
                 <Text className="text-lg font-semibold text-gray-800">
-                  Dr. {appointment.Doctor.firstName}{" "}
-                  {appointment.Doctor.lastName}
+                  Dr.{" "}
+                  {appointment?.Doctor?.firstName ||
+                    appointment?.Doctor?.user?.lastName}{" "}
+                  {appointment?.Doctor?.lastName ||
+                    appointment?.Doctor?.user?.firstName}
                 </Text>
                 <Text className="text-sm text-gray-600">
                   Date: {new Date(appointment.dateTime).toLocaleString()}
                 </Text>
+                {appointment?.status && (
+                  <StatusBadge
+                    status={
+                      appointment?.status as
+                        | "pending"
+                        | "confirmed"
+                        | "cancelled"
+                        | "completed"
+                    }
+                  />
+                )}
               </View>
             </View>
 
@@ -104,13 +124,13 @@ export default function Appointment() {
               >
                 <MaterialIcons name="edit" size={24} color="blue" />
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => confirmDeleteAppointment(appointment?.id || "")}
               >
                 <MaterialIcons name="delete" size={24} color="red" />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
-          </View>
+          </Pressable>
         ))
       )}
 
@@ -181,8 +201,8 @@ function UpdateAppointmentForm({
   return (
     <View className="bg-white p-5 rounded-xl mx-4 mt-4">
       <Text className="text-xl font-bold mb-4">
-        Update Appointment for Dr. {appointment.Doctor.firstName}{" "}
-        {appointment.Doctor.lastName}
+        Update Appointment for Dr. {appointment?.Doctor?.firstName}{" "}
+        {appointment?.Doctor?.lastName}
       </Text>
       <Text className="text-sm text-gray-600">Selected Date & Time:</Text>
 

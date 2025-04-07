@@ -66,15 +66,15 @@ Your final-year project, a mobile app for healthcare appointment booking, should
 
 appointment
 
-1. change status on appointment cancel
-2. add appointment show page
+1. change status on appointment cancel \*\*\*\*
+2. add appointment show page \*\*\*\*
 3. add toast on product detail (change to description)
-4. on add checkout to cart
-5. change currency to pounds
+4. on add checkout to cart \*\*\*\*
+5. change currency to pounds \*\*\*\*
 6. populate tables
-7. Medical Records
-8. search by doctor name
-9. medical record page
+7. Medical Records \*\*\*\*
+8. search by doctor name \*\*\*\*
+9. medical record page \*\*\*\*
 10. correct message icon to user.role // item user
 11. add medical record page
 12. update profile ui

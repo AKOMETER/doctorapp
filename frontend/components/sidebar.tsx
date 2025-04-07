@@ -22,17 +22,19 @@ const Sidebar = ({
 
   async function handleLogout() {
     await AsyncStorage.setItem("token", "");
-
+    await AsyncStorage.setItem("user", "");
     router.push("/auth/login");
   }
 
-  const name = isUserLoggedIn.status
-    ? user.firstName + " " + user.lastName
-    : "Guest";
-  const imageUrl = isUserLoggedIn.status
-    ? backendUrl + "/" + user.profileImage
+  const name =
+    user?.firstName || user?.lastName
+      ? user?.firstName + " " + user?.lastName
+      : "Guest";
+  const imageUrl = user?.profileImage
+    ? backendUrl + "/" + user?.profileImage
     : "https://avatar.iran.liara.run/public/boy?username=Ash";
 
+  // console.log("user", user, "isUserLoggedIn", isUserLoggedIn);
   return (
     <View style={styles.container}>
       {isOpen && (
@@ -54,7 +56,7 @@ const Sidebar = ({
               <Text style={styles.greetingText}>Hello</Text>
               <Text style={styles.guestText}>{name}</Text>
               <Text style={styles.guestText}>
-                $ {isUserLoggedIn.user?.amount || 0}
+                £ {isUserLoggedIn.user?.amount || 0}
               </Text>
             </View>
           </View>
@@ -120,16 +122,18 @@ const Sidebar = ({
               </TouchableOpacity>
             )}
 
-            <TouchableOpacity
-              style={styles.navItem}
-              onPress={() => {
-                router.push("/pages/message");
-                toggleSidebar();
-              }}
-            >
-              <FontAwesome name="envelope" size={20} color="#000000" />
-              <Text style={styles.navText}>Message</Text>
-            </TouchableOpacity>
+            {(user?.role == "Doctor" || user?.role == "Patient") && (
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => {
+                  router.push("/pages/message");
+                  toggleSidebar();
+                }}
+              >
+                <FontAwesome name="envelope" size={20} color="#000000" />
+                <Text style={styles.navText}>Message</Text>
+              </TouchableOpacity>
+            )}
             {user?.role !== "Admin" && (
               <TouchableOpacity
                 style={styles.navItem}
@@ -166,28 +170,33 @@ const Sidebar = ({
               </TouchableOpacity>
             )}
 
-            <TouchableOpacity
-              onPress={() => {
-                router.push("/pages/profile");
-                toggleSidebar();
-              }}
-              style={styles.navItem}
-            >
-              <FontAwesome name="user" size={20} color="#000000" />
-              <Text style={styles.navText}>My Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navItem}
-              onPress={() => {
-                router.push("/pages/settings");
-                toggleSidebar();
-              }}
-            >
-              <FontAwesome name="cogs" size={20} color="#000000" />
-              <Text style={styles.navText}>Settings</Text>
-            </TouchableOpacity>
+            {(user?.role == "Doctor" || user?.role == "Patient") && (
+              <TouchableOpacity
+                onPress={() => {
+                  router.push("/pages/profile");
+                  toggleSidebar();
+                }}
+                style={styles.navItem}
+              >
+                <FontAwesome name="user" size={20} color="#000000" />
+                <Text style={styles.navText}>My Profile</Text>
+              </TouchableOpacity>
+            )}
 
-            {isUserLoggedIn?.status ? (
+            {(user?.role == "Doctor" || user?.role == "Patient") && (
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => {
+                  router.push("/pages/settings");
+                  toggleSidebar();
+                }}
+              >
+                <FontAwesome name="cogs" size={20} color="#000000" />
+                <Text style={styles.navText}>Settings</Text>
+              </TouchableOpacity>
+            )}
+
+            {!isUserLoggedIn?.status ? (
               <TouchableOpacity
                 style={styles.login}
                 onPress={() => {
