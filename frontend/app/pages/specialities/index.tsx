@@ -18,9 +18,9 @@ export default function Specialities() {
     <SafeAreaView className="flex-1 p-4">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex flex-wrap flex-row justify-center gap-4">
-          {specialities.map((item) => (
+          {specialities.map((item, i) => (
             <TouchableOpacity
-              key={item.id}
+              key={i}
               className="items-center mr-2"
               onPress={() => router.push(`/pages/specialities/${item.id}`)}
             >

@@ -1,6 +1,4 @@
-import Sidebar from "@/components/sidebar";
 import apiRequest from "@/services/apiRequest";
-import { specialities } from "@/utils/data";
 import { LabType } from "@/utils/dataTypes";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -19,7 +17,7 @@ export default function Labs() {
   const [labs, setLabs] = useState([]);
   useEffect(() => {
     apiRequest.get("/lab").then((res: any) => {
-      setLabs(res.data);
+      if (res.data) setLabs(res.data?.data);
     });
   }, []);
 

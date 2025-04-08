@@ -148,8 +148,12 @@ export default function Doctor() {
           />
 
           <View style={styles.modalButtons}>
-            <Button title="Update" onPress={handleUpdate} />
-            <Button title="Close" onPress={() => setModalVisible(false)} />
+            <Button color={"#1f5b92"} title="Update" onPress={handleUpdate} />
+            <Button
+              color={"#1f5b92"}
+              title="Close"
+              onPress={() => setModalVisible(false)}
+            />
           </View>
         </View>
       </Modal>

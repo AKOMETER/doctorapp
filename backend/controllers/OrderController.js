@@ -42,6 +42,9 @@ exports.checkoutOrder = async (req, res) => {
     // Save all order items
     await OrderItem.bulkCreate(orderItems);
 
+    // Empty user's cart
+    await CartItem.destroy({ where: { userId } });
+
     return res.status(200).json({
       message: "Order placed successfully",
       orderItems,

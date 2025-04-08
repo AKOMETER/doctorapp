@@ -85,7 +85,11 @@ export default function AdminLabScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Button title="Create New Lab" onPress={openCreateModal} />
+      <Button
+        color={"#1f5b92"}
+        title="Create New Lab"
+        onPress={openCreateModal}
+      />
 
       {labs.map((lab) => (
         <View key={lab.id} style={styles.card}>
@@ -145,8 +149,12 @@ export default function AdminLabScreen() {
           />
 
           <View style={styles.modalButtons}>
-            <Button title="Save" onPress={handleSave} />
-            <Button title="Cancel" onPress={() => setModalVisible(false)} />
+            <Button color={"#1f5b92"} title="Save" onPress={handleSave} />
+            <Button
+              color={"#1f5b92"}
+              title="Cancel"
+              onPress={() => setModalVisible(false)}
+            />
           </View>
         </View>
       </Modal>

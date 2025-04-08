@@ -122,8 +122,9 @@ export default function Settings() {
       {/* Change Password */}
 
       <TouchableOpacity
-        className="bg-blue-500 py-3 px-5 rounded-lg mb-4"
+        className=" py-3 px-5 rounded-lg mb-4"
         onPress={() => setPasswordModalVisible(true)}
+        style={{ backgroundColor: "#1f5b92" }}
       >
         <Text className="text-white text-center font-semibold">
           Change Password
@@ -186,7 +187,8 @@ export default function Settings() {
 
       {/* Change Email */}
       <TouchableOpacity
-        className="bg-blue-500 py-3 px-5 rounded-lg"
+        className="py-3 px-5 rounded-lg"
+        style={{ backgroundColor: "#1f5b92" }}
         onPress={() => setEmailModalVisible(true)}
       >
         <Text className="text-white text-center font-semibold">

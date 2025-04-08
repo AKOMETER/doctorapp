@@ -40,7 +40,9 @@ export default function Calendar({
           date.getMinutes()
         );
         setSelectedDate(updatedDate);
-        setMode(null); // Picker done
+        setTimeout(() => {
+          setMode(null); // Picker done
+        }, 1500);
       }
     }
   };

@@ -9,11 +9,11 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useSidebar } from "@/context/SidebarContext";
-import { FontAwesome } from "@expo/vector-icons";
 import apiRequest from "@/services/apiRequest";
 import { CartItemType } from "@/utils/dataTypes";
 import { showToast } from "@/utils/helperFunction";
 import Toast from "react-native-toast-message";
+import { useRouter } from "expo-router";
 
 export default function CartScreen() {
   const { user, isUserLoggedIn, setIsUserLoggedIn } = useSidebar();
@@ -24,7 +24,7 @@ export default function CartScreen() {
   useEffect(() => {
     // if (!user) return;
     apiRequest.get(`/cart/${user?.id}`).then((res) => {
-      if (res) setCart(res?.data);
+      if (res?.data) setCart(res?.data);
     });
   }, []);
 
@@ -36,45 +36,67 @@ export default function CartScreen() {
     setCart(updated);
   };
 
-  const getTotal = () =>
-    cart.reduce(
+  const getTotal = () => {
+    return cart.reduce(
       (sum: any, item: any) => sum + item.Product.price * item.quantity,
       0
     );
+  };
 
   const handleCheckout = async () => {
+    console.log("here is it ");
     const total = getTotal();
 
-    if (user.amount < total) {
+    console.log(
+      "parseInt(user.amount) < total)",
+      parseInt(user.amount) < total
+    );
+    if (parseInt(user.amount) < total) {
       showToast(
         "error",
         "Insufficient Funds",
         "You do not have enough balance."
       );
+      setLoading(false);
       return;
     }
 
     setLoading(true);
+    const router = useRouter();
 
-    try {
-      const payload = {
-        cartItems: cart,
-        amount: total,
-        userId: user.id,
-      };
+    const payload = {
+      cartItems: cart,
+      amount: total,
+      userId: user.id,
+    };
+    console.log("payload", payload);
 
-      const response = await apiRequest.post("/order/checkout", payload);
+    apiRequest
+      .post("/order/checkout", payload)
+      .then((res) => {
+        const newAmount = user.amount - total;
+        setIsUserLoggedIn({ ...isUserLoggedIn, cart: [], amount: newAmount });
 
-      const newAmount = user.amount - total;
-      setIsUserLoggedIn({ ...isUserLoggedIn, cart: [], amount: newAmount });
+        showToast("success", "Success", "Order placed successfully!");
+        setModalVisible(false);
 
-      showToast("success", "Success", "Order placed successfully!");
-      setModalVisible(false);
-    } catch (err) {
-      showToast("error", "Error", "Something went wrong while placing order.");
-    } finally {
-      setLoading(false);
-    }
+        setTimeout(() => {
+          router.push("/");
+        }, 1000);
+        console.log("try");
+      })
+      .catch((err) => {
+        console.log("catch");
+        showToast(
+          "error",
+          "Error",
+          "Something went wrong while placing order."
+        );
+      })
+      .finally(() => {
+        console.log("finally");
+        setLoading(false);
+      });
   };
 
   const renderItem = ({ item, index }: any) => (
@@ -120,7 +142,7 @@ export default function CartScreen() {
       {cart.length > 0 && (
         <View className="mt-6">
           <Text className="text-right text-lg font-bold mb-3">
-            Total: £ {getTotal()}
+            Total: £ {getTotal() || 0}
           </Text>
 
           <TouchableOpacity
@@ -166,7 +188,7 @@ export default function CartScreen() {
                 className={`rounded-xl py-3 flex-1 ${
                   loading ? "bg-gray-400" : "bg-green-600"
                 }`}
-                onPress={handleCheckout}
+                onPress={() => handleCheckout()}
                 disabled={loading}
               >
                 <Text className="text-white text-center font-semibold">

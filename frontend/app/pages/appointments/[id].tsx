@@ -1,4 +1,5 @@
 import StatusBadge from "@/components/StatusBadge";
+import RescheduleComponent from "@/components/rescheduleButton";
 import apiRequest from "@/services/apiRequest";
 import { AppointmentType } from "@/utils/dataTypes";
 import { showToast } from "@/utils/helperFunction";
@@ -13,6 +14,7 @@ import {
   Text,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
 
 export default function ShowAppointment() {
   const navigation = useNavigation();
@@ -21,7 +23,7 @@ export default function ShowAppointment() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: "Doctor Profile",
+      title: "Appointment Details ",
       headerStyle: { backgroundColor: "#00b4d8" },
       headerTintColor: "#fff",
     });
@@ -34,14 +36,17 @@ export default function ShowAppointment() {
   }, []);
 
   async function handleStatusChange(status: string) {
-    try {
-      await apiRequest.put(`/appointment/${appointment?.id}`, {
+    apiRequest
+      .put(`/appointment/${appointment?.id}`, {
         status,
+      })
+      .then((res) => {
+        console.log("res", res);
+        showToast("success", "Cancelled", "Appointment Cancelled successfully");
+      })
+      .catch((err) => {
+        showToast("error", "Error", "Failed to update appointment");
       });
-      showToast("success", "Updated", "Appointment updated successfully");
-    } catch (err) {
-      showToast("error", "Error", "Failed to update appointment");
-    }
   }
 
   const router = useRouter();
@@ -123,24 +128,7 @@ export default function ShowAppointment() {
               </View>
 
               <View className="fixed top-80 w-full">
-                {/* <Pressable>
-                  <View>
-                    <Text className="rounded-3xl w-full m-0 p-4 text-center text-white bg-red-500">
-                      Cancel Appointment
-                    </Text>
-                  </View>
-                </Pressable> */}
-                {/* <Pressable
-                  onPress={() => {
-                    handleStatusChange("Cancelled");
-                  }}
-                >
-                  <View>
-                    <Text className=" my-3 rounded-3xl w-full m-0 p-4 text-center text-white bg-red-500">
-                      Cancel Appointment
-                    </Text>
-                  </View>
-                </Pressable> */}
+                <RescheduleComponent id={id} />
                 <Pressable
                   className="mb-9"
                   onPress={() => {
@@ -172,6 +160,7 @@ export default function ShowAppointment() {
           </Pressable>
         </View>
       )}
+      <Toast />
     </ScrollView>
   );
 }

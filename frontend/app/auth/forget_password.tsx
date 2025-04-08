@@ -34,6 +34,10 @@ export default function ForgetPasswordScreen() {
       .then((res) => {
         if (res?.status == 200) {
           showToast("success", res?.data?.msg);
+
+          setTimeout(() => {
+            router.push("/auth/forget_password_confirm");
+          }, 1500);
         }
       })
       .catch((err) => {

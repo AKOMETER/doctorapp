@@ -16,6 +16,7 @@ import { Picker } from "@react-native-picker/picker";
 import { AppointmentType } from "@/utils/dataTypes";
 import apiRequest from "@/services/apiRequest";
 import Toast from "react-native-toast-message";
+import { showToast } from "@/utils/helperFunction";
 
 export default function DoctorAdmin() {
   const navigation = useNavigation();
@@ -41,7 +42,7 @@ export default function DoctorAdmin() {
       const res = await apiRequest.get("/appointment/focus");
       setAppointments(res?.data?.data);
     } catch (err) {
-      Alert.alert("Error", "Failed to fetch appointments");
+      showToast("error", "Failed to fetch appointments");
     } finally {
       setLoading(false);
     }
@@ -64,9 +65,9 @@ export default function DoctorAdmin() {
       });
       fetchAppointments();
       setModalVisible(false);
-      Alert.alert("Success", "Appointment updated");
+      showToast("success", "Appointment updated");
     } catch (err) {
-      Alert.alert("Error", "Failed to update appointment");
+      showToast("error", "Failed to update appointment");
     }
   };
 
@@ -96,9 +97,9 @@ export default function DoctorAdmin() {
           <Text>Date: {new Date(item.dateTime).toLocaleString()}</Text>
           <TouchableOpacity
             onPress={() => handleModify(item)}
-            style={styles.modifyBtn}
+            style={styles.updateBtn}
           >
-            <Text style={{ color: "#fff" }}>Modify</Text>
+            <Text style={{ color: "#fff" }}>Update</Text>
           </TouchableOpacity>
         </View>
       ))}
@@ -119,7 +120,7 @@ export default function DoctorAdmin() {
                 <Picker.Item label="Pending" value="Pending" />
                 <Picker.Item label="Confirmed" value="Confirmed" />
                 <Picker.Item label="Cancelled" value="Cancelled" />
-                <Picker.Item label="Completed" value="Completed" />
+                {/* <Picker.Item label="Completed" value="Completed" /> */}
               </Picker>
             </View>
 
@@ -133,8 +134,12 @@ export default function DoctorAdmin() {
             />
 
             <View style={styles.modalActions}>
-              <Button title="Cancel" onPress={() => setModalVisible(false)} />
-              <Button title="Save" onPress={handleSave} />
+              <Button
+                color={"#1f5b92"}
+                title="Cancel"
+                onPress={() => setModalVisible(false)}
+              />
+              <Button color={"#1f5b92"} title="Save" onPress={handleSave} />
             </View>
           </View>
         </View>
@@ -152,6 +157,7 @@ const styles = StyleSheet.create({
   card: {
     padding: 16,
     marginBottom: 12,
+    marginTop: 12,
     backgroundColor: "#fff",
     borderRadius: 10,
     elevation: 2,
@@ -159,10 +165,19 @@ const styles = StyleSheet.create({
   modifyBtn: {
     marginTop: 10,
     padding: 10,
-    backgroundColor: "#00b4d8",
+    backgroundColor: "#1f5b92",
     borderRadius: 5,
     alignItems: "center",
   },
+
+  updateBtn: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "#1f5b92",
+    borderRadius: 5,
+    alignItems: "center",
+  },
+
   modalWrapper: {
     flex: 1,
     justifyContent: "center",

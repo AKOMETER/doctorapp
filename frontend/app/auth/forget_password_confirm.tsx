@@ -71,7 +71,7 @@ export default function ForgetPasswordScreen() {
         }
       />
       <TouchableOpacity style={styles.resetButton} onPress={handleSubmit}>
-        <Text style={styles.resetButtonText}>Send Reset Link</Text>
+        <Text style={styles.resetButtonText}>Confirm</Text>
       </TouchableOpacity>
       <Toast />
     </View>

@@ -16,6 +16,7 @@ import apiRequest from "@/services/apiRequest";
 import NumberInput from "@/components/number_input";
 import { ProductType } from "@/utils/dataTypes";
 import Toast from "react-native-toast-message";
+import { showToast } from "@/utils/helperFunction";
 
 export default function AdminProductScreen() {
   const [products, setProducts] = useState<ProductType[]>([]);
@@ -83,8 +84,12 @@ export default function AdminProductScreen() {
         text: "Delete",
         onPress: async () => {
           try {
-            await apiRequest.delete(`/product/${id}`);
-            fetchProducts();
+            await apiRequest.delete(`/product/${id}`).then((res) => {
+              showToast("success", "Product Deleted Successfully");
+              setTimeout(() => {
+                fetchProducts();
+              }, 1000);
+            });
           } catch (err) {
             console.error("Delete product error:", err);
           }
@@ -95,7 +100,11 @@ export default function AdminProductScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Button title="Create New Product" onPress={openCreateModal} />
+      <Button
+        color={"#1f5b92"}
+        title="Create New Product"
+        onPress={openCreateModal}
+      />
 
       {products.map((product) => (
         <View key={product.id} style={styles.card}>
@@ -171,8 +180,12 @@ export default function AdminProductScreen() {
           />
 
           <View style={styles.modalButtons}>
-            <Button title="Save" onPress={handleSave} />
-            <Button title="Cancel" onPress={() => setModalVisible(false)} />
+            <Button color={"#1f5b92"} title="Save" onPress={handleSave} />
+            <Button
+              color={"#1f5b92"}
+              title="Cancel"
+              onPress={() => setModalVisible(false)}
+            />
           </View>
         </View>
       </Modal>

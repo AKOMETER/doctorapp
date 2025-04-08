@@ -155,7 +155,8 @@ export default function ChatApp() {
               onChangeText={setMessage}
             />
             <TouchableOpacity
-              className="bg-blue-500 px-4 py-2 rounded-lg"
+              className=" px-4 py-2 rounded-lg"
+              style={{ backgroundColor: "#1f5b92" }}
               onPress={() => handleSendMessage(selectedUser)}
             >
               <Text className="text-white font-bold">Send</Text>
@@ -163,6 +164,7 @@ export default function ChatApp() {
           </View>
 
           <TouchableOpacity
+            style={{ backgroundColor: "#1f5b92" }}
             className="mt-4 bg-gray-600 p-3 rounded-lg items-center"
             onPress={() => setSelectedUser(null)}
           >

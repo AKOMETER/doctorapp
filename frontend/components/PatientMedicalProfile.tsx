@@ -40,13 +40,31 @@ export default function PatientMedicalProfile() {
   };
 
   const handleSubmit = async () => {
-    try {
-      const res = await apiRequest.post("/medical_record", { userId, ...form });
-
-      console.log("res", res);
-      showToast("success", "Success", "Medical record saved successfully");
-    } catch (err) {
-      showToast("error", "Error", "Failed to save record");
+    console.log("{ userId, ...form }", { userId, ...form });
+    if (form?.createdAt || form?.id || form?.updatedAt) {
+      apiRequest
+        .put(`/medical_record/${form?.id}`, { userId, ...form })
+        .then((res) => {
+          console.log("res", res);
+          showToast(
+            "success",
+            "Success",
+            "Medical record Updated successfully"
+          );
+        })
+        .catch((err) => {
+          showToast("error", "Error", "Failed to save record");
+        });
+    } else {
+      apiRequest
+        .post(`/medical_record/`, { userId, ...form })
+        .then((res) => {
+          console.log("res", res);
+          showToast("success", "Success", "Medical record saved successfully");
+        })
+        .catch((err) => {
+          showToast("error", "Error", "Failed to save record");
+        });
     }
   };
 
@@ -112,8 +130,9 @@ export default function PatientMedicalProfile() {
       </View>
 
       <TouchableOpacity
-        className="bg-blue-600 rounded p-3 mt-4 mb-7"
+        className="rounded p-3 mt-4 mb-7"
         onPress={handleSubmit}
+        style={{ backgroundColor: "#1f5b92" }}
       >
         <Text className="text-white text-center font-semibold">
           Save Medical Record

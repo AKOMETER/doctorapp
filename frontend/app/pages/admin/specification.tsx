@@ -10,6 +10,7 @@ import {
 import { SpecialtyType } from "@/utils/dataTypes";
 import apiRequest from "@/services/apiRequest";
 import Toast from "react-native-toast-message";
+import { showToast } from "@/utils/helperFunction";
 
 export default function Specification() {
   const [specialties, setSpecialties] = useState<SpecialtyType[]>([]);
@@ -41,8 +42,12 @@ export default function Specification() {
   };
 
   const handleDelete = async (id: string | undefined) => {
-    apiRequest.delete(`/specialty/${id}`);
-    fetchSpecialties();
+    apiRequest.delete(`/specialty/${id}`).then((res) => {
+      showToast("success", "Specialty Deleted Successfully");
+    });
+    setTimeout(() => {
+      fetchSpecialties();
+    }, 1000);
   };
 
   useEffect(() => {
@@ -64,7 +69,11 @@ export default function Specification() {
         value={form.icon}
         onChangeText={(val) => setForm({ ...form, icon: val })}
       />
-      <Button title={editId ? "Update" : "Create"} onPress={handleSubmit} />
+      <Button
+        color={"#1f5b92"}
+        title={editId ? "Update" : "Create"}
+        onPress={handleSubmit}
+      />
 
       <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 20 }}>
         Specialty List
@@ -84,9 +93,9 @@ export default function Specification() {
               <Text style={{ color: "red" }}>Delete</Text>
             </TouchableOpacity>
           </View>
-          <Toast />
         </View>
       ))}
+      <Toast />
     </ScrollView>
   );
 }

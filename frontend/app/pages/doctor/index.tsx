@@ -1,8 +1,10 @@
 import Sidebar from "@/components/sidebar";
 import { useSidebar } from "@/context/SidebarContext";
-import { doctors, specialities } from "@/utils/data";
+import apiRequest from "@/services/apiRequest";
+import { DoctorType } from "@/utils/dataTypes";
+
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -15,6 +17,12 @@ import {
 export default function Doctor() {
   const router = useRouter();
   const { user } = useSidebar();
+  const [doctors, setDoctors] = useState<DoctorType[]>([]);
+  useEffect(() => {
+    apiRequest.get("/doctor").then((res: any) => {
+      if (res) setDoctors(res.data.data);
+    });
+  }, []);
   return (
     // <Sidebar title="View All Doctors">
     <SafeAreaView>
@@ -23,42 +31,33 @@ export default function Doctor() {
           {doctors.map((doctor) => (
             <View
               key={doctor.id}
-              style={{
-                flexDirection: "row",
-                backgroundColor: "white",
-                borderRadius: 10,
-                marginBottom: 10,
-                padding: 10,
-                elevation: 2,
-              }}
+              className="flex-row bg-white rounded-lg mb-4 p-4 shadow-md"
             >
               <Image
-                source={{ uri: doctor.image }}
-                style={{ width: 80, height: 80, borderRadius: 10 }}
+                source={{
+                  uri: doctor.image,
+                }}
+                style={{ width: 100, height: 100 }}
               />
-              <View style={{ marginLeft: 10, flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                  {doctor.name}
+              <View className="ml-4 flex-1">
+                <Text className="text-base font-bold">
+                  {doctor?.user?.firstName + " " + doctor?.user?.lastName}
                 </Text>
-                <Text style={{ color: "#777" }}>
-                  {specialities[doctor.specialty].name}
+                <Text className="text-gray-500">
+                  {doctor.Specialties.slice(0, 3).map((item) => {
+                    return <Text key={item?.id}>{item?.name} </Text>;
+                  })}
                 </Text>
-                <Text style={{ color: "#0077b6" }}>{doctor.location}</Text>
-                <Text>{doctor.price}</Text>
-                <Text>{`⭐ ${doctor.rating}`}</Text>
+                <Text className="text-blue-700">{doctor.location}</Text>
+                <Text className="text-gray-700">${doctor.price}</Text>
+                <Text className="text-yellow-500">{`⭐ ${doctor.ratings}`}</Text>
               </View>
               {user?.role == "Patient" && (
                 <TouchableOpacity
+                  className="bg-cyan-500 rounded-md px-4 py-2 self-center"
                   onPress={() => router.push(`/pages/doctor/${doctor.id}`)}
-                  style={{
-                    backgroundColor: "#00b4d8",
-                    borderRadius: 8,
-                    paddingVertical: 10,
-                    paddingHorizontal: 15,
-                    alignSelf: "center",
-                  }}
                 >
-                  <Text style={{ color: "white" }}>Book Appointment</Text>
+                  <Text className="text-white">Book Appointment</Text>
                 </TouchableOpacity>
               )}
             </View>

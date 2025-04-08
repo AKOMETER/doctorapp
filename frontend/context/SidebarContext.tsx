@@ -18,7 +18,7 @@ interface SidebarContextType {
   setUser: any;
   token: string;
   setToken: any;
-  isUserLoggedIn: Record<string, any>;
+  isUserLoggedIn: IsUserLoggedInType | null;
   setIsUserLoggedIn: any;
 }
 
@@ -46,7 +46,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [user, setUser] = useState<any>(null);
   const [isUserLoggedIn, setIsUserLoggedIn] =
-    useState<IsUserLoggedInType>(defaultIsUserLogged);
+    useState<IsUserLoggedInType | null>(null);
 
   const [token, setToken] = useState<any>(null);
 

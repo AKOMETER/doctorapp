@@ -6,6 +6,8 @@ import Appointment from "@/components/appointment";
 import { useSidebar } from "@/context/SidebarContext";
 import { DoctorType } from "@/utils/dataTypes";
 import apiRequest from "@/services/apiRequest";
+import Toast from "react-native-toast-message";
+import { showToast } from "@/utils/helperFunction";
 
 const Appointments = () => {
   const navigation = useNavigation();
@@ -46,7 +48,10 @@ const Appointments = () => {
       .post("/appointment", newData)
       .then((res) => {
         // console.log("Appointment created:", res);
-        setRouteID(null); // switch to Appointment view
+        showToast("success", "Appointment Booking was successfully ");
+        setTimeout(() => {
+          setRouteID(null); // switch to Appointment view
+        }, 1500);
       })
       .catch((err) => {
         console.log("Booking error:", err);
@@ -60,6 +65,7 @@ const Appointments = () => {
       ) : (
         <Calendar handleBook={handleBook} />
       )}
+      <Toast />
     </ScrollView>
   );
 };

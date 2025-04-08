@@ -82,3 +82,10 @@ appointment
 14. add medical to client dashboard
 15. change to new dashboard add existing cards
 16. add user medical record on doctor appointment card as a toolkit
+
+today
+// user
+
+add rescedule appointment button (pop up menu for date and time )
+cart should be cleared upon complete purchase
+check cart checkout functionality

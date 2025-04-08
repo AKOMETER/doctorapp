@@ -155,7 +155,8 @@ export default function Profile() {
 
       <TouchableOpacity
         onPress={handleSubmit(onSubmit)}
-        className="bg-blue-500 p-4 rounded flex items-center"
+        className=" p-4 rounded flex items-center"
+        style={{ backgroundColor: "#1f5b92" }}
       >
         <Text className="text-white font-bold">Update Profile</Text>
       </TouchableOpacity>

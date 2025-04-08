@@ -55,9 +55,7 @@ const Sidebar = ({
             <View style={styles.greeting}>
               <Text style={styles.greetingText}>Hello</Text>
               <Text style={styles.guestText}>{name}</Text>
-              <Text style={styles.guestText}>
-                £ {isUserLoggedIn.user?.amount || 0}
-              </Text>
+              <Text style={styles.guestText}>£ {user?.amount || 0}</Text>
             </View>
           </View>
 
@@ -118,7 +116,7 @@ const Sidebar = ({
                 }}
               >
                 <FontAwesome name="crosshairs" size={20} color="#000000" />
-                <Text style={styles.navText}>Manager</Text>
+                <Text style={styles.navText}>Manage</Text>
               </TouchableOpacity>
             )}
 

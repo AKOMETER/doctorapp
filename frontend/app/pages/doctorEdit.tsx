@@ -1,6 +1,6 @@
 // DoctorEditForm.tsx
 import React, { useEffect, useState } from "react";
-import { Text, Button, ActivityIndicator } from "react-native";
+import { Text, Button, ActivityIndicator, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MultiSelect from "react-native-multiple-select";
 import apiRequest from "@/services/apiRequest";
@@ -250,7 +250,9 @@ export default function DoctorEditForm() {
         onChange={handleForm}
       />
 
-      <Button title="Update Doctor" onPress={handleSave} />
+      <Button color={"#1f5b92"} title="Update Doctor" onPress={handleSave} />
+
+      <View className="margin" style={{ marginVertical: 16 }}></View>
       <Toast />
     </KeyboardAwareScrollView>
   );
