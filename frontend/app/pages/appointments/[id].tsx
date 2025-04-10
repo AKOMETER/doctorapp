@@ -133,7 +133,11 @@ export default function ShowAppointment() {
               </View>
 
               <View className="fixed  w-full" style={styles.top}>
-                <RescheduleComponent id={id} getAppointment={getAppointment} />
+                <RescheduleComponent
+                  initialDate={appointment?.dateTime}
+                  id={id}
+                  getAppointment={getAppointment}
+                />
                 <Pressable
                   className="mb-9"
                   onPress={() => {

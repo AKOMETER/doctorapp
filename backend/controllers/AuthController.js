@@ -89,22 +89,20 @@ exports.register = async (req, res) => {
         location: faker.location.city() + ", " + faker.location.country(),
         price: faker.number.float({ min: 20, max: 200, precision: 0.01 }),
         image: faker.image.avatar(),
-        education: JSON.stringify({
+        education: {
           school: faker.person.jobTitle(),
           location: faker.location.city(),
           year: faker.number.int({ min: 2000, max: 2024 }),
-        }),
-        service: JSON.stringify(
-          ["Consultation", "Surgery", "Therapy"].slice(
-            0,
-            faker.number.int({ min: 1, max: 3 })
-          )
+        },
+        service: ["Consultation", "Surgery", "Therapy"].slice(
+          0,
+          faker.number.int({ min: 1, max: 3 })
         ),
-        experience: JSON.stringify({
+        experience: {
           name: faker.person.jobTitle(),
           location: faker.location.city(),
           year: faker.number.int({ min: 2010, max: 2024 }),
-        }),
+        },
       });
     }
 

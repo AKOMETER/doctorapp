@@ -152,7 +152,7 @@ const HomePage = () => {
             </Text>
           </View>
 
-          {doctors.slice(0, 5).map((doctor: DoctorType) => {
+          {doctors.slice(0, 3).map((doctor: DoctorType) => {
             return (
               <View
                 key={doctor.id}
@@ -166,7 +166,7 @@ const HomePage = () => {
                 />
                 <View className="ml-4 flex-1">
                   <Text className="text-base font-bold">
-                    {doctor?.user?.firstName + " " + doctor?.user?.lastName}
+                    DR. {doctor?.user?.firstName + " " + doctor?.user?.lastName}
                   </Text>
                   <Text className="text-gray-500">
                     {doctor.Specialties.slice(0, 3).map((item) => {

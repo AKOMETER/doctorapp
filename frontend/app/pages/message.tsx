@@ -76,7 +76,7 @@ export default function ChatApp() {
       setMessages(res?.data || []);
     });
   }
-
+  console.log("users", users);
   const renderMessage = ({
     item,
   }: {
@@ -110,12 +110,13 @@ export default function ChatApp() {
     >
       <View className="flex-row items-center space-x-2 gap-3">
         <FontAwesome
-          name={user?.role === "Doctor" ? "user-md" : "user"}
+          name={item?.role === "Doctor" ? "user-md" : "user"}
           size={28}
           color="#4CAF50"
         />
         <Text className="text-lg font-bold text-gray-800">
-          {item.firstName} {item.lastName}
+          {item?.role == "Doctor" && <Text>Dr</Text>} {item.firstName}{" "}
+          {item.lastName}
         </Text>
       </View>
     </TouchableOpacity>

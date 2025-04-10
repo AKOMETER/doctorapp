@@ -25,7 +25,6 @@ const Sidebar = ({
     await AsyncStorage.setItem("user", "");
     router.push("/auth/login");
   }
-
   const name =
     (user?.firstName || user?.lastName) && isUserLoggedIn?.user
       ? user?.firstName + " " + user?.lastName

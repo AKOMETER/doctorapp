@@ -35,13 +35,20 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useFocusEffect(
     useCallback(() => {
-      apiRequest
-        .get("/user/is_logged")
-        .then((res) => {
-          if (res) setIsUserLoggedIn(res?.data);
-        })
-        .catch((err) => console.log(err));
-    }, [])
+      const fetchUserStatus = async () => {
+        try {
+          const res = await apiRequest.get("/user/is_logged");
+          if (res) setIsUserLoggedIn(res.data);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      fetchUserStatus();
+
+      // Optional: return a cleanup if needed
+      return () => {};
+    }, []) // no dependency means this runs every focus
   );
 
   const [user, setUser] = useState<any>(null);
@@ -71,7 +78,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     getUser();
   }, []);
-
+  console.log("isUserLoggedIn", isUserLoggedIn);
   return (
     <SidebarContext.Provider
       value={{

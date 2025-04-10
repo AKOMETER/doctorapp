@@ -11,8 +11,10 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function Calendar({
   handleBook,
+  id,
 }: {
   handleBook: (datetime: string, duration: number, reason: string) => void;
+  id: string;
 }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [mode, setMode] = useState<"date" | "time" | null>("date");

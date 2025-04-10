@@ -37,7 +37,7 @@ const Appointments = () => {
 
     const newData = {
       patientId: user?.id,
-      doctorId: doctor?.id,
+      doctorId: routeID,
       status: "pending",
       dateTime: datetime,
       duration,
@@ -63,7 +63,7 @@ const Appointments = () => {
       {routeID === null ? (
         <Appointment />
       ) : (
-        <Calendar handleBook={handleBook} />
+        <Calendar handleBook={handleBook} id={routeID} />
       )}
       <Toast />
     </ScrollView>

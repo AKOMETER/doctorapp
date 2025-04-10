@@ -43,8 +43,12 @@ const AppointmentController = {
           .json({ msg: "Access denied. Only doctors allowed." });
       }
 
+      const doctor = await Doctor.findOne({
+        where: { userId: user?.id },
+      });
+
       const appointments = await Appointment.findAll({
-        where: { doctorId: user.id },
+        where: { doctorId: doctor.id },
         include: [
           {
             model: User,

@@ -21,17 +21,22 @@ const seedDoctors = async (count = 10) => {
     // ];
 
     const doctors_images = [
-      "https://static.vecteezy.com/system/resources/previews/024/585/358/non_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-d.d",
-      "https://static.vecteezy.com/system/resources/previews/024/585/326/non_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-d.d",
-      "https://static.vecteezy.com/system/resources/previews/024/585/403/non_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-d.png",
       "https://static.vecteezy.com/system/resources/previews/024/585/399/non_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-png.png",
       "https://static.vecteezy.com/system/resources/previews/053/237/197/non_2x/happy-3d-cartoon-doctor-holding-clipboard-healthcare-medical-checkup-png.png",
       "https://static.vecteezy.com/system/resources/previews/024/585/299/non_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-png.png",
       "https://static.vecteezy.com/system/resources/previews/046/380/856/non_2x/3d-cute-cartoon-male-doctor-png.png",
-      "https://png.pngtree.com/png-clipart/20231003/original/pngtree-3d-happy-cartoon-doctor-cartoon-doctor-generative-ai-png-image_13247511.png",
-      "https://i.pinimg.com/474x/16/7c/c9/167cc9c96c2302638429c1c986feea39.jpg",
-      "https://png.pngtree.com/png-clipart/20240826/original/pngtree-cartoon-career-female-doctor-png-image_15854227.png",
-      "https://png.pngtree.com/png-clipart/20250117/original/pngtree-female-doctor-cartoon-style-stethoscope-png-image_20045591.d",
+      // "https://png.pngtree.com/png-vector/20240705/ourlarge/pngtree-cartoon-career-male-doctor-png-image_12995496.png",
+      "https://static.vecteezy.com/system/resources/thumbnails/049/388/766/small_2x/cartoon-3d-of-a-doctor-in-a-white-medical-gown-with-a-medical-stethoscope-png.png",
+      "https://i.pinimg.com/564x/c6/3f/84/c63f84397bf54e9961f6d8cf0dedcb13.jpg",
+      "https://img.freepik.com/premium-psd/3d-cartoon-doctor-portrait-isolated-transparent-background-png-psd_888962-1567.jpg",
+      "https://img.freepik.com/premium-photo/3d-cartoon-doctor-character-transparent-background_75891-3962.jpg",
+      // "https://static.vecteezy.com/system/resources/previews/024/585/358/non_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-d.d",
+      // "https://static.vecteezy.com/system/resources/previews/024/585/326/non_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-d.d",
+      // "https://static.vecteezy.com/system/resources/previews/024/585/403/non_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-d.png",
+      // "https://png.pngtree.com/png-clipart/20231003/original/pngtree-3d-happy-cartoon-doctor-cartoon-doctor-generative-ai-png-image_13247511.png",
+      // "https://i.pinimg.com/474x/16/7c/c9/167cc9c96c2302638429c1c986feea39.jpg",
+      // "https://png.pngtree.com/png-clipart/20240826/original/pngtree-cartoon-career-female-doctor-png-image_15854227.png",
+      // "https://png.pngtree.com/png-clipart/20250117/original/pngtree-female-doctor-cartoon-style-stethoscope-png-image_20045591.d",
     ];
 
     let doctors = [];

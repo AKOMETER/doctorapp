@@ -35,7 +35,7 @@ export default function Appointment() {
   const fetchAppointments = async () => {
     try {
       const res = await apiRequest.get(`/appointment/${user?.id}`);
-      if (res) setAppointmentsList(res?.data.data);
+      if (res) setAppointmentsList(res?.data?.data);
     } catch (error) {
       showToast("error", "Error", "Failed to fetch appointments.");
     }
@@ -59,6 +59,8 @@ export default function Appointment() {
     }
   };
   const router = useRouter();
+
+  console.log("appointmentsList", appointmentsList);
   return (
     <ScrollView className="bg-gray-100 p-4">
       {showUpdateForm && currentAppointment ? (
