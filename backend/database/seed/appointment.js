@@ -16,7 +16,7 @@ const seedAppointments = async (count = 10) => {
           "Pending",
           "Confirmed",
           "Cancelled",
-          "Completed",
+          "Reschedule",
         ]),
         duration: faker.number.int({ min: 1, max: 24 }), // Duration in hours
         reason: faker.lorem.sentence(),

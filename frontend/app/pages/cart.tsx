@@ -18,7 +18,7 @@ import { useRouter } from "expo-router";
 export default function CartScreen() {
   const { user, isUserLoggedIn, setIsUserLoggedIn } = useSidebar();
   const [modalVisible, setModalVisible] = useState(false);
-  const [cart, setCart] = useState<CartItemType[]>(isUserLoggedIn.cart || []);
+  const [cart, setCart] = useState<CartItemType[]>(isUserLoggedIn?.cart || []);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

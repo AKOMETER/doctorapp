@@ -30,7 +30,7 @@ const Appointment = sequelize.define(
       defaultValue: 30, // Default appointment duration is 30 minutes
     },
     status: {
-      type: DataTypes.ENUM("Pending", "Confirmed", "Cancelled", "Completed"),
+      type: DataTypes.ENUM("Pending", "Confirmed", "Cancelled", "Reschedule"),
       defaultValue: "Pending",
     },
     reason: {

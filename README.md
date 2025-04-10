@@ -81,11 +81,14 @@ appointment
 13. add back location and name search
 14. add medical to client dashboard
 15. change to new dashboard add existing cards
-16. add user medical record on doctor appointment card as a toolkit
+16.
 
 today
 // user
 
 add rescedule appointment button (pop up menu for date and time )
 cart should be cleared upon complete purchase
+
+add user medical record on doctor appointment card as a toolkit
 check cart checkout functionality
+remodel reschedule in appointment

@@ -84,7 +84,7 @@ export default function DoctorAdmin() {
         <Text style={{ color: "#fff" }}>Modify</Text>
       </TouchableOpacity>
 
-      {appointments.map((item, index) => (
+      {(appointments || []).map((item, index) => (
         <View key={index} style={styles.card}>
           <Text>
             Patient: {item.Patient?.firstName} {item.Patient?.lastName}
@@ -120,7 +120,7 @@ export default function DoctorAdmin() {
                 <Picker.Item label="Pending" value="Pending" />
                 <Picker.Item label="Confirmed" value="Confirmed" />
                 <Picker.Item label="Cancelled" value="Cancelled" />
-                {/* <Picker.Item label="Completed" value="Completed" /> */}
+                {/* <Picker.Item label="Reschedule" value="Reschedule" /> */}
               </Picker>
             </View>
 

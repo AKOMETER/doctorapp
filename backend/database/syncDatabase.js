@@ -97,7 +97,9 @@ CartItem.belongsTo(Product, { foreignKey: "productId" });
 // Sync database
 const syncDatabase = async () => {
   try {
-    await sequelize.sync({ alter: false }); // Use { force: true } to drop and recreate tables
+    await sequelize.sync({ alter: false });
+    // await sequelize.sync({ alter: true, force: true });
+
     console.log("Database synchronized successfully.");
   } catch (error) {
     console.error("Error synchronizing database:", error);

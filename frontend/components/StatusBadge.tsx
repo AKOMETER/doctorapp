@@ -12,7 +12,7 @@ const statusColors: Record<
   Pending: { bg: "#FFEB3B", text: "#795548" },
   Confirmed: { bg: "#4CAF50", text: "#fff" },
   Cancelled: { bg: "#F44336", text: "#fff" },
-  Completed: { bg: "#2196F3", text: "#fff" },
+  Reschedule: { bg: "#2196F3", text: "#fff" },
 };
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {

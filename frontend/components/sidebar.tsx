@@ -27,12 +27,13 @@ const Sidebar = ({
   }
 
   const name =
-    user?.firstName || user?.lastName
+    (user?.firstName || user?.lastName) && isUserLoggedIn?.user
       ? user?.firstName + " " + user?.lastName
       : "Guest";
-  const imageUrl = user?.profileImage
-    ? backendUrl + "/" + user?.profileImage
-    : "https://avatar.iran.liara.run/public/boy?username=Ash";
+  const imageUrl =
+    user?.profileImage && isUserLoggedIn?.user
+      ? backendUrl + "/" + user?.profileImage
+      : "https://avatar.iran.liara.run/public/boy?username=Ash";
 
   // console.log("user", user, "isUserLoggedIn", isUserLoggedIn);
   return (
@@ -107,7 +108,7 @@ const Sidebar = ({
               </TouchableOpacity>
             )}
 
-            {user?.role == "Admin" && (
+            {user?.role == "Admin" && isUserLoggedIn?.user && (
               <TouchableOpacity
                 style={styles.navItem}
                 onPress={() => {

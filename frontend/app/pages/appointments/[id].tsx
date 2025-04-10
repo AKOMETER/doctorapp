@@ -11,6 +11,7 @@ import {
   Pressable,
   SafeAreaView,
   ScrollView,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -127,7 +128,7 @@ export default function ShowAppointment() {
                 </View>
               </View>
 
-              <View className="fixed top-80 w-full">
+              <View className="fixed  w-full" style={styles.top}>
                 <RescheduleComponent id={id} />
                 <Pressable
                   className="mb-9"
@@ -164,3 +165,9 @@ export default function ShowAppointment() {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  top: {
+    top: 300,
+  },
+});
