@@ -133,7 +133,7 @@ const Sidebar = ({
                 <Text style={styles.navText}>Message</Text>
               </TouchableOpacity>
             )}
-            {user?.role !== "Admin" && (
+            {user?.role !== "Admin" && isUserLoggedIn?.user && (
               <TouchableOpacity
                 style={styles.navItem}
                 onPress={() => {

@@ -30,11 +30,15 @@ export default function ShowAppointment() {
     });
   }, [navigation]);
 
-  useEffect(() => {
+  function getAppointment() {
     apiRequest.get(`/appointment/get_one/${id}`).then((res) => {
       if (res?.data?.data) setAppointment(res?.data?.data);
     });
-  }, []);
+  }
+
+  useEffect(() => {
+    getAppointment();
+  }, [appointment]);
 
   async function handleStatusChange(status: string) {
     apiRequest
@@ -129,7 +133,7 @@ export default function ShowAppointment() {
               </View>
 
               <View className="fixed  w-full" style={styles.top}>
-                <RescheduleComponent id={id} />
+                <RescheduleComponent id={id} getAppointment={getAppointment} />
                 <Pressable
                   className="mb-9"
                   onPress={() => {

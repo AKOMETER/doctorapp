@@ -6,7 +6,13 @@ import DateTimePicker, {
 import apiRequest from "@/services/apiRequest";
 import { showToast } from "@/utils/helperFunction";
 
-const RescheduleComponent = ({ id }: { id: string }) => {
+const RescheduleComponent = ({
+  id,
+  getAppointment,
+}: {
+  id: string;
+  getAppointment: any;
+}) => {
   const [date, setDate] = useState<Date>(new Date());
   const [tempDate, setTempDate] = useState<Date>(new Date());
   const [mode, setMode] = useState<"date" | "time">("date");
@@ -49,6 +55,7 @@ const RescheduleComponent = ({ id }: { id: string }) => {
       });
       showToast("success", "Appointment rescheduled successfully");
       setShowModal(false);
+      getAppointment();
     } catch (error) {
       console.error(error);
       showToast("error", "Failed to reschedule appointment");
