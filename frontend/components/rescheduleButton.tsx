@@ -9,18 +9,30 @@ import { showToast } from "@/utils/helperFunction";
 interface Props {
   id: string;
   getAppointment: () => void;
-  initialDate: string; // from backend or use new Date()
+  initialDate?: string; // optional, fallback to today
 }
 
+// Utility: force local date from string (no timezone shift)
+const parseLocalDate = (dateStr: string) => {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
 const RescheduleComponent = ({ id, getAppointment, initialDate }: Props) => {
-  const [date, setDate] = useState<Date>(new Date(initialDate)); // confirmed reschedule date
-  const [tempDate, setTempDate] = useState<Date>(new Date(initialDate)); // temporary for modal
+  const now = new Date();
+  const fallbackDate =
+    initialDate && !isNaN(Date.parse(initialDate))
+      ? new Date(initialDate)
+      : now;
+
+  const [date, setDate] = useState<Date>(fallbackDate);
+  const [tempDate, setTempDate] = useState<Date>(fallbackDate);
   const [mode, setMode] = useState<"date" | "time">("date");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showPicker, setShowPicker] = useState<boolean>(false);
 
   const handleOpenModal = () => {
-    setTempDate(date); // pre-fill with current value
+    setTempDate(date);
     setMode("date");
     setShowModal(true);
     setShowPicker(true);
@@ -29,16 +41,24 @@ const RescheduleComponent = ({ id, getAppointment, initialDate }: Props) => {
   const handleChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (event.type === "set" && selectedDate) {
       if (mode === "date") {
-        const updatedDate = new Date(
+        // prevent selecting a past date
+        const today = new Date();
+        selectedDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        if (selectedDate < today) {
+          showToast("error", "Cannot select a past date");
+          return;
+        }
+
+        const updated = new Date(
           selectedDate.getFullYear(),
           selectedDate.getMonth(),
           selectedDate.getDate(),
           tempDate.getHours(),
           tempDate.getMinutes()
         );
-        setTempDate(updatedDate);
 
-        // Switch to time after short delay to ensure picker remounts
+        setTempDate(updated);
         setShowPicker(false);
         setTimeout(() => {
           setMode("time");
@@ -48,6 +68,16 @@ const RescheduleComponent = ({ id, getAppointment, initialDate }: Props) => {
         const updated = new Date(tempDate);
         updated.setHours(selectedDate.getHours());
         updated.setMinutes(selectedDate.getMinutes());
+
+        // prevent selecting past time if same day
+        if (
+          updated.toDateString() === new Date().toDateString() &&
+          updated < new Date()
+        ) {
+          showToast("error", "Cannot select a past time");
+          return;
+        }
+
         setTempDate(updated);
         setShowPicker(false);
       }
@@ -62,16 +92,17 @@ const RescheduleComponent = ({ id, getAppointment, initialDate }: Props) => {
         datetime: tempDate,
         status: "Reschedule",
       });
-      setDate(tempDate); // commit final value
+
+      setDate(tempDate);
       showToast("success", "Appointment rescheduled successfully");
       setShowModal(false);
       getAppointment();
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       showToast("error", "Failed to reschedule appointment");
     }
   };
-  console.log("date", date, "tempDate", tempDate, "mode", mode);
+
   return (
     <View>
       <Pressable onPress={handleOpenModal}>
@@ -97,6 +128,7 @@ const RescheduleComponent = ({ id, getAppointment, initialDate }: Props) => {
                 mode={mode}
                 is24Hour={true}
                 display="default"
+                minimumDate={new Date()}
                 onChange={handleChange}
               />
             )}

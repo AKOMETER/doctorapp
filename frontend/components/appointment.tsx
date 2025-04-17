@@ -60,7 +60,6 @@ export default function Appointment() {
   };
   const router = useRouter();
 
-  console.log("appointmentsList", appointmentsList);
   return (
     <ScrollView className="bg-gray-100 p-4">
       {showUpdateForm && currentAppointment ? (
@@ -95,10 +94,10 @@ export default function Appointment() {
               <View>
                 <Text className="text-lg font-semibold text-gray-800">
                   Dr.{" "}
-                  {appointment?.Doctor?.firstName ||
-                    appointment?.Doctor?.user?.lastName}{" "}
-                  {appointment?.Doctor?.lastName ||
-                    appointment?.Doctor?.user?.firstName}
+                  {appointment?.doctorProfile?.lastName ||
+                    appointment?.doctorProfile?.user?.firstName}{" "}
+                  {appointment?.doctorProfile?.firstName ||
+                    appointment?.doctorProfile?.user?.lastName}
                 </Text>
                 <Text className="text-sm text-gray-600">
                   Date: {new Date(appointment.dateTime).toLocaleString()}

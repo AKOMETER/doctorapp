@@ -25,6 +25,7 @@ const Sidebar = ({
     await AsyncStorage.setItem("user", "");
     router.push("/auth/login");
   }
+
   const name =
     (user?.firstName || user?.lastName) && isUserLoggedIn?.user
       ? user?.firstName + " " + user?.lastName
@@ -34,7 +35,6 @@ const Sidebar = ({
       ? backendUrl + "/" + user?.profileImage
       : "https://avatar.iran.liara.run/public/boy?username=Ash";
 
-  // console.log("user", user, "isUserLoggedIn", isUserLoggedIn);
   return (
     <View style={styles.container}>
       {isOpen && (
@@ -164,7 +164,7 @@ const Sidebar = ({
                 }}
               >
                 <FontAwesome name="cube" size={20} color="#000000" />
-                <Text style={styles.navText}>Admin</Text>
+                <Text style={styles.navText}>Doctor</Text>
               </TouchableOpacity>
             )}
 

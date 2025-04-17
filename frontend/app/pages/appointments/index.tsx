@@ -13,7 +13,7 @@ const Appointments = () => {
   const navigation = useNavigation();
   const { id }: { id: string } = useLocalSearchParams();
   const [routeID, setRouteID] = useState<string | null>(id || null);
-  const [doctor, setDoctor] = useState<DoctorType | null>(null);
+  // const [doctor, setDoctor] = useState<DoctorType | null>(null);
   const { user } = useSidebar();
 
   useEffect(() => {
@@ -24,16 +24,8 @@ const Appointments = () => {
     });
   }, [navigation]);
 
-  useEffect(() => {
-    if (routeID) {
-      apiRequest.get(`/doctor/${routeID}`).then((res) => {
-        setDoctor(res?.data.data);
-      });
-    }
-  }, [routeID]);
-
   const handleBook = (datetime: string, duration: number, reason: string) => {
-    if (!doctor) return;
+    if (!id) return;
 
     const newData = {
       patientId: user?.id,

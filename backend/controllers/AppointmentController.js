@@ -85,9 +85,14 @@ const AppointmentController = {
             attributes: ["id", "firstName", "lastName", "email"],
           },
           {
-            model: User,
-            as: "Doctor",
-            attributes: ["id", "firstName", "lastName", "email"],
+            model: Doctor,
+            as: "doctorProfile", // this matches the alias you just added
+            include: [
+              {
+                model: User,
+                as: "user",
+              },
+            ],
           },
         ],
       });

@@ -92,7 +92,7 @@ export default function RootLayout() {
         <Stack.Screen name="pages/doctorAdmin" options={{ title: "Admin" }} />
         <Stack.Screen
           name="pages/doctorEdit"
-          options={{ title: "Admin Edit" }}
+          options={{ title: "Edit Doctor Profile" }}
         />
 
         {/* admin */}

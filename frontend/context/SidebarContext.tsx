@@ -78,7 +78,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     getUser();
   }, []);
-  console.log("isUserLoggedIn", isUserLoggedIn);
+
   return (
     <SidebarContext.Provider
       value={{
