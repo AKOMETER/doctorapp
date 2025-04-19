@@ -28,9 +28,11 @@ api.interceptors.request.use(
 );
 
 export const login = async (email: string, password: string) => {
+  console.log("email and password", email, password);
   try {
     const response = await api.post("/auth/login", { email, password });
-    return response.data;
+
+    return response?.data;
   } catch (error: any) {
     if (error.response.data.errors) {
       const errs: any[] = error.response.data.errors;
@@ -45,7 +47,6 @@ export const login = async (email: string, password: string) => {
 };
 
 export const register = async (data: Record<string, any>) => {
-  console.log("data in register", data);
   try {
     const response = await api.post("/auth/register", data);
     return response.data;

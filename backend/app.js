@@ -7,8 +7,14 @@ const cors = require("cors");
 const passport = require("passport");
 const syncDatabase = require("./database/syncDatabase");
 require("dotenv").config();
+const helmet = require("helmet");
+const compression = require("compression");
 
 var app = express();
+
+//for prod
+app.use(helmet());
+app.use(compression());
 
 // Allow all origins
 app.use(cors());

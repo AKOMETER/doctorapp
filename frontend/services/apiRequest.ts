@@ -4,6 +4,7 @@ import { showToast } from "@/utils/helperFunction";
 
 // Base URL from env
 const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+console.log("backendUrl", backendUrl);
 
 const apiRequest = {
   get: async (path: string, options: { query?: Record<string, any> } = {}) => {
