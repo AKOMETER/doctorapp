@@ -40,15 +40,14 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
           const res = await apiRequest.get("/user/is_logged");
           if (res) setIsUserLoggedIn(res.data);
         } catch (err) {
-          console.log(err);
+          console.error(err);
         }
       };
 
       fetchUserStatus();
 
-      // Optional: return a cleanup if needed
       return () => {};
-    }, []) // no dependency means this runs every focus
+    }, []) // ✅ empty dependency array
   );
 
   const [user, setUser] = useState<any>(null);

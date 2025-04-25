@@ -44,13 +44,8 @@ export default function CartScreen() {
   };
 
   const handleCheckout = async () => {
-    console.log("here is it ");
     const total = getTotal();
 
-    console.log(
-      "parseInt(user.amount) < total)",
-      parseInt(user.amount) < total
-    );
     if (parseInt(user.amount) < total) {
       showToast(
         "error",
@@ -69,7 +64,6 @@ export default function CartScreen() {
       amount: total,
       userId: user.id,
     };
-    console.log("payload", payload);
 
     apiRequest
       .post("/order/checkout", payload)
@@ -83,10 +77,8 @@ export default function CartScreen() {
         setTimeout(() => {
           router.push("/");
         }, 1000);
-        console.log("try");
       })
       .catch((err) => {
-        console.log("catch");
         showToast(
           "error",
           "Error",
@@ -94,7 +86,6 @@ export default function CartScreen() {
         );
       })
       .finally(() => {
-        console.log("finally");
         setLoading(false);
       });
   };

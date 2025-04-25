@@ -1,10 +1,19 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showToast } from "@/utils/helperFunction";
-
+import Constants from "expo-constants";
 // Base URL from env
-const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
-console.log("backendUrl", backendUrl);
+const backendUrl =
+  // Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL ||
+  process.env.EXPO_PUBLIC_BACKEND_URL || "https://doctorwelfare.erose.name.ng"; // fallback if undefined
+console.log(
+  "backendUrl",
+  backendUrl,
+  " process.env.EXPO_PUBLIC_BACKEND_URL",
+  process.env.EXPO_PUBLIC_BACKEND_URL,
+  "Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL",
+  Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL
+);
 
 const apiRequest = {
   get: async (path: string, options: { query?: Record<string, any> } = {}) => {

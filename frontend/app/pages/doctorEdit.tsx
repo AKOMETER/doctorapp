@@ -145,8 +145,6 @@ export default function DoctorEditForm() {
       labIds: selectedLabs,
     };
 
-    console.log("newData", newData);
-
     try {
       await apiRequest.put(`/doctor/${user?.id}`, newData);
       showToast("success", "Doctor profile updated");

@@ -76,7 +76,7 @@ export default function ChatApp() {
       setMessages(res?.data || []);
     });
   }
-  console.log("users", users);
+
   const renderMessage = ({
     item,
   }: {

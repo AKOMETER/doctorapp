@@ -24,10 +24,10 @@ export default function PatientMedicalProfile() {
     const fetchMedicalRecord = async () => {
       try {
         const res = await apiRequest.get(`/medical_record/${userId}`);
-        console.log("userId", userId, "Res", res);
+
         if (res) setForm(res.data);
       } catch (err) {
-        console.log("No existing record");
+        console.error("No existing record");
       } finally {
         setLoading(false);
       }
@@ -40,12 +40,10 @@ export default function PatientMedicalProfile() {
   };
 
   const handleSubmit = async () => {
-    console.log("{ userId, ...form }", { userId, ...form });
     if (form?.createdAt || form?.id || form?.updatedAt) {
       apiRequest
         .put(`/medical_record/${form?.id}`, { userId, ...form })
         .then((res) => {
-          console.log("res", res);
           showToast(
             "success",
             "Success",
@@ -59,7 +57,6 @@ export default function PatientMedicalProfile() {
       apiRequest
         .post(`/medical_record/`, { userId, ...form })
         .then((res) => {
-          console.log("res", res);
           showToast("success", "Success", "Medical record saved successfully");
         })
         .catch((err) => {

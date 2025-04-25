@@ -18,14 +18,22 @@ const Sidebar = ({
   title: string;
 }) => {
   const router = useRouter();
-  const { toggleSidebar, isOpen, user, isUserLoggedIn } = useSidebar();
+  const {
+    toggleSidebar,
+    isOpen,
+    user,
+    isUserLoggedIn,
+    setIsUserLoggedIn,
+    setUser,
+  } = useSidebar();
 
   async function handleLogout() {
     await AsyncStorage.setItem("token", "");
     await AsyncStorage.setItem("user", "");
+    setIsUserLoggedIn(null);
+    setUser(null);
     router.push("/auth/login");
   }
-
   const name =
     (user?.firstName || user?.lastName) && isUserLoggedIn?.user
       ? user?.firstName + " " + user?.lastName

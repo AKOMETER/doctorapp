@@ -39,14 +39,13 @@ const Appointments = () => {
     apiRequest
       .post("/appointment", newData)
       .then((res) => {
-        // console.log("Appointment created:", res);
         showToast("success", "Appointment Booking was successfully ");
         setTimeout(() => {
           setRouteID(null); // switch to Appointment view
         }, 1500);
       })
       .catch((err) => {
-        console.log("Booking error:", err);
+        console.error("Booking error:", err);
       });
   };
 

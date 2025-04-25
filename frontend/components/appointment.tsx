@@ -190,7 +190,7 @@ function UpdateAppointmentForm({
   const handleUpdateAppointment = async () => {
     try {
       await apiRequest.put(`/appointment/${appointment.id}`, {
-        datetime: selectedDate.toISOString(),
+        dateTime: selectedDate.toISOString(),
       });
       showToast("success", "Updated", "Appointment updated successfully");
       onUpdated();

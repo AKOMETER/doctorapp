@@ -83,12 +83,10 @@ const RegisterScreen = () => {
 
     try {
       const data = await register(newData);
-      console.log("data", data);
       if (!data) {
         return;
       }
       showToast("success", "Registration Successful");
-      console.log(data);
       //clear form data
       setFormData({
         first_name: "",

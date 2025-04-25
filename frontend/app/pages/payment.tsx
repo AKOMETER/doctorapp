@@ -42,7 +42,6 @@ export default function Payment() {
       reference: "TXN" + Date.now(), // simple unique reference
     };
 
-    console.log("payload", payload);
     try {
       apiRequest.post("/transaction", payload);
       setSelectedMethodId(null);

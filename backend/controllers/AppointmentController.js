@@ -169,12 +169,12 @@ const AppointmentController = {
   // update appointment
   async update(req, res) {
     try {
-      const { remark, status } = req.body;
+      const { remark, status, dateTime } = req.body;
       const appointment = await Appointment.findByPk(req.params.id);
       if (!appointment)
         return res.status(404).json({ msg: "Appointment not found" });
 
-      await appointment.update({ remark, status });
+      await appointment.update({ remark, status, dateTime });
 
       return res
         .status(200)

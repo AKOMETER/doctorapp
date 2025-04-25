@@ -38,7 +38,7 @@ export default function ShowAppointment() {
 
   useEffect(() => {
     getAppointment();
-  }, [appointment]);
+  }, []);
 
   async function handleStatusChange(status: string) {
     apiRequest
@@ -46,7 +46,6 @@ export default function ShowAppointment() {
         status,
       })
       .then((res) => {
-        console.log("res", res);
         showToast("success", "Cancelled", "Appointment Cancelled successfully");
       })
       .catch((err) => {

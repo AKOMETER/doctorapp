@@ -1,101 +1,93 @@
 import React, { useState } from "react";
 import { View, Text, Pressable, Modal } from "react-native";
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import apiRequest from "@/services/apiRequest";
 import { showToast } from "@/utils/helperFunction";
+import Toast from "react-native-toast-message";
 
 interface Props {
   id: string;
   getAppointment: () => void;
-  initialDate?: string; // optional, fallback to today
+  initialDate?: string;
 }
-
-// Utility: force local date from string (no timezone shift)
-const parseLocalDate = (dateStr: string) => {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day);
-};
 
 const RescheduleComponent = ({ id, getAppointment, initialDate }: Props) => {
   const now = new Date();
-  const fallbackDate =
+  const baseDate =
     initialDate && !isNaN(Date.parse(initialDate))
       ? new Date(initialDate)
       : now;
 
-  const [date, setDate] = useState<Date>(fallbackDate);
-  const [tempDate, setTempDate] = useState<Date>(fallbackDate);
-  const [mode, setMode] = useState<"date" | "time">("date");
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [showPicker, setShowPicker] = useState<boolean>(false);
+  const [date, setDate] = useState<Date>(baseDate);
+  const [tempDate, setTempDate] = useState<Date>(baseDate);
+  const [showModal, setShowModal] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
-  const handleOpenModal = () => {
+  const openRescheduleModal = () => {
     setTempDate(date);
-    setMode("date");
     setShowModal(true);
-    setShowPicker(true);
+    setShowDatePicker(true);
+    setShowTimePicker(false);
   };
 
-  const handleChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    if (event.type === "set" && selectedDate) {
-      if (mode === "date") {
-        // prevent selecting a past date
-        const today = new Date();
-        selectedDate.setHours(0, 0, 0, 0);
-        today.setHours(0, 0, 0, 0);
-        if (selectedDate < today) {
-          showToast("error", "Cannot select a past date");
-          return;
-        }
+  const closeModal = () => {
+    setShowModal(false);
+    setShowDatePicker(false);
+    setShowTimePicker(false);
+  };
 
-        const updated = new Date(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth(),
-          selectedDate.getDate(),
-          tempDate.getHours(),
-          tempDate.getMinutes()
-        );
+  const onDatePicked = (event: any, selected?: Date) => {
+    if (event.type === "dismissed") {
+      closeModal();
+      return;
+    }
 
-        setTempDate(updated);
-        setShowPicker(false);
-        setTimeout(() => {
-          setMode("time");
-          setShowPicker(true);
-        }, 50);
-      } else {
-        const updated = new Date(tempDate);
-        updated.setHours(selectedDate.getHours());
-        updated.setMinutes(selectedDate.getMinutes());
+    if (selected) {
+      const newDate = new Date(selected);
+      newDate.setHours(tempDate.getHours(), tempDate.getMinutes());
 
-        // prevent selecting past time if same day
-        if (
-          updated.toDateString() === new Date().toDateString() &&
-          updated < new Date()
-        ) {
-          showToast("error", "Cannot select a past time");
-          return;
-        }
-
-        setTempDate(updated);
-        setShowPicker(false);
+      if (newDate < new Date(new Date().setHours(0, 0, 0, 0))) {
+        showToast("error", "Cannot select a past date");
+        return;
       }
+
+      setTempDate(newDate);
+      setShowDatePicker(false);
+      setShowTimePicker(true);
+    }
+  };
+
+  const onTimePicked = (_: any, selected?: Date) => {
+    setShowTimePicker(false);
+    if (selected) {
+      const updated = new Date(tempDate);
+      updated.setHours(selected.getHours(), selected.getMinutes());
+
+      if (
+        updated.toDateString() === new Date().toDateString() &&
+        updated < new Date()
+      ) {
+        showToast("error", "Cannot select a past time");
+        return;
+      }
+
+      setTempDate(updated);
     } else {
-      setShowPicker(false);
+      closeModal();
     }
   };
 
   const handleReschedule = async () => {
     try {
       await apiRequest.put(`/appointment/${id}`, {
-        datetime: tempDate,
+        dateTime: tempDate,
         status: "Reschedule",
       });
 
       setDate(tempDate);
       showToast("success", "Appointment rescheduled successfully");
-      setShowModal(false);
+      closeModal();
       getAppointment();
     } catch (err) {
       console.error(err);
@@ -105,7 +97,7 @@ const RescheduleComponent = ({ id, getAppointment, initialDate }: Props) => {
 
   return (
     <View>
-      <Pressable onPress={handleOpenModal}>
+      <Pressable onPress={openRescheduleModal}>
         <Text className="my-3 rounded-3xl w-full m-0 p-4 text-center text-white bg-blue-500">
           Reschedule Appointment
         </Text>
@@ -115,30 +107,36 @@ const RescheduleComponent = ({ id, getAppointment, initialDate }: Props) => {
         <View className="flex-1 justify-center items-center bg-black/40">
           <View className="bg-white p-6 rounded-2xl w-[90%]">
             <Text className="text-lg font-semibold text-center mb-4">
-              Select New Date & Time
+              Reschedule Appointment
             </Text>
 
             <Text className="text-center text-gray-700 mb-4">
               {tempDate.toLocaleString()}
             </Text>
 
-            {showPicker && (
+            {showDatePicker && (
               <DateTimePicker
                 value={tempDate}
-                mode={mode}
-                is24Hour={true}
+                mode="date"
                 display="default"
                 minimumDate={new Date()}
-                onChange={handleChange}
+                onChange={onDatePicked}
+              />
+            )}
+
+            {showTimePicker && (
+              <DateTimePicker
+                value={tempDate}
+                mode="time"
+                display="default"
+                is24Hour
+                onChange={onTimePicked}
               />
             )}
 
             <View className="mt-6 flex-row justify-between">
               <Pressable
-                onPress={() => {
-                  setShowModal(false);
-                  setShowPicker(false);
-                }}
+                onPress={closeModal}
                 className="bg-red-500 rounded-xl px-6 py-3"
               >
                 <Text className="text-white text-center">Cancel</Text>

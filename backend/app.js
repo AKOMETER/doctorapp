@@ -9,8 +9,11 @@ const syncDatabase = require("./database/syncDatabase");
 require("dotenv").config();
 const helmet = require("helmet");
 const compression = require("compression");
-
+const reminderJob = require("./jobs/reminderJob.js");
 var app = express();
+
+//cron job
+reminderJob.start();
 
 //for prod
 app.use(helmet());

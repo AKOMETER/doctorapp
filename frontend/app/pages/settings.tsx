@@ -109,7 +109,6 @@ export default function Settings() {
           showToast("success", "Email updated successfully!");
           setEmailModalVisible(false);
         }
-        console.log("res email", res);
       })
       .catch((err) => {
         showToast("error", "Email updated failed!");

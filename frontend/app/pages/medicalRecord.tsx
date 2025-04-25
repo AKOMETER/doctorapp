@@ -34,13 +34,11 @@ export default function MedicalRecord() {
     const fetchMedicalRecord = async () => {
       try {
         const res = await apiRequest.get(`/medical_record/${user?.id}`);
-        console.log("userId", user?.id, "Res", res);
         if (res?.status == 200) setForm(res?.data);
         else {
           showToast("error", res?.data?.msg || "No Record Found");
         }
       } catch (err) {
-        console.log("No existing record");
       } finally {
         setLoading(false);
       }
@@ -55,7 +53,6 @@ export default function MedicalRecord() {
         ...form,
       });
 
-      console.log("res", res);
       showToast("success", "Success", "Medical record saved successfully");
     } catch (err) {
       showToast("error", "Error", "Failed to save record");
