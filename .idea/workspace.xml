@@ -6,13 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="05e3acf3-a457-4914-b296-4e43c88ed4f5" name="Changes" comment="added bac">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/jobs/reminderJob.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/jobs/reminderJob.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/pages/appointments/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/pages/appointments/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/components/calender.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/calender.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/components/doctor_overview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/doctor_overview.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/context/SidebarContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/context/SidebarContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/services/apiRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/services/apiRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

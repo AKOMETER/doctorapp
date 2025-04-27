@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from "react";
-import { View, Text, Button, TextInput, Platform } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import React, { useState } from "react";
+import { View, Text, Button, TextInput } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker"; // Import Modal DateTime Picker
+import dayjs from "dayjs";
 
 export default function Calendar({
   handleBook,
@@ -9,43 +10,43 @@ export default function Calendar({
   handleBook: (datetime: string, duration: number, reason: string) => void;
   id: string;
 }) {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date()); // State to store selected date
-  const [showDatePicker, setShowDatePicker] = useState(false); // Show date picker
-  const [showTimePicker, setShowTimePicker] = useState(false); // Show time picker
+  const [selectedDate, setSelectedDate] = useState(dayjs()); // Use dayjs for selected date
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false); // Show date picker
+  const [isTimePickerVisible, setTimePickerVisible] = useState(false); // Show time picker
   const [duration, setDuration] = useState("30"); // Duration state
   const [reason, setReason] = useState(""); // Reason state
 
-  // This function handles both date and time changes
-  const handleDateTimeChange = useCallback(
-    (event: any, date?: Date, mode?: "date" | "time") => {
-      if (event.type === "dismissed") {
-        if (mode === "date") setShowDatePicker(false);
-        if (mode === "time") setShowTimePicker(false);
-        return;
-      }
-      if (date) {
-        const updatedDate = new Date(selectedDate);
+  // Handle date and time changes
+  const handleDateTimeChange = (date: Date, mode: "date" | "time") => {
+    let updatedDate = dayjs(date);
 
-        // Update only the date part or time part based on what is being selected
-        if (mode === "date") {
-          updatedDate.setFullYear(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate()
-          );
-        } else if (mode === "time") {
-          updatedDate.setHours(date.getHours(), date.getMinutes(), 0, 0);
-        }
+    // If the time picker was used, update the time part only
+    if (mode === "time") {
+      updatedDate = updatedDate
+        .set("year", selectedDate.year())
+        .set("month", selectedDate.month())
+        .set("date", selectedDate.date());
+    }
+    setSelectedDate(updatedDate); // Update the selected date
+  };
 
-        setSelectedDate(updatedDate); // Update state with the new date
-      }
+  // Show the date picker modal
+  const showDatePicker = () => {
+    setDatePickerVisible(true);
+  };
 
-      // Close the picker after selecting a date or time
-      if (mode === "date") setShowDatePicker(false);
-      if (mode === "time") setShowTimePicker(false);
-    },
-    [selectedDate]
-  );
+  // Show the time picker modal
+  const showTimePicker = () => {
+    setTimePickerVisible(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
+  };
+
+  const hideTimePicker = () => {
+    setTimePickerVisible(false);
+  };
 
   const handleFinalSubmit = () => {
     handleBook(selectedDate.toISOString(), parseInt(duration), reason);
@@ -58,37 +59,42 @@ export default function Calendar({
       </Text>
 
       <Text className="text-base text-blue-600 mb-4">
-        {selectedDate.toLocaleString()} {/* Display selected date */}
+        {selectedDate.format("YYYY-MM-DD HH:mm")} {/* Display selected date */}
       </Text>
 
       <View className="flex flex-row space-x-3 mb-4">
         <View className="m-3">
-          <Button title="Pick Date" onPress={() => setShowDatePicker(true)} />
+          <Button title="Pick Date" onPress={showDatePicker} />
         </View>
 
         <View className="m-3">
-          <Button title="Pick Time" onPress={() => setShowTimePicker(true)} />
+          <Button title="Pick Time" onPress={showTimePicker} />
         </View>
       </View>
 
-      {showDatePicker && (
-        <DateTimePicker
-          value={selectedDate} // Keep selected date for picker
-          mode="date"
-          minimumDate={new Date()} // Allow selecting only future dates
-          onChange={(event, date) => handleDateTimeChange(event, date, "date")}
-          display={Platform.OS === "ios" ? "spinner" : "default"}
-        />
-      )}
+      {/* Date Picker Modal */}
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        date={new Date(selectedDate.toString())}
+        onConfirm={(date) => {
+          handleDateTimeChange(date, "date");
+          hideDatePicker();
+        }}
+        onCancel={hideDatePicker}
+      />
 
-      {showTimePicker && (
-        <DateTimePicker
-          value={selectedDate} // Keep selected date for picker
-          mode="time"
-          onChange={(event, date) => handleDateTimeChange(event, date, "time")}
-          display={Platform.OS === "ios" ? "spinner" : "default"}
-        />
-      )}
+      {/* Time Picker Modal */}
+      <DateTimePickerModal
+        isVisible={isTimePickerVisible}
+        mode="time"
+        date={new Date(selectedDate.toString())}
+        onConfirm={(date) => {
+          handleDateTimeChange(date, "time");
+          hideTimePicker();
+        }}
+        onCancel={hideTimePicker}
+      />
 
       <Text className="text-lg font-bold text-gray-800 mb-1">
         Duration (minutes):
