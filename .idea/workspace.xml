@@ -5,25 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="05e3acf3-a457-4914-b296-4e43c88ed4f5" name="Changes" comment="added bac">
-      <change beforePath="$PROJECT_DIR$/backend/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/config/nodemailer.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/nodemailer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/controllers/AppointmentController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/AppointmentController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/jobs/reminderJob.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/jobs/reminderJob.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/auth/register.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/auth/register.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/pages/appointments/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/pages/appointments/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/pages/appointments/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/pages/appointments/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/pages/cart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/pages/cart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/pages/doctorEdit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/pages/doctorEdit.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/pages/medicalRecord.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/pages/medicalRecord.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/pages/message.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/pages/message.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/pages/payment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/pages/payment.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/pages/settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/pages/settings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/components/PatientMedicalProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/PatientMedicalProfile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/components/appointment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/appointment.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/components/rescheduleButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/rescheduleButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/components/sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/calender.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/calender.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/doctor_overview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/doctor_overview.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/context/SidebarContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/context/SidebarContext.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/services/apiRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/services/apiRequest.ts" afterDir="false" />
     </list>

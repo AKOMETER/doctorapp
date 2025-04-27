@@ -4,8 +4,9 @@ import { showToast } from "@/utils/helperFunction";
 import Constants from "expo-constants";
 // Base URL from env
 const backendUrl =
-  // Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL ||
-  process.env.EXPO_PUBLIC_BACKEND_URL || "https://doctorwelfare.erose.name.ng"; // fallback if undefined
+  Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL ||
+  process.env.EXPO_PUBLIC_BACKEND_URL ||
+  "https://doctorwelfare.erose.name.ng"; // fallback if undefined
 console.log(
   "backendUrl",
   backendUrl,
@@ -114,7 +115,7 @@ const handleError = (error: any) => {
     ) {
       //redirect to login
     }
-    showToast("error", error?.response?.data?.msg || "Something went wrong");
+    // showToast("error", error?.response?.data?.msg || "Something went wrong");
   }
 };
 

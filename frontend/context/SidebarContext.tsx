@@ -33,23 +33,6 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsOpen((prev) => !prev);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchUserStatus = async () => {
-        try {
-          const res = await apiRequest.get("/user/is_logged");
-          if (res) setIsUserLoggedIn(res.data);
-        } catch (err) {
-          console.error(err);
-        }
-      };
-
-      fetchUserStatus();
-
-      return () => {};
-    }, []) // ✅ empty dependency array
-  );
-
   const [user, setUser] = useState<any>(null);
   const [isUserLoggedIn, setIsUserLoggedIn] =
     useState<IsUserLoggedInType | null>(null);
@@ -67,6 +50,23 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
       setToken(JSON.parse(_token));
     }
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchUserStatus = async () => {
+        try {
+          const res = await apiRequest.get("/user/is_logged");
+          if (res) setIsUserLoggedIn(res.data);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      fetchUserStatus();
+
+      return () => {};
+    }) // ✅ empty dependency array
+  );
 
   useEffect(() => {
     if (typeof user == "string") {

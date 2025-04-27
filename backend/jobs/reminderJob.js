@@ -33,6 +33,7 @@ const reminderJob = cron.schedule("* * * * *", async () => {
     });
 
     for (const appt of appointments) {
+      console.log("app", appt);
       if (appt.Patient?.email) {
         // Send email reminder to Patient
         await sendMail(

@@ -1,10 +1,9 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import Calendar from "@/components/calender";
 import Appointment from "@/components/appointment";
 import { useSidebar } from "@/context/SidebarContext";
-import { DoctorType } from "@/utils/dataTypes";
 import apiRequest from "@/services/apiRequest";
 import Toast from "react-native-toast-message";
 import { showToast } from "@/utils/helperFunction";
@@ -12,8 +11,7 @@ import { showToast } from "@/utils/helperFunction";
 const Appointments = () => {
   const navigation = useNavigation();
   const { id }: { id: string } = useLocalSearchParams();
-  const [routeID, setRouteID] = useState<string | null>(id || null);
-  // const [doctor, setDoctor] = useState<DoctorType | null>(null);
+  const [routeID, setRouterID] = useState<string | null>(id || null); // no setRouteID that causes reset
   const { user } = useSidebar();
 
   useEffect(() => {
@@ -24,11 +22,15 @@ const Appointments = () => {
     });
   }, [navigation]);
 
-  const handleBook = (datetime: string, duration: number, reason: string) => {
-    if (!id) return;
+  const handleBook = async (
+    datetime: string,
+    duration: number,
+    reason: string
+  ) => {
+    if (!id || !user?.id) return;
 
     const newData = {
-      patientId: user?.id,
+      patientId: user.id,
       doctorId: routeID,
       status: "pending",
       dateTime: datetime,
@@ -36,25 +38,24 @@ const Appointments = () => {
       reason,
     };
 
-    apiRequest
-      .post("/appointment", newData)
-      .then((res) => {
-        showToast("success", "Appointment Booking was successfully ");
-        setTimeout(() => {
-          setRouteID(null); // switch to Appointment view
-        }, 1500);
-      })
-      .catch((err) => {
-        console.error("Booking error:", err);
-      });
+    try {
+      await apiRequest.post("/appointment", newData);
+      showToast("success", "Appointment Booking was successful");
+      // optional: navigation.goBack()
+      setTimeout(() => {
+        setRouterID(null);
+      }, 1000);
+    } catch (err) {
+      console.error("Booking error:", err);
+    }
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {routeID === null ? (
-        <Appointment />
-      ) : (
+    <ScrollView className="p-4 bg-gray-100 flex-1">
+      {routeID ? (
         <Calendar handleBook={handleBook} id={routeID} />
+      ) : (
+        <Appointment />
       )}
       <Toast />
     </ScrollView>
@@ -62,10 +63,3 @@ const Appointments = () => {
 };
 
 export default Appointments;
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: "#f5f5f5",
-  },
-});

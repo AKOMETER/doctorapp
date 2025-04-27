@@ -89,7 +89,7 @@ export default function Overview({
               ) : (
                 <View className="ml-4">
                   {section.isArray ? (
-                    <View></View>
+                    <></>
                   ) : (
                     <View>
                       <Text>{section.data.name || section.data.school}</Text>
